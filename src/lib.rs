@@ -7,28 +7,27 @@ pub extern crate game_features;
 pub extern crate specs;
 #[macro_use]
 extern crate specs_derive;
-pub extern crate shrev;
 pub extern crate hibitset;
+pub extern crate shrev;
 #[macro_use]
 extern crate derive_new;
 
 pub use bracket_lib::prelude::*;
-pub use specs::prelude::*;
-pub use hibitset::BitSet;
 pub use game_features::*;
+pub use hibitset::BitSet;
 pub use shrev::*;
+pub use specs::prelude::*;
 
 // macro re-export
+pub use derive_new::*;
 pub use specs_declaration::*;
 pub use specs_derive::*;
-pub use derive_new::*;
 
 add_wasm_support!();
 
-
 #[derive(new)]
 pub struct Comp<T>(pub T);
-impl<T: Send+Sync+'static> Component for Comp<T> {
+impl<T: Send + Sync + 'static> Component for Comp<T> {
     type Storage = DenseVecStorage<Self>;
 }
 
@@ -93,7 +92,7 @@ impl CollisionMap {
 
     pub fn is_set(&self, x: u32, y: u32) -> bool {
         self.bitset.contains(self.index_of(x, y))
-   }
+    }
 
     pub fn size(&self) -> (u32, u32) {
         (self.width, self.height)
@@ -167,11 +166,21 @@ pub struct CollisionResource {
 
 impl CollisionResource {
     pub fn is_inside(&self, p: &Point) -> bool {
-        position_inside_rect(p.x - self.position.x, p.y - self.position.y, 0, 0, self.map.size().0, self.map.size().1)
+        position_inside_rect(
+            p.x - self.position.x,
+            p.y - self.position.y,
+            0,
+            0,
+            self.map.size().0,
+            self.map.size().1,
+        )
     }
     /// Check is_inside before calling this.
     pub fn relative_point(&self, p: &Point) -> (u32, u32) {
-        ((p.x - self.position.x) as u32, (p.y - self.position.y) as u32)
+        (
+            (p.x - self.position.x) as u32,
+            (p.y - self.position.y) as u32,
+        )
     }
 }
 
@@ -181,29 +190,67 @@ pub struct Camera {
     pub size: Point,
 }
 
-pub fn position_inside_rect(pos_x: i32, pos_y: i32, rect_x: i32, rect_y: i32, size_x: u32, size_y: u32) -> bool {
-    pos_x >= rect_x &&
-    pos_y >= rect_y &&
-    pos_x < rect_x + size_x as i32 &&
-    pos_y < rect_y + size_y as i32
+pub fn position_inside_rect(
+    pos_x: i32,
+    pos_y: i32,
+    rect_x: i32,
+    rect_y: i32,
+    size_x: u32,
+    size_y: u32,
+) -> bool {
+    pos_x >= rect_x
+        && pos_y >= rect_y
+        && pos_x < rect_x + size_x as i32
+        && pos_y < rect_y + size_y as i32
 }
 
-system!(CombineCollisionSystem, |positions: ReadStorage<'a, Point>, collisions: ReadStorage<'a, Collision>, maps: ReadStorage<'a, CollisionMap>, global_map: WriteExpect<'a, CollisionResource>| {
+system!(CombineCollisionSystem, |positions: ReadStorage<
+    'a,
+    Point,
+>,
+                                 collisions: ReadStorage<
+    'a,
+    Collision,
+>,
+                                 maps: ReadStorage<
+    'a,
+    CollisionMap,
+>,
+                                 global_map: WriteExpect<
+    'a,
+    CollisionResource,
+>| {
     global_map.map.clear();
 
     for (pos, _) in (&positions, &collisions).join() {
         let (x, y) = (pos.x, pos.y);
-        if position_inside_rect(x, y, global_map.position.x, global_map.position.y, global_map.map.size().0, global_map.map.size().1) {
+        if position_inside_rect(
+            x,
+            y,
+            global_map.position.x,
+            global_map.position.y,
+            global_map.map.size().0,
+            global_map.map.size().1,
+        ) {
             let (t_x, t_y) = (global_map.position.x, global_map.position.y);
             global_map.map.set((x - t_x) as u32, (y - t_y) as u32);
         }
     }
 
     for (pos, coll) in (&positions, &maps).join() {
-        for i in 0..coll.size().0 as i32{
+        for i in 0..coll.size().0 as i32 {
             for j in 0..coll.size().1 as i32 {
                 let (x, y) = (pos.x + i, pos.y + j);
-                if coll.is_set(i as u32, j as u32) && position_inside_rect(x, y, global_map.position.x, global_map.position.y, global_map.map.size().0, global_map.map.size().1) {
+                if coll.is_set(i as u32, j as u32)
+                    && position_inside_rect(
+                        x,
+                        y,
+                        global_map.position.x,
+                        global_map.position.y,
+                        global_map.map.size().0,
+                        global_map.map.size().1,
+                    )
+                {
                     let (t_x, t_y) = (global_map.position.x, global_map.position.y);
                     global_map.map.set((x - t_x) as u32, (y - t_y) as u32);
                 }
@@ -212,26 +259,46 @@ system!(CombineCollisionSystem, |positions: ReadStorage<'a, Point>, collisions: 
     }
 });
 
-system!(AiPathingSystem, |dests: ReadStorage<'a, AiDestination>, global_map: ReadExpect<'a, CollisionResource>, positions: ReadStorage<'a, Point>, paths: WriteStorage<'a, AiPath>| {
-    for (pos, dest, path) in (&positions, &dests, &mut paths).join() {
-        if pos.x == dest.target.x && pos.y == dest.target.y {
-            continue;
+system!(
+    AiPathingSystem,
+    |dests: ReadStorage<'a, AiDestination>,
+     global_map: ReadExpect<'a, CollisionResource>,
+     positions: ReadStorage<'a, Point>,
+     paths: WriteStorage<'a, AiPath>| {
+        for (pos, dest, path) in (&positions, &dests, &mut paths).join() {
+            if pos.x == dest.target.x && pos.y == dest.target.y {
+                continue;
+            }
+            // TODO Safety check for < 0 or out of map bounds
+            let d = global_map.map.index_of(
+                (pos.x - global_map.position.x) as u32,
+                (pos.y - global_map.position.y) as u32,
+            );
+            let t = global_map.map.index_of(
+                (dest.target.x - global_map.position.x) as u32,
+                (dest.target.y - global_map.position.y) as u32,
+            );
+            let p = a_star_search(d, t, &global_map.map);
+            path.path = p;
         }
-        // TODO Safety check for < 0 or out of map bounds
-        let d = global_map.map.index_of((pos.x - global_map.position.x) as u32, (pos.y - global_map.position.y) as u32);
-        let t = global_map.map.index_of((dest.target.x - global_map.position.x) as u32, (dest.target.y - global_map.position.y) as u32);
-        let p = a_star_search(d, t, &global_map.map);
-        path.path = p;
     }
-});
+);
 
-system!(AiMovementSystem, |positions: WriteStorage<'a, Point>, paths: WriteStorage<'a, AiPath>, global_map: ReadExpect<'a, CollisionResource>| {
+system!(AiMovementSystem, |positions: WriteStorage<'a, Point>,
+                           paths: WriteStorage<'a, AiPath>,
+                           global_map: ReadExpect<
+    'a,
+    CollisionResource,
+>| {
     // doesn't handle two entities that want to go to the same tile.
     for (pos, path) in (&mut positions, &mut paths).join() {
         if path.path.success && path.path.steps.len() > 1 {
             let dest = path.path.steps.remove(1);
             let (x, y) = global_map.map.position_of(dest as u32);
-            *pos = Point::new(x as i32 + global_map.position.x, y as i32 + global_map.position.y);
+            *pos = Point::new(
+                x as i32 + global_map.position.x,
+                y as i32 + global_map.position.y,
+            );
         }
     }
 });
@@ -240,12 +307,17 @@ system!(AiMovementSystem, |positions: WriteStorage<'a, Point>, paths: WriteStora
 macro_rules! event_reader_res {
     ($name:ident, $ev_type:ty) => {
         pub struct $name(ReaderId<$ev_type>);
-    }
+    };
 }
 
 #[derive(Debug, Clone, Copy, Component)]
 pub enum Direction {
-    North, East, South, West, Up, Down,
+    North,
+    East,
+    South,
+    West,
+    Up,
+    Down,
 }
 
 pub fn move_position(old_position: &Point, dir: Direction) -> Point {
@@ -258,23 +330,44 @@ pub fn move_position(old_position: &Point, dir: Direction) -> Point {
     }
 }
 
-pub fn render_sprites<'a>(ctx: &mut BTerm, camera: &Camera, positions: ReadStorage<'a, Point>, multi_sprites: ReadStorage<'a, MultiSprite>, sprites: ReadStorage<'a, Sprite>) {
+pub fn render_sprites<'a>(
+    ctx: &mut BTerm,
+    camera: &Camera,
+    positions: ReadStorage<'a, Point>,
+    multi_sprites: ReadStorage<'a, MultiSprite>,
+    sprites: ReadStorage<'a, Sprite>,
+) {
     for (pos, sprite) in (&positions, &multi_sprites).join() {
-        sprite.tile.render(ctx, Point::new(pos.x - camera.position.x, pos.y - camera.position.y));
+        sprite.tile.render(
+            ctx,
+            Point::new(pos.x - camera.position.x, pos.y - camera.position.y),
+        );
     }
     for (pos, sprite) in (&positions, &sprites).join() {
-        ctx.set(pos.x - camera.position.x, pos.y - camera.position.y, sprite.fg, sprite.bg, sprite.glyph);
+        ctx.set(
+            pos.x - camera.position.x,
+            pos.y - camera.position.y,
+            sprite.fg,
+            sprite.bg,
+            sprite.glyph,
+        );
     }
 }
 
 state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Dispatcher<'static, 'static>, ctx: &mut BTerm);
 
-pub fn mini_loop<I: State+'static>(world: &mut World, dispatcher: &mut Dispatcher<'static, 'static>, init_state: I) {
+pub fn mini_loop<I: State + 'static>(
+    world: &mut World,
+    dispatcher: &mut Dispatcher<'static, 'static>,
+    init_state: I,
+) {
     let mut state_machine = StateMachine::new(init_state);
     loop {
         let mut input = INPUT.lock();
         for key in input.key_pressed_set().iter() {
-            world.fetch_mut::<EventChannel<VirtualKeyCode>>().single_write(*key);
+            world
+                .fetch_mut::<EventChannel<VirtualKeyCode>>()
+                .single_write(*key);
         }
         dispatcher.dispatch(world);
         world.maintain();
@@ -282,7 +375,12 @@ pub fn mini_loop<I: State+'static>(world: &mut World, dispatcher: &mut Dispatche
     }
 }
 
-pub fn mini_init(width: u32, height: u32, name: &str, dispatcher_builder: DispatcherBuilder<'static, 'static>) -> (World, Dispatcher<'static, 'static>, BTerm) {
+pub fn mini_init(
+    width: u32,
+    height: u32,
+    name: &str,
+    dispatcher_builder: DispatcherBuilder<'static, 'static>,
+) -> (World, Dispatcher<'static, 'static>, BTerm) {
     let context = BTermBuilder::new()
         .with_simple_console(width, height, "terminal8x8.png")
         .with_font("terminal8x8.png", 8, 8)
@@ -306,7 +404,7 @@ mod tests {
         let mut m = CollisionMap::new(3, 3);
         m.set(2, 2);
         assert!(m.is_set(2, 2));
-        assert_eq!(m.index_of(2,2), 8);
+        assert_eq!(m.index_of(2, 2), 8);
         assert_eq!(m.position_of(8), (2, 2));
     }
 }
