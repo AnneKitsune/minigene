@@ -6,9 +6,18 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["crossterm"]
+crossterm = ["bracket-lib/crossterm"]
+wasm = ["wasm-bindgen", "bracket-lib/opengl"]
+
 [dependencies]
 #bracket-lib = { path = "../bracket-lib", default-features = false, features = ["specs", "threaded", "crossterm"] }
-bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded", "crossterm"] }
+
+#bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded", "opengl"] }
+
+bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded"] }
+
 specs_declaration = { version = "0.3.0" }
 #game_features = { path = "../game_features" }
 game_features = { version = "0.2.0" }
@@ -18,4 +27,6 @@ shrev = "1.1.1"
 hibitset = "0.6.3"
 derive-new = "0.5"
 pushdown-automaton-macro = "0.1.0"
+wasm-bindgen = { version = "0.2", optional = true }
+
 
