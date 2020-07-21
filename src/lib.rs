@@ -23,6 +23,8 @@ pub use derive_new::*;
 pub use specs_declaration::*;
 pub use specs_derive::*;
 
+use std::collections::HashMap;
+
 add_wasm_support!();
 
 #[derive(new)]
@@ -306,7 +308,7 @@ system!(AiMovementSystem, |positions: WriteStorage<'a, Point>,
 #[macro_export]
 macro_rules! event_reader_res {
     ($name:ident, $ev_type:ty) => {
-        pub struct $name(ReaderId<$ev_type>);
+        pub struct $name(pub ReaderId<$ev_type>);
     };
 }
 
@@ -329,6 +331,19 @@ pub fn move_position(old_position: &Point, dir: Direction) -> Point {
         _ => unimplemented!(),
     }
 }
+
+event_reader_res!(InputDriverRes, VirtualKeyCode);
+
+system!(InputDriver<E: Clone + Send + Sync + 'static>, |keymap: Read<'a, HashMap<VirtualKeyCode, E>>, 
+        inputs: Read<'a, EventChannel<VirtualKeyCode>>,
+        events: Write<'a, EventChannel<E>>,
+        reader: WriteExpect<'a, InputDriverRes>| {
+    for i in inputs.read(&mut reader.0) {
+        if let Some(e) = keymap.get(i) {
+            events.single_write(e.clone());
+        }
+    }
+});
 
 pub fn render_sprites<'a>(
     ctx: &mut BTerm,
