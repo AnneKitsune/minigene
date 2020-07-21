@@ -25,8 +25,6 @@ pub use specs_derive::*;
 
 use std::collections::HashMap;
 
-add_wasm_support!();
-
 #[derive(new)]
 pub struct Comp<T>(pub T);
 impl<T: Send + Sync + 'static> Component for Comp<T> {
