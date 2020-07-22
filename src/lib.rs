@@ -24,6 +24,7 @@ pub use specs_declaration::*;
 pub use specs_derive::*;
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 #[derive(new)]
 pub struct Comp<T>(pub T);
@@ -395,8 +396,10 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
-    dispatcher_builder: DispatcherBuilder<'static, 'static>,
+    mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Dispatcher<'static, 'static>, BTerm) {
+    #[cfg(feature = "wasm")]
+    web_worker::init_panic_hook();
     let context = BTermBuilder::new()
         .with_simple_console(width, height, "terminal8x8.png")
         .with_font("terminal8x8.png", 8, 8)
@@ -406,6 +409,10 @@ pub fn mini_init(
         .build()
         .expect("Failed to build BTerm context.");
     let mut world = World::new();
+    #[cfg(feature = "wasm")]
+    {
+        dispatcher_builder = dispatcher_builder.with_pool(Arc::new(web_worker::default_thread_pool(None).expect("Failed to create web worker thread pool")));
+    }
     let mut dispatcher = dispatcher_builder.build();
     dispatcher.setup(&mut world);
     world.insert(EventChannel::<VirtualKeyCode>::new());
@@ -424,3 +431,4 @@ mod tests {
         assert_eq!(m.position_of(8), (2, 2));
     }
 }
+
