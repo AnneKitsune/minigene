@@ -436,4 +436,3 @@ mod tests {
         assert_eq!(m.position_of(8), (2, 2));
     }
 }
-
