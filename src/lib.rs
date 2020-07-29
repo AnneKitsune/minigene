@@ -23,6 +23,10 @@ pub use derive_new::*;
 pub use specs_declaration::*;
 pub use specs_derive::*;
 
+mod dispatcher;
+
+pub use crate::dispatcher::*;
+
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -375,7 +379,7 @@ state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Dispatch
 
 pub fn mini_loop<I: State + 'static>(
     world: &mut World,
-    dispatcher: &mut Dispatcher<'static, 'static>,
+    dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
     init_state: I,
 ) {
     let mut state_machine = StateMachine::new(init_state);
@@ -386,7 +390,7 @@ pub fn mini_loop<I: State + 'static>(
                 .fetch_mut::<EventChannel<VirtualKeyCode>>()
                 .single_write(*key);
         }
-        dispatcher.dispatch(world);
+        dispatcher.run_now(world);
         world.maintain();
         std::thread::sleep(std::time::Duration::from_millis(8));
     }
@@ -396,8 +400,10 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
-    mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
-) -> (World, Dispatcher<'static, 'static>, BTerm) {
+    dispatcher: Box<dyn UnifiedDispatcher + 'static>,
+    mut world: World,
+    //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
+) -> (World, Box<dyn UnifiedDispatcher + 'static>, BTerm) {
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let context = BTermBuilder::new()
@@ -408,13 +414,12 @@ pub fn mini_init(
         .with_advanced_input(true)
         .build()
         .expect("Failed to build BTerm context.");
-    let mut world = World::new();
-    #[cfg(feature = "wasm")]
-    {
-        dispatcher_builder = dispatcher_builder.with_pool(Arc::new(web_worker::default_thread_pool(None).expect("Failed to create web worker thread pool")));
-    }
-    let mut dispatcher = dispatcher_builder.build();
-    dispatcher.setup(&mut world);
+    //#[cfg(feature = "wasm")]
+    //{
+    //    dispatcher_builder = dispatcher_builder.with_pool(Arc::new(web_worker::default_thread_pool(None).expect("Failed to create web worker thread pool")));
+    //}
+    //let mut dispatcher = dispatcher_builder.build();
+    //dispatcher.setup(&mut world);
     world.insert(EventChannel::<VirtualKeyCode>::new());
     (world, dispatcher, context)
 }
