@@ -163,6 +163,10 @@ impl BaseMap for CollisionMap {
     }
 }
 
+pub fn dist(p1: &Point, p2: &Point) -> f32 {
+    ((p2.x as f32 - p1.x as f32).powf(2.0) + (p2.y as f32 - p1.y as f32).powf(2.0)).sqrt()
+}
+
 #[derive(new)]
 pub struct CollisionResource {
     pub map: CollisionMap,
