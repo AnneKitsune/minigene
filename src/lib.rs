@@ -17,6 +17,8 @@ pub use game_features::*;
 pub use hibitset::BitSet;
 pub use shrev::*;
 pub use specs::prelude::*;
+pub use specs::storage::MaskedStorage;
+pub use specs::world::EntitiesRes;
 
 // macro re-export
 pub use derive_new::*;
