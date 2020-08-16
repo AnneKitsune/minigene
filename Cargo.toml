@@ -20,7 +20,8 @@ bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "loca
 
 specs_declaration = { version = "0.3.0" }
 #game_features = { path = "../game_features" }
-game_features = { version = "0.2.0" }
+#game_features = { version = "0.2.0" }
+game_features = { path = "../game_features" }
 specs = { version = "0.16.1" }
 specs-derive = "0.4.1"
 shrev = "1.1.1"
@@ -29,5 +30,7 @@ derive-new = "0.5"
 pushdown-automaton-macro = "0.1.0"
 wasm-bindgen = { version = "0.2", optional = true }
 web_worker = { version = "0.3.0", optional = true }
+game_time = { path = "../game_time" }
+stopwatch = "=0.0.7"
 #web_worker = { path = "../web_worker", optional = true }
 

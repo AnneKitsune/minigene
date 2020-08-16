@@ -19,6 +19,8 @@ pub use shrev::*;
 pub use specs::prelude::*;
 pub use specs::storage::MaskedStorage;
 pub use specs::world::EntitiesRes;
+pub use game_time::*;
+pub use stopwatch::*;
 
 // macro re-export
 pub use derive_new::*;
@@ -467,6 +469,7 @@ pub fn mini_loop<I: State + 'static>(
 ) {
     let mut state_machine = StateMachine::new(init_state);
     loop {
+        world.get_mut::<Stopwatch>().unwrap().start();
         let mut input = INPUT.lock();
         for key in input.key_pressed_set().iter() {
             world
@@ -476,6 +479,13 @@ pub fn mini_loop<I: State + 'static>(
         dispatcher.run_now(world);
         world.maintain();
         std::thread::sleep(std::time::Duration::from_millis(8));
+        let elapsed = world.fetch::<Stopwatch>().elapsed();
+        let time = world.get_mut::<Time>().unwrap();
+        time.increment_frame_number();
+        time.set_delta_time(elapsed);
+        let stopwatch = world.get_mut::<Stopwatch>().unwrap();
+        stopwatch.stop();
+        stopwatch.restart();
     }
 }
 
@@ -504,6 +514,8 @@ pub fn mini_init(
     //let mut dispatcher = dispatcher_builder.build();
     //dispatcher.setup(&mut world);
     world.insert(EventChannel::<VirtualKeyCode>::new());
+    world.insert(Stopwatch::new());
+    world.insert(Time::default());
     (world, dispatcher, context)
 }
 
