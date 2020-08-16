@@ -14,12 +14,12 @@ extern crate derive_new;
 
 pub use bracket_lib::prelude::*;
 pub use game_features::*;
+pub use game_time::*;
 pub use hibitset::BitSet;
 pub use shrev::*;
 pub use specs::prelude::*;
 pub use specs::storage::MaskedStorage;
 pub use specs::world::EntitiesRes;
-pub use game_time::*;
 pub use stopwatch::*;
 
 // macro re-export
