@@ -460,33 +460,51 @@ pub fn render_sprites<'a>(
     }
 }
 
-state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Dispatcher<'static, 'static>, ctx: &mut BTerm);
+pub type MiniDispatcher = Box<dyn UnifiedDispatcher + 'static>;
+
+state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>, ctx: &mut BTerm);
 
 pub fn mini_loop<I: State + 'static>(
     world: &mut World,
     dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
+    ctx: &mut BTerm,
     init_state: I,
 ) {
     let mut state_machine = StateMachine::new(init_state);
-    loop {
-        world.get_mut::<Stopwatch>().unwrap().start();
-        let mut input = INPUT.lock();
-        for key in input.key_pressed_set().iter() {
-            world
-                .fetch_mut::<EventChannel<VirtualKeyCode>>()
-                .single_write(*key);
-        }
-        dispatcher.run_now(world);
-        world.maintain();
-        std::thread::sleep(std::time::Duration::from_millis(8));
-        let elapsed = world.fetch::<Stopwatch>().elapsed();
-        let time = world.get_mut::<Time>().unwrap();
-        time.increment_frame_number();
-        time.set_delta_time(elapsed);
-        let stopwatch = world.get_mut::<Stopwatch>().unwrap();
-        stopwatch.stop();
-        stopwatch.restart();
+    state_machine.start(world, dispatcher, ctx);
+    while state_machine.is_running() {
+        mini_frame(world, dispatcher, ctx, &mut state_machine);
     }
+}
+
+pub fn mini_frame(
+    world: &mut World,
+    dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
+    ctx: &mut BTerm,
+    state_machine: &mut StateMachine,
+) {
+    world.get_mut::<Stopwatch>().unwrap().start();
+
+    let mut input = INPUT.lock();
+    for key in input.key_pressed_set().iter() {
+        world
+            .fetch_mut::<EventChannel<VirtualKeyCode>>()
+            .single_write(*key);
+    }
+    dispatcher.run_now(world);
+    state_machine.update(world, dispatcher, ctx);
+    world.maintain();
+
+    #[cfg(not(target_arch = "wasm32"))]
+    std::thread::sleep(std::time::Duration::from_millis(8));
+
+    let elapsed = world.fetch::<Stopwatch>().elapsed();
+    let time = world.get_mut::<Time>().unwrap();
+    time.increment_frame_number();
+    time.set_delta_time(elapsed);
+    let stopwatch = world.get_mut::<Stopwatch>().unwrap();
+    stopwatch.stop();
+    stopwatch.restart();
 }
 
 pub fn mini_init(
