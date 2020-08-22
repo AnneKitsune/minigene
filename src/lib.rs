@@ -454,11 +454,21 @@ system!(RemoveOutdatedEffectorSystem<E: Send+Sync+'static>, |
     }
 });
 
+system!(SkillCooldownSystem<S: Send+Sync+Hash+Eq+'static>, |
+        skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
+        time: Read<'a, Time>| {
+    for inst in (&mut skill_instances,).join() {
+        for i in inst.0.0.skills.iter_mut() {
+            i.1.current_cooldown -= time.delta_seconds() as f64;
+        }
+    }
+});
+
 #[derive(Debug, Clone, new)]
 pub struct SkillTriggerEvent<K>(pub Entity, pub K);
 
-system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sync+'static, S: Send+Sync+Clone+Hash+Eq+'static, I: Send+Sync+'static, GE: Send+Sync+'static>, |
-        skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I, GE>>,
+system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sync+'static, S: Send+Sync+Clone+Hash+Eq+'static, I: Send+Sync+'static>, |
+        skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I>>,
         skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
         stats: ReadStorage<'a, Comp<StatSet<K>>>,
         stat_defs: ReadExpect<'a, StatDefinitions<K>>,
@@ -466,10 +476,13 @@ system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sy
         entities: Entities<'a>| {
     for (entity, skills, stat) in (&*entities, &mut skill_instances, &stats).join() {
         for skill in skills.0.skills.iter() {
-            let def = skill_defs.defs.get(&skill.0).expect("No skill definition for provided key");
-            if def.passive && def.check_conditions(&stat.0, &stat_defs) {
-                // Trigger skill
-                event_channel.single_write(SkillTriggerEvent(entity, skill.0.clone()));
+            if skill.1.current_cooldown <= 0.0 {
+                // get def from skill key
+                let def = skill_defs.defs.get(&skill.0).expect("No skill definition for provided key");
+                if def.passive && def.check_conditions(&stat.0, &stat_defs) {
+                    // Trigger skill
+                    event_channel.single_write(SkillTriggerEvent(entity, skill.0.clone()));
+                }
             }
         }
     }
@@ -477,15 +490,14 @@ system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sy
 
 pub struct ExecSkillRes<S: Send+Sync+'static>(pub ReaderId<SkillTriggerEvent<S>>);
 
-system!(ExecSkillSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Clone+Hash+Eq+'static, S: Send+Sync+Hash+Eq+'static, I: Send+Sync+'static, GE: Send+Sync+Clone+'static>, |
-        skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I, GE>>,
+system!(ExecSkillSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Clone+Hash+Eq+'static, S: Send+Sync+Hash+Eq+'static, I: Send+Sync+'static>, |
+        skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I>>,
         skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
         stats: ReadStorage<'a, Comp<StatSet<K>>>,
         effector_defs: ReadExpect<'a, EffectorDefinitions<K,E>>,
         effectors: WriteStorage<'a, Comp<EffectorSet<E>>>,
         event_channel: Read<'a, EventChannel<SkillTriggerEvent<S>>>,
-        reader: WriteExpect<'a, ExecSkillRes<S>>,
-        out_event: Write<'a, EventChannel<GE>>| {
+        reader: WriteExpect<'a, ExecSkillRes<S>>| {
     for ev in event_channel.read(&mut reader.0) {
         let def = skill_defs.defs.get(&ev.1).expect("Received event for unknown skill key.");
         for eff in def.stat_effectors.iter() {
@@ -493,10 +505,13 @@ system!(ExecSkillSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Clone+Hash+Eq
             effectors.entry(ev.0).unwrap().or_insert_with(|| Comp(EffectorSet::default())).0.effectors
                 .push(EffectorInstance::new(eff.clone(), eff_def.duration));
         }
-        for ev2 in def.event_on_trigger.iter() {
-            out_event.single_write(ev2.clone());
-        }
-        skill_instances.get_mut(ev.0).expect("Entity specified by event doesn't have an expected SkillInstance for this skill activation.").0.skills.get_mut(&ev.1).expect("Skill instance doesn't exist for this entity").current_cooldown = def.cooldown;
+        skill_instances.get_mut(ev.0)
+            .expect("Entity specified by event doesn't have an expected SkillInstance for this skill activation.")
+            .0
+            .skills
+            .get_mut(&ev.1)
+            .expect("Skill instance doesn't exist for this entity")
+            .current_cooldown = def.cooldown;
     }
 });
 
