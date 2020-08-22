@@ -33,6 +33,8 @@ pub use crate::dispatcher::*;
 
 use std::collections::HashMap;
 use std::sync::Arc;
+use std::hash::Hash;
+use std::fmt::Debug;
 
 #[derive(new)]
 pub struct Comp<T>(pub T);
@@ -436,6 +438,97 @@ system!(GotoEntitySimpleSystem, |entities: Entities<'a>,
     }
 });
 
+// Run after ApplyEffectorsSystem
+system!(RemoveOutdatedEffectorSystem<E: Send+Sync+'static>, |
+        effectors: WriteStorage<'a, Comp<EffectorSet<E>>>,
+        time: ReadExpect<'a, Time>| {
+    for (mut eff) in (&mut effectors,).join() {
+        eff.0.0.effectors.retain(|e| {
+            if let Some(mut d) = e.disable_in {
+                d -= time.delta_seconds() as f64;
+                d > 0.0
+            } else {
+                true
+            }
+        });
+    }
+});
+
+#[derive(Debug, Clone, new)]
+pub struct SkillTriggerEvent<K>(pub Entity, pub K);
+
+system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sync+'static, S: Send+Sync+Clone+Hash+Eq+'static, I: Send+Sync+'static, GE: Send+Sync+'static>, |
+        skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I, GE>>,
+        skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
+        stats: ReadStorage<'a, Comp<StatSet<K>>>,
+        stat_defs: ReadExpect<'a, StatDefinitions<K>>,
+        event_channel: Write<'a, EventChannel<SkillTriggerEvent<S>>>, 
+        entities: Entities<'a>| {
+    for (entity, skills, stat) in (&*entities, &mut skill_instances, &stats).join() {
+        for skill in skills.0.skills.iter() {
+            let def = skill_defs.defs.get(&skill.0).expect("No skill definition for provided key");
+            if def.passive && def.check_conditions(&stat.0, &stat_defs) {
+                // Trigger skill
+                event_channel.single_write(SkillTriggerEvent(entity, skill.0.clone()));
+            }
+        }
+    }
+});
+
+pub struct ExecSkillRes<S: Send+Sync+'static>(pub ReaderId<SkillTriggerEvent<S>>);
+
+system!(ExecSkillSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Clone+Hash+Eq+'static, S: Send+Sync+Hash+Eq+'static, I: Send+Sync+'static, GE: Send+Sync+Clone+'static>, |
+        skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I, GE>>,
+        skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
+        stats: ReadStorage<'a, Comp<StatSet<K>>>,
+        effector_defs: ReadExpect<'a, EffectorDefinitions<K,E>>,
+        effectors: WriteStorage<'a, Comp<EffectorSet<E>>>,
+        event_channel: Read<'a, EventChannel<SkillTriggerEvent<S>>>,
+        reader: WriteExpect<'a, ExecSkillRes<S>>,
+        out_event: Write<'a, EventChannel<GE>>| {
+    for ev in event_channel.read(&mut reader.0) {
+        let def = skill_defs.defs.get(&ev.1).expect("Received event for unknown skill key.");
+        for eff in def.stat_effectors.iter() {
+            let eff_def = effector_defs.defs.get(&eff).expect("Unknown effector key.");
+            effectors.entry(ev.0).unwrap().or_insert_with(|| Comp(EffectorSet::default())).0.effectors
+                .push(EffectorInstance::new(eff.clone(), eff_def.duration));
+        }
+        for ev2 in def.event_on_trigger.iter() {
+            out_event.single_write(ev2.clone());
+        }
+        skill_instances.get_mut(ev.0).expect("Entity specified by event doesn't have an expected SkillInstance for this skill activation.").0.skills.get_mut(&ev.1).expect("Skill instance doesn't exist for this entity").current_cooldown = def.cooldown;
+    }
+});
+
+system!(ApplyEffectorSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Hash+Eq+'static>, |
+        defs: ReadExpect<'a, StatDefinitions<K>>,
+        stats: WriteStorage<'a, Comp<StatSet<K>>>,
+        effector_defs: ReadExpect<'a, EffectorDefinitions<K,E>>,
+        effectors: ReadStorage<'a, Comp<EffectorSet<E>>>| {
+    for (stat, effector) in (&mut stats, &effectors).join() {
+        // for each stat
+        for mut s in stat.0.stats.values_mut() {
+            s.value_with_effectors = s.value;
+            // find effectors affecting this stat
+            for e in effector.0.effectors.iter() {
+                let def = effector_defs.defs.get(&e.effector_key).expect("Tried to fetch unknown stat key.");
+                // look into the effect of each effector
+                for (key, ty) in def.effects.iter() {
+                    // if any matches
+                    if *key == s.key {
+                        // Apply Effector
+                        match ty {
+                            EffectorType::Additive(v) => s.value_with_effectors += v,
+                            EffectorType::AdditiveMultiplier(v) => unimplemented!(),
+                            EffectorType::MultiplicativeMultiplier(v) => s.value_with_effectors *= v,
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
+
 pub fn render_sprites<'a>(
     ctx: &mut BTerm,
     camera: &Camera,
@@ -534,6 +627,20 @@ pub fn mini_init(
     world.insert(EventChannel::<VirtualKeyCode>::new());
     world.insert(Stopwatch::new());
     world.insert(Time::default());
+
+    //#[cfg(not(feature = "wasm"))]
+    //{
+    //    std::panic::set_hook(Box::new(|i| {
+    //        if let Some(s) = i.payload().downcast_ref::<&str>() {
+    //            eprintln!("panic occurred: {:?}", s);
+    //        } else {
+    //            eprintln!("panic occurred");
+    //        }
+    //        eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
+    //        std::fs::write("/tmp/err", "WE CRASHED").unwrap();
+    //    }));
+    //}
+
     (world, dispatcher, context)
 }
 

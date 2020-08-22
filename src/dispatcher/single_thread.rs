@@ -33,11 +33,11 @@ pub struct SingleThreadedDispatcher<'a> {
 }
 
 impl<'a> UnifiedDispatcher for SingleThreadedDispatcher<'a> {
-    fn run_now(&mut self, ecs: *mut World) {
-        unsafe {
+    fn run_now(&mut self, ecs: &mut World) {
+        //unsafe {
             for sys in self.systems.iter_mut() {
-                sys.run_now(&*ecs);
+                sys.run_now(ecs);
             }
-        }
+        //}
     }
 }

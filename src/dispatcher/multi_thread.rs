@@ -36,9 +36,7 @@ pub struct MultiThreadedDispatcher {
 }
 
 impl<'a> UnifiedDispatcher for MultiThreadedDispatcher {
-    fn run_now(&mut self, ecs: *mut World) {
-        unsafe {
-            self.dispatcher.dispatch(&mut *ecs);
-        }
+    fn run_now(&mut self, ecs: &mut World) {
+        self.dispatcher.dispatch(ecs);
     }
 }
