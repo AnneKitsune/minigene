@@ -443,7 +443,7 @@ system!(RemoveOutdatedEffectorSystem<E: Send+Sync+'static>, |
         effectors: WriteStorage<'a, Comp<EffectorSet<E>>>,
         time: ReadExpect<'a, Time>| {
     for (mut eff) in (&mut effectors,).join() {
-        eff.0.0.effectors.retain(|e| {
+        (eff.0).0.effectors.retain(|e| {
             if let Some(mut d) = e.disable_in {
                 d -= time.delta_seconds() as f64;
                 d > 0.0
@@ -458,7 +458,7 @@ system!(SkillCooldownSystem<S: Send+Sync+Hash+Eq+'static>, |
         skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
         time: Read<'a, Time>| {
     for inst in (&mut skill_instances,).join() {
-        for i in inst.0.0.skills.iter_mut() {
+        for i in (inst.0).0.skills.iter_mut() {
             i.1.current_cooldown -= time.delta_seconds() as f64;
         }
     }
@@ -467,19 +467,20 @@ system!(SkillCooldownSystem<S: Send+Sync+Hash+Eq+'static>, |
 #[derive(Debug, Clone, new)]
 pub struct SkillTriggerEvent<K>(pub Entity, pub K);
 
-system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sync+'static, S: Send+Sync+Clone+Hash+Eq+'static, I: Send+Sync+'static>, |
+system!(TriggerPassiveSkillSystem<K: Send+Sync+Debug+Hash+Eq+'static, E: Send+Sync+'static, S: Send+Sync+Clone+Hash+Eq+'static, I: Send+Sync+'static+Clone+PartialEq+Debug, IT: Send+Sync+'static+SlotType, CD: Send+Sync+'static+Default+Debug+Clone>, |
         skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I>>,
         skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
         stats: ReadStorage<'a, Comp<StatSet<K>>>,
         stat_defs: ReadExpect<'a, StatDefinitions<K>>,
+        inventories: ReadStorage<'a, Comp<Inventory<I, IT, CD>>>,
         event_channel: Write<'a, EventChannel<SkillTriggerEvent<S>>>, 
         entities: Entities<'a>| {
-    for (entity, skills, stat) in (&*entities, &mut skill_instances, &stats).join() {
+    for (entity, skills, stat, inventory) in (&*entities, &mut skill_instances, &stats, &inventories).join() {
         for skill in skills.0.skills.iter() {
             if skill.1.current_cooldown <= 0.0 {
                 // get def from skill key
                 let def = skill_defs.defs.get(&skill.0).expect("No skill definition for provided key");
-                if def.passive && def.check_conditions(&stat.0, &stat_defs) {
+                if def.passive && def.check_conditions(&stat.0, &inventory.0, &stat_defs) {
                     // Trigger skill
                     event_channel.single_write(SkillTriggerEvent(entity, skill.0.clone()));
                 }
@@ -499,6 +500,7 @@ system!(ExecSkillSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Clone+Hash+Eq
         event_channel: Read<'a, EventChannel<SkillTriggerEvent<S>>>,
         reader: WriteExpect<'a, ExecSkillRes<S>>| {
     for ev in event_channel.read(&mut reader.0) {
+        // TODO consume item if needed
         let def = skill_defs.defs.get(&ev.1).expect("Received event for unknown skill key.");
         for eff in def.stat_effectors.iter() {
             let eff_def = effector_defs.defs.get(&eff).expect("Unknown effector key.");
