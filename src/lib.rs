@@ -50,7 +50,7 @@ pub struct Sprite {
 }
 
 #[derive(Component)]
-pub struct SpriteIndex(pub i32);
+pub struct SpriteIndex(pub usize);
 
 #[derive(Component, new)]
 pub struct MultiSprite {
@@ -583,15 +583,15 @@ pub fn render_sprites<'a>(
         #[cfg(feature = "opengl")]
         {
         ctx.add_sprite(
-            Rect::with_exact(
-                pos.x - camera.position.x,
-                pos.y - camera.position.y,
+            Rect::with_size(
+                (pos.x - camera.position.x) * 1,
+                (pos.y - camera.position.y) * 1,
                 // TODO make this dynamic.
-                8,
-                8,
+                1,
+                1,
             ),
             0,
-            RGBA::new(),
+            RGBA::named(WHITE),
             sprite.0,
         );
         }
@@ -657,15 +657,20 @@ pub fn mini_init(
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
-    if let Some(ss) = spritesheet {
         #[cfg(feature = "opengl")]
         {
-            context = context.with_spritesheet(ss);
-            context = context.with_sprite_console(width, height, 0);
+            if let Some(ss) = spritesheet {
+                context = context.with_sprite_sheet(ss);
+                context = context.with_sprite_console(width, height, 0);
+            } else {
+                println!("Using opengl mode without a spritesheet!");
+            }
         }
-    } else {
+    #[cfg(not(feature = "opengl"))]
+    {
         context = context.with_simple_console(width, height, "terminal8x8.png");
     }
+
     let context = context.with_font("terminal8x8.png", 8, 8)
         .with_title(name)
         .with_vsync(false)
