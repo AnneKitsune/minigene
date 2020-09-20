@@ -9,7 +9,8 @@ edition = "2018"
 [features]
 default = ["crossterm"]
 crossterm = ["bracket-lib/crossterm"]
-wasm = ["wasm-bindgen", "bracket-lib/opengl", "web_worker"]
+opengl = ["bracket-lib/opengl"]
+wasm = ["wasm-bindgen", "opengl", "bracket-lib/opengl", "web_worker"]
 
 [dependencies]
 #bracket-lib = { path = "../bracket-lib", default-features = false, features = ["specs", "threaded", "crossterm"] }

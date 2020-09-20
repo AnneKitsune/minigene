@@ -595,7 +595,7 @@ pub fn mini_frame(
 ) {
     world.get_mut::<Stopwatch>().unwrap().start();
 
-    let mut input = INPUT.lock();
+    let input = INPUT.lock();
     for key in input.key_pressed_set().iter() {
         world
             .fetch_mut::<EventChannel<VirtualKeyCode>>()
@@ -621,7 +621,7 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
-    spritesheet: Option<SpriteSheet>
+    spritesheet: Option<SpriteSheet>,
     dispatcher: Box<dyn UnifiedDispatcher + 'static>,
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
@@ -630,8 +630,11 @@ pub fn mini_init(
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
     if let Some(ss) = spritesheet {
-        context = context.with_spritesheet(ss);
-        context = context.with_sprite_console(width, height, 0);
+        #[cfg(feature = "opengl")]
+        {
+            context = context.with_spritesheet(ss);
+            context = context.with_sprite_console(width, height, 0);
+        }
     } else {
         context = context.with_simple_console(width, height, "terminal8x8.png");
     }
