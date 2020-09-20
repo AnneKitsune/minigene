@@ -621,15 +621,21 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
+    spritesheet: Option<SpriteSheet>
     dispatcher: Box<dyn UnifiedDispatcher + 'static>,
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Box<dyn UnifiedDispatcher + 'static>, BTerm) {
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
-    let context = BTermBuilder::new()
-        .with_simple_console(width, height, "terminal8x8.png")
-        .with_font("terminal8x8.png", 8, 8)
+    let mut context = BTermBuilder::new();
+    if let Some(ss) = spritesheet {
+        context = context.with_spritesheet(ss);
+        context = context.with_sprite_console(width, height, 0);
+    } else {
+        context = context.with_simple_console(width, height, "terminal8x8.png");
+    }
+    let context = context.with_font("terminal8x8.png", 8, 8)
         .with_title(name)
         .with_vsync(false)
         .with_advanced_input(true)
