@@ -49,6 +49,9 @@ pub struct Sprite {
     pub bg: RGBA,
 }
 
+#[derive(Component)]
+pub struct SpriteIndex(pub i32);
+
 #[derive(Component, new)]
 pub struct MultiSprite {
     pub tile: MultiTileSprite,
@@ -546,7 +549,7 @@ system!(ApplyEffectorSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Hash+Eq+'
     }
 });
 
-pub fn render_sprites<'a>(
+pub fn render_ascii<'a>(
     ctx: &mut BTerm,
     camera: &Camera,
     positions: ReadStorage<'a, Point>,
@@ -567,6 +570,31 @@ pub fn render_sprites<'a>(
             sprite.bg,
             sprite.glyph,
         );
+    }
+}
+
+pub fn render_sprites<'a>(
+    ctx: &mut BTerm,
+    camera: &Camera,
+    positions: ReadStorage<'a, Point>,
+    sprites: ReadStorage<'a, SpriteIndex>,
+) {
+    for (pos, sprite) in (&positions, &sprites).join() {
+        #[cfg(feature = "opengl")]
+        {
+        ctx.add_sprite(
+            Rect::with_exact(
+                pos.x - camera.position.x,
+                pos.y - camera.position.y,
+                // TODO make this dynamic.
+                8,
+                8,
+            ),
+            0,
+            RGBA::new(),
+            sprite.0,
+        );
+        }
     }
 }
 
