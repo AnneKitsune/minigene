@@ -8,7 +8,7 @@ edition = "2018"
 
 [features]
 default = ["crossterm"]
-crossterm = ["bracket-lib/crossterm"]
+terminal = ["bracket-lib/crossterm", "crossterm"]
 opengl = ["bracket-lib/opengl"]
 wasm = ["wasm-bindgen", "opengl", "bracket-lib/opengl", "web_worker"]
 
@@ -34,5 +34,6 @@ web_worker = { version = "0.3.0", optional = true }
 #game_time = { path = "../game_time" }
 game_time = { git = "https://github.com/jojolepro/game_time" }
 stopwatch = "=0.0.7"
+crossterm = { version = "~0.17.4", optional = true }
 #web_worker = { path = "../web_worker", optional = true }
 

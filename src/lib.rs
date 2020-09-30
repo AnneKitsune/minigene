@@ -12,6 +12,10 @@ pub extern crate shrev;
 #[macro_use]
 extern crate derive_new;
 
+#[cfg(feature = "terminal")]
+#[macro_use]
+extern crate crossterm;
+
 pub use bracket_lib::prelude::*;
 pub use game_features::*;
 pub use game_time::*;
@@ -654,6 +658,17 @@ pub fn mini_init(
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Box<dyn UnifiedDispatcher + 'static>, BTerm) {
+    #[cfg(feature = "terminal")]
+    std::panic::set_hook(Box::new(|panic_info| {
+        use std::io::Write;
+        crossterm::terminal::disable_raw_mode();
+        let location = panic_info.location().unwrap();
+        println!("Panic occured at {}:{}", location.file(), location.line());
+        if let Some(s) = panic_info.payload().downcast_ref::<&str>() {
+            println!("Panic occured: {:?}", s);
+        }
+        //execute!(std::io::stdout(), crossterm::terminal::EnableLineWrap);
+    }));
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
