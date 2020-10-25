@@ -16,7 +16,8 @@ extern crate derive_new;
 #[macro_use]
 extern crate crossterm;
 
-pub use bracket_lib::prelude::*;
+pub use bracket_lib::prelude::{BTerm,Point, VirtualKeyCode, INPUT, BTermBuilder, EMBED, BaseMap, a_star_search,
+MultiTileSprite, NavigationPath, RGBA, SmallVec, SpriteSheet};
 pub use game_features::*;
 pub use game_time::*;
 pub use hibitset::BitSet;
@@ -32,8 +33,20 @@ pub use specs_declaration::*;
 pub use specs_derive::*;
 
 mod dispatcher;
+mod components;
+mod macros;
+mod render;
+mod resources;
+mod systems;
+mod utils;
 
 pub use crate::dispatcher::*;
+pub use crate::components::*;
+pub use crate::macros::*;
+pub use crate::render::*;
+pub use crate::resources::*;
+pub use crate::systems::*;
+pub use crate::utils::*;
 
 use std::collections::HashMap;
 use std::sync::Arc;

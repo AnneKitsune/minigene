@@ -1,3 +1,5 @@
+use crate::*;
+
 pub fn render_ascii<'a>(
     ctx: &mut BTerm,
     camera: &Camera,

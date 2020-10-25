@@ -1,3 +1,5 @@
+pub use crate::*;
+
 system!(AiMovementSystem, |positions: WriteStorage<'a, Point>,
                            paths: WriteStorage<'a, AiPath>,
                            global_map: ReadExpect<

@@ -1,3 +1,5 @@
+pub use crate::*;
+
 event_reader_res!(InputDriverRes, VirtualKeyCode);
 
 system!(

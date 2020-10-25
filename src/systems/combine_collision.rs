@@ -1,3 +1,5 @@
+pub use crate::*;
+
 system!(CombineCollisionSystem, |positions: ReadStorage<
     'a,
     Point,

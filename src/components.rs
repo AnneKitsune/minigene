@@ -1,3 +1,5 @@
+use crate::*;
+
 #[derive(new)]
 pub struct Comp<T>(pub T);
 impl<T: Send + Sync + 'static> Component for Comp<T> {
@@ -105,7 +107,7 @@ impl BaseMap for CollisionMap {
     }
 
     fn get_available_exits(&self, idx: usize) -> SmallVec<[(usize, f32); 10]> {
-        let mut o = smallvec![];
+        let mut o = SmallVec::new();
         //println!("idx: {}", idx);
         // right
         if (idx % self.width as usize) < (self.width as usize - 1) {

@@ -1,3 +1,5 @@
+pub use crate::*;
+
 pub struct ExecSkillRes<S: Send+Sync+'static>(pub ReaderId<SkillTriggerEvent<S>>);
 
 system!(ExecSkillSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Clone+Hash+Eq+'static, S: Send+Sync+Hash+Eq+'static, I: Send+Sync+'static>, |

@@ -1,3 +1,5 @@
+use crate::*;
+
 #[derive(new)]
 pub struct CollisionResource {
     pub map: CollisionMap,

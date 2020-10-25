@@ -1,3 +1,5 @@
+pub use crate::*;
+
 system!(GotoEntitySimpleSystem, |entities: Entities<'a>,
                                  positions: WriteStorage<
     'a,

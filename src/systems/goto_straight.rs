@@ -1,3 +1,5 @@
+pub use crate::*;
+
 system!(GotoStraightSystem, |positions: WriteStorage<'a, Point>,
                              gotos: ReadStorage<
     'a,

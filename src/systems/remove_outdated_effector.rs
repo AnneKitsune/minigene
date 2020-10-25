@@ -1,3 +1,5 @@
+pub use crate::*;
+
 // Run after ApplyEffectorsSystem
 system!(RemoveOutdatedEffectorSystem<E: Send+Sync+'static>, |
         effectors: WriteStorage<'a, Comp<EffectorSet<E>>>,
