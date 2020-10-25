@@ -15,5 +15,5 @@ pub use multi_thread::*;
 use specs::prelude::World;
 
 pub trait UnifiedDispatcher {
-    fn run_now(&mut self, ecs: &mut World);
+    fn run_now(&mut self, ecs: *mut World);
 }

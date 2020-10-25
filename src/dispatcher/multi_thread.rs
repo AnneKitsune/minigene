@@ -35,8 +35,8 @@ pub struct MultiThreadedDispatcher {
     pub dispatcher: specs::Dispatcher<'static, 'static>,
 }
 
-impl<'a> UnifiedDispatcher for MultiThreadedDispatcher {
-    fn run_now(&mut self, ecs: &mut World) {
-        self.dispatcher.dispatch(ecs);
+impl UnifiedDispatcher for MultiThreadedDispatcher {
+    fn run_now(&mut self, ecs: *mut World) {
+        unsafe{self.dispatcher.dispatch(&*ecs);}
     }
 }

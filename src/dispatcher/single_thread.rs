@@ -28,16 +28,16 @@ macro_rules! dispatcher {
     };
 }
 
-pub struct SingleThreadedDispatcher<'a> {
-    pub systems: Vec<Box<dyn RunNow<'a>>>,
+pub struct SingleThreadedDispatcher {
+    pub systems: Vec<Box<dyn RunNow<'static>>>,
 }
 
-impl<'a> UnifiedDispatcher for SingleThreadedDispatcher<'a> {
-    fn run_now(&mut self, ecs: &mut World) {
-        //unsafe {
+impl UnifiedDispatcher for SingleThreadedDispatcher {
+    fn run_now(&mut self, ecs: *mut World) {
+        unsafe {
             for sys in self.systems.iter_mut() {
-                sys.run_now(ecs);
+                sys.run_now(&*ecs);
             }
-        //}
+        }
     }
 }
