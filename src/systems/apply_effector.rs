@@ -19,7 +19,7 @@ system!(ApplyEffectorSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Hash+Eq+'
                         // Apply Effector
                         match ty {
                             EffectorType::Additive(v) => s.value_with_effectors += v,
-                            EffectorType::AdditiveMultiplier(v) => unimplemented!(),
+                            EffectorType::AdditiveMultiplier(_v) => unimplemented!(),
                             EffectorType::MultiplicativeMultiplier(v) => s.value_with_effectors *= v,
                         }
                     }

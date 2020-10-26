@@ -17,7 +17,7 @@ system!(GotoEntitySimpleSystem, |entities: Entities<'a>,
         if let Some(target) = positions.get(t).map(|p| p.clone()) {
             let mut p = positions.get_mut(e).unwrap();
             // TODO improve when we have a Time struct
-            for i in 0..(speed as usize) {
+            for _i in 0..(speed as usize) {
                 let delta_x = target.x - p.x;
                 let delta_y = target.y - p.y;
                 if delta_x.abs() >= delta_y.abs() {

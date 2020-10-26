@@ -1,19 +1,12 @@
 pub extern crate bracket_lib;
 #[macro_use]
 extern crate pushdown_automaton_macro;
-#[macro_use]
-extern crate specs_declaration;
 pub extern crate game_features;
 pub extern crate specs;
-#[macro_use]
-extern crate specs_derive;
 pub extern crate hibitset;
 pub extern crate shrev;
-#[macro_use]
-extern crate derive_new;
 
 #[cfg(feature = "terminal")]
-#[macro_use]
 extern crate crossterm;
 
 pub use bracket_lib::prelude::{BTerm,Point, VirtualKeyCode, INPUT, BTermBuilder, EMBED, BaseMap, a_star_search,
@@ -49,7 +42,7 @@ pub use crate::systems::*;
 pub use crate::utils::*;
 
 use std::collections::HashMap;
-use std::sync::Arc;
+
 use std::hash::Hash;
 use std::fmt::Debug;
 
@@ -111,15 +104,15 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
-    spritesheet: Option<SpriteSheet>,
+    _spritesheet: Option<SpriteSheet>,
     dispatcher: Box<dyn UnifiedDispatcher + 'static>,
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Box<dyn UnifiedDispatcher + 'static>, BTerm) {
     #[cfg(feature = "terminal")]
     std::panic::set_hook(Box::new(|panic_info| {
-        use std::io::Write;
-        crossterm::terminal::disable_raw_mode();
+        
+        crossterm::terminal::disable_raw_mode().unwrap();
         let location = panic_info.location().unwrap();
         println!("Panic occured at {}:{}", location.file(), location.line());
         if let Some(s) = panic_info.payload().downcast_ref::<&str>() {

@@ -7,7 +7,7 @@ system!(GotoStraightSystem, |positions: WriteStorage<'a, Point>,
 >| {
     for (mut p, goto) in (&mut positions, &gotos).join() {
         // TODO improve when we have a Time struct
-        for i in 0..(goto.speed as usize) {
+        for _i in 0..(goto.speed as usize) {
             let delta_x = goto.target.x - p.x;
             let delta_y = goto.target.y - p.y;
             if delta_x.abs() >= delta_y.abs() {

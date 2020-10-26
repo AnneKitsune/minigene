@@ -25,12 +25,12 @@ pub fn render_ascii<'a>(
 }
 
 pub fn render_sprites<'a>(
-    ctx: &mut BTerm,
-    camera: &Camera,
+    _ctx: &mut BTerm,
+    _camera: &Camera,
     positions: ReadStorage<'a, Point>,
     sprites: ReadStorage<'a, SpriteIndex>,
 ) {
-    for (pos, sprite) in (&positions, &sprites).join() {
+    for (_pos, _sprite) in (&positions, &sprites).join() {
         #[cfg(feature = "opengl")]
         {
         ctx.add_sprite(
