@@ -2,15 +2,17 @@ pub extern crate bracket_lib;
 #[macro_use]
 extern crate pushdown_automaton_macro;
 pub extern crate game_features;
-pub extern crate specs;
 pub extern crate hibitset;
 pub extern crate shrev;
+pub extern crate specs;
 
 #[cfg(feature = "terminal")]
 extern crate crossterm;
 
-pub use bracket_lib::prelude::{BTerm,Point, VirtualKeyCode, INPUT, BTermBuilder, EMBED, BaseMap, a_star_search,
-MultiTileSprite, NavigationPath, RGBA, SmallVec, SpriteSheet};
+pub use bracket_lib::prelude::{
+    a_star_search, BTerm, BTermBuilder, BaseMap, MultiTileSprite, NavigationPath, Point, SmallVec,
+    SpriteSheet, VirtualKeyCode, EMBED, INPUT, RGBA,
+};
 pub use game_features::*;
 pub use game_time::*;
 pub use hibitset::BitSet;
@@ -25,16 +27,16 @@ pub use derive_new::*;
 pub use specs_declaration::*;
 pub use specs_derive::*;
 
-mod dispatcher;
 mod components;
+mod dispatcher;
 mod macros;
 mod render;
 mod resources;
 mod systems;
 mod utils;
 
-pub use self::dispatcher::*;
 pub use self::components::*;
+pub use self::dispatcher::*;
 pub use self::macros::*;
 pub use self::render::*;
 pub use self::resources::*;
@@ -43,8 +45,8 @@ pub use self::utils::*;
 
 use std::collections::HashMap;
 
-use std::hash::Hash;
 use std::fmt::Debug;
+use std::hash::Hash;
 
 /// A dispatcher that can work for both single threaded and multi threaded situations.
 pub type MiniDispatcher = Box<dyn UnifiedDispatcher + 'static>;
@@ -115,7 +117,6 @@ pub fn mini_init(
 ) -> (World, Box<dyn UnifiedDispatcher + 'static>, BTerm) {
     #[cfg(feature = "terminal")]
     std::panic::set_hook(Box::new(|panic_info| {
-        
         crossterm::terminal::disable_raw_mode().unwrap();
         let location = panic_info.location().unwrap();
         println!("Panic occured at {}:{}", location.file(), location.line());
@@ -127,21 +128,22 @@ pub fn mini_init(
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
-        #[cfg(feature = "opengl")]
-        {
-            if let Some(ss) = spritesheet {
-                context = context.with_sprite_sheet(ss);
-                context = context.with_sprite_console(width, height, 0);
-            } else {
-                println!("Using opengl mode without a spritesheet!");
-            }
+    #[cfg(feature = "opengl")]
+    {
+        if let Some(ss) = spritesheet {
+            context = context.with_sprite_sheet(ss);
+            context = context.with_sprite_console(width, height, 0);
+        } else {
+            println!("Using opengl mode without a spritesheet!");
         }
+    }
     #[cfg(not(feature = "opengl"))]
     {
         context = context.with_simple_console(width, height, "terminal8x8.png");
     }
 
-    let context = context.with_font("terminal8x8.png", 8, 8)
+    let context = context
+        .with_font("terminal8x8.png", 8, 8)
         .with_title(name)
         .with_vsync(false)
         .with_advanced_input(true)

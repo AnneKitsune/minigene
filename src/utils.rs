@@ -39,22 +39,21 @@ mod tests {
     use crate::*;
     #[test]
     fn distance() {
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(0,0)), 0.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(5,0)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(-5,0)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(0,5)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(0,-5)), 5.0);
-        assert_eq!(dist(&Point::new(0, -5), &Point::new(0,0)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(3,4)), 5.0);
+        assert_eq!(dist(&Point::new(0, 0), &Point::new(0, 0)), 0.0);
+        assert_eq!(dist(&Point::new(0, 0), &Point::new(5, 0)), 5.0);
+        assert_eq!(dist(&Point::new(0, 0), &Point::new(-5, 0)), 5.0);
+        assert_eq!(dist(&Point::new(0, 0), &Point::new(0, 5)), 5.0);
+        assert_eq!(dist(&Point::new(0, 0), &Point::new(0, -5)), 5.0);
+        assert_eq!(dist(&Point::new(0, -5), &Point::new(0, 0)), 5.0);
+        assert_eq!(dist(&Point::new(0, 0), &Point::new(3, 4)), 5.0);
     }
     #[test]
     fn check_inside_rect() {
-        assert!(position_inside_rect(0,0,0,0,1,1));
-        assert!(!position_inside_rect(0,0,1,1,1,1));
-        assert!(position_inside_rect(5,3,0,0,10,10));
-        assert!(position_inside_rect(-10,-10,-15,-15,10,10));
-        assert!(position_inside_rect(-1,-1,-2,-2,2,2));
-        assert!(!position_inside_rect(-1,-1,-2,-2,1,1));
+        assert!(position_inside_rect(0, 0, 0, 0, 1, 1));
+        assert!(!position_inside_rect(0, 0, 1, 1, 1, 1));
+        assert!(position_inside_rect(5, 3, 0, 0, 10, 10));
+        assert!(position_inside_rect(-10, -10, -15, -15, 10, 10));
+        assert!(position_inside_rect(-1, -1, -2, -2, 2, 2));
+        assert!(!position_inside_rect(-1, -1, -2, -2, 1, 1));
     }
 }
-

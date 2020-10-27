@@ -185,14 +185,14 @@ mod tests {
     #[test]
     fn collision_map_set_unset_clear() {
         let mut map = CollisionMap::new(5, 5);
-        assert!(!map.is_set(3,3));
-        map.set(3,3);
-        assert!(map.is_set(3,3));
-        map.unset(3,3);
-        assert!(!map.is_set(3,3));
-        map.set(3,3);
+        assert!(!map.is_set(3, 3));
+        map.set(3, 3);
+        assert!(map.is_set(3, 3));
+        map.unset(3, 3);
+        assert!(!map.is_set(3, 3));
+        map.set(3, 3);
         map.clear();
-        assert!(!map.is_set(3,3));
+        assert!(!map.is_set(3, 3));
     }
     #[test]
     fn small_map() {
@@ -204,7 +204,7 @@ mod tests {
     #[test]
     fn huge_map() {
         let mut map = CollisionMap::new(1000, 1000);
-        map.set(999,999);
+        map.set(999, 999);
     }
     #[test]
     #[should_panic]
@@ -223,4 +223,3 @@ mod tests {
         assert!(map.is_set(9999, 1000));
     }
 }
-

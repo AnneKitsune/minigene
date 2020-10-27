@@ -36,4 +36,3 @@ impl Default for GameSpeed {
         GameSpeed(1.0)
     }
 }
-
