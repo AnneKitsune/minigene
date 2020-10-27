@@ -102,10 +102,14 @@ impl CollisionMap {
     }
 
     pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
-        y * self.width + x
+        let idx = y * self.width + x;
+        assert!(idx <= self.width * self.height - 1);
+        idx
     }
 
     pub(crate) fn position_of(&self, idx: u32) -> (u32, u32) {
+        assert!(self.width > 0);
+        assert!(self.height > 0);
         (idx % self.width, idx / self.width)
     }
 }
@@ -173,5 +177,50 @@ pub enum Direction {
     West,
     Up,
     Down,
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    #[test]
+    fn collision_map_set_unset_clear() {
+        let mut map = CollisionMap::new(5, 5);
+        assert!(!map.is_set(3,3));
+        map.set(3,3);
+        assert!(map.is_set(3,3));
+        map.unset(3,3);
+        assert!(!map.is_set(3,3));
+        map.set(3,3);
+        map.clear();
+        assert!(!map.is_set(3,3));
+    }
+    #[test]
+    fn small_map() {
+        let _ = CollisionMap::new(0, 0);
+        let mut map = CollisionMap::new(1, 1);
+        map.set(0, 0);
+        assert!(map.is_set(0, 0));
+    }
+    #[test]
+    fn huge_map() {
+        let mut map = CollisionMap::new(1000, 1000);
+        map.set(999,999);
+    }
+    #[test]
+    #[should_panic]
+    fn small_map_out_of_bounds() {
+        let mut map = CollisionMap::new(0, 0);
+        map.set(0, 0);
+        assert!(map.is_set(0, 0));
+    }
+    #[test]
+    #[should_panic]
+    fn big_map_out_of_bounds() {
+        let mut map = CollisionMap::new(1000, 1000);
+        map.set(1000, 1000);
+        assert!(map.is_set(1000, 1000));
+        map.set(9999, 1000);
+        assert!(map.is_set(9999, 1000));
+    }
 }
 
