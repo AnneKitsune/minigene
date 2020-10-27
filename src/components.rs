@@ -1,11 +1,13 @@
 use crate::*;
 
+/// Wrapper around any type to make it a `Component`.
 #[derive(new)]
 pub struct Comp<T>(pub T);
 impl<T: Send + Sync + 'static> Component for Comp<T> {
     type Storage = DenseVecStorage<Self>;
 }
 
+/// A single colored letter sprite.
 #[derive(Component)]
 pub struct Sprite {
     pub glyph: u16,
@@ -13,42 +15,43 @@ pub struct Sprite {
     pub bg: RGBA,
 }
 
+/// The index of a 2d sprite. Created from `SpriteSheet`'s index.
 #[derive(Component)]
 pub struct SpriteIndex(pub usize);
 
+/// A text-based sprite that is multiple tiles wide/high.
 #[derive(Component, new)]
 pub struct MultiSprite {
     pub tile: MultiTileSprite,
 }
 
+/// The path calculated by the Ai that it will follow.
 #[derive(Component, new)]
 pub struct AiPath {
     pub path: NavigationPath,
 }
 
+/// Indicates that the ai should calculate an AiPath from the current position
+/// towards this destination.
 #[derive(Component, new)]
 pub struct AiDestination {
     pub target: Point,
 }
 
+/// Indicates that the ai should calculate an AiPath from the current position
+/// towards this destination.
 #[derive(Component, new)]
 pub struct GotoStraight {
     pub target: Point,
     pub speed: f32,
 }
 
+/// Indicates that the ai should calculate an AiPath from the current position
+/// towards this entity's position.
 #[derive(Component, new)]
 pub struct GotoEntity {
     pub entity: Entity,
     pub speed: f32,
-}
-
-pub struct GameSpeed(f32);
-
-impl Default for GameSpeed {
-    fn default() -> Self {
-        GameSpeed(1.0)
-    }
 }
 
 /// Collision of a single tile entity
@@ -64,6 +67,7 @@ pub struct CollisionMap {
 }
 
 impl CollisionMap {
+    /// Create a new collision map.
     pub fn new(width: u32, height: u32) -> Self {
         Self {
             bitset: BitSet::with_capacity(width * height),
@@ -72,31 +76,36 @@ impl CollisionMap {
         }
     }
 
+    /// Enable collision at the given position.
     pub fn set(&mut self, x: u32, y: u32) {
         self.bitset.add(self.index_of(x, y));
     }
 
+    /// Disable collision at the given position.
     pub fn unset(&mut self, x: u32, y: u32) {
         self.bitset.remove(self.index_of(x, y));
     }
 
+    /// Checks if collision is enabled at the given position.
     pub fn is_set(&self, x: u32, y: u32) -> bool {
         self.bitset.contains(self.index_of(x, y))
     }
 
+    /// Gives the size of the collision map.
     pub fn size(&self) -> (u32, u32) {
         (self.width, self.height)
     }
 
+    /// Erase the collision map.
     pub fn clear(&mut self) {
         self.bitset.clear();
     }
 
-    pub fn index_of(&self, x: u32, y: u32) -> u32 {
+    pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
         y * self.width + x
     }
 
-    pub fn position_of(&self, idx: u32) -> (u32, u32) {
+    pub(crate) fn position_of(&self, idx: u32) -> (u32, u32) {
         (idx % self.width, idx / self.width)
     }
 }
@@ -148,12 +157,14 @@ impl BaseMap for CollisionMap {
     }
 }
 
+/// Used to change the visible space of the world on screen.
 #[derive(new)]
 pub struct Camera {
     pub position: Point,
     pub size: Point,
 }
 
+/// A direction towards one of the 3d axis.
 #[derive(Debug, Clone, Copy, Component)]
 pub enum Direction {
     North,

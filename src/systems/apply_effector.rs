@@ -1,4 +1,4 @@
-pub use crate::*;
+use crate::*;
 
 system!(ApplyEffectorSystem<K: Send+Sync+Hash+Eq+'static, E: Send+Sync+Hash+Eq+'static>, |
         defs: ReadExpect<'a, StatDefinitions<K>>,

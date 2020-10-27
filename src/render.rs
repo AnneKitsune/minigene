@@ -1,5 +1,6 @@
 use crate::*;
 
+/// Renders ascii characters.
 pub fn render_ascii<'a>(
     ctx: &mut BTerm,
     camera: &Camera,
@@ -24,6 +25,8 @@ pub fn render_ascii<'a>(
     }
 }
 
+/// Renders 2d tile sprites characters.
+/// Only available using the `opengl` feature.
 pub fn render_sprites<'a>(
     _ctx: &mut BTerm,
     _camera: &Camera,

@@ -1,4 +1,4 @@
-pub use crate::*;
+use crate::*;
 
 system!(AiMovementSystem, |positions: WriteStorage<'a, Point>,
                            paths: WriteStorage<'a, AiPath>,

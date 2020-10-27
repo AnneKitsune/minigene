@@ -1,4 +1,4 @@
-pub use crate::*;
+use crate::*;
 
 system!(GotoEntitySimpleSystem, |entities: Entities<'a>,
                                  positions: WriteStorage<

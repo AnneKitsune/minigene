@@ -1,4 +1,4 @@
-pub use crate::*;
+use crate::*;
 
 #[derive(Debug, Clone, new)]
 pub struct SkillTriggerEvent<K>(pub Entity, pub K);

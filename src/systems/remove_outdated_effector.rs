@@ -1,4 +1,4 @@
-pub use crate::*;
+use crate::*;
 
 // Run after ApplyEffectorsSystem
 system!(RemoveOutdatedEffectorSystem<E: Send+Sync+'static>, |

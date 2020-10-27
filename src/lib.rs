@@ -33,23 +33,25 @@ mod resources;
 mod systems;
 mod utils;
 
-pub use crate::dispatcher::*;
-pub use crate::components::*;
-pub use crate::macros::*;
-pub use crate::render::*;
-pub use crate::resources::*;
-pub use crate::systems::*;
-pub use crate::utils::*;
+pub use self::dispatcher::*;
+pub use self::components::*;
+pub use self::macros::*;
+pub use self::render::*;
+pub use self::resources::*;
+pub use self::systems::*;
+pub use self::utils::*;
 
 use std::collections::HashMap;
 
 use std::hash::Hash;
 use std::fmt::Debug;
 
+/// A dispatcher that can work for both single threaded and multi threaded situations.
 pub type MiniDispatcher = Box<dyn UnifiedDispatcher + 'static>;
 
 state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>, ctx: &mut BTerm);
 
+/// Runs the engine until the state machine quits.
 pub fn mini_loop<I: State + 'static>(
     world: &mut World,
     dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
@@ -63,6 +65,7 @@ pub fn mini_loop<I: State + 'static>(
     }
 }
 
+/// Runs a single game frame and updates the state machine.
 pub fn mini_frame(
     world: &mut World,
     dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
@@ -100,6 +103,7 @@ pub fn mini_frame(
     }
 }
 
+/// Initializes the engine structures.
 pub fn mini_init(
     width: u32,
     height: u32,

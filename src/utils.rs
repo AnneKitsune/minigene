@@ -1,9 +1,11 @@
 use crate::*;
 
+/// Get the euclidian distance between two points.
 pub fn dist(p1: &Point, p2: &Point) -> f32 {
     ((p2.x as f32 - p1.x as f32).powf(2.0) + (p2.y as f32 - p1.y as f32).powf(2.0)).sqrt()
 }
 
+/// Checks if the given position is inside of the given rectangle.
 pub fn position_inside_rect(
     pos_x: i32,
     pos_y: i32,
@@ -18,6 +20,8 @@ pub fn position_inside_rect(
         && pos_y < rect_y + size_y as i32
 }
 
+/// Moves the 2d point by 1 in the given direction.
+/// Only works for 2d directions (North, South, East, West)
 pub fn move_position(old_position: &Point, dir: Direction) -> Point {
     match dir {
         Direction::North => Point::new(old_position.x, old_position.y - 1),
