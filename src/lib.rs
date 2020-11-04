@@ -159,18 +159,7 @@ pub fn mini_init(
     world.insert(Stopwatch::new());
     world.insert(Time::default());
 
-    #[cfg(not(feature = "wasm"))]
-    {
-        std::panic::set_hook(Box::new(|i| {
-            if let Some(s) = i.payload().downcast_ref::<&str>() {
-                eprintln!("panic occurred: {:?}", s);
-            } else {
-                eprintln!("panic occurred");
-            }
-            eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
-            std::fs::write("/tmp/err", "WE CRASHED").unwrap();
-        }));
-    }
+    init_thread_pool().unwrap();
 
     (world, dispatcher, context)
 }

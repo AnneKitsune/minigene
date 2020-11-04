@@ -1,3 +1,4 @@
+use specs::rayon::{ThreadPoolBuildError, ThreadPoolBuilder};
 use crate::*;
 
 /// Get the euclidian distance between two points.
@@ -32,6 +33,27 @@ pub fn move_position(old_position: &Point, dir: Direction) -> Point {
         Direction::West => Point::new(old_position.x - 1, old_position.y),
         _ => unimplemented!(),
     }
+}
+
+/// Initializes the default rayon threadpool for compability with the
+/// thread profiler.
+pub fn init_thread_pool() -> Result<(), ThreadPoolBuildError> {
+    ThreadPoolBuilder::new()
+        .start_handler(|_idx| {
+            #[cfg(not(feature = "wasm"))]
+            {
+                std::panic::set_hook(Box::new(|i| {
+                    if let Some(s) = i.payload().downcast_ref::<&str>() {
+                        eprintln!("panic occurred: {:?}", s);
+                    } else {
+                        eprintln!("panic occurred");
+                    }
+                    eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
+                    let _ = std::fs::write("/tmp/err", "WE CRASHED");
+                }));
+            }
+        })
+        .build_global()
 }
 
 #[cfg(test)]
