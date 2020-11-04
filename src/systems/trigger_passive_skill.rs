@@ -10,7 +10,7 @@ system!(
         S: Send + Sync + Clone + Hash + Eq + 'static,
         I: Send + Sync + 'static + Clone + PartialEq + Debug,
         IT: Send + Sync + 'static + SlotType,
-        CD: Send + Sync + 'static + Default + Debug + Clone,
+        CD: Send + Sync + 'static + Default + Debug + Clone
     >,
     |skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I>>,
      skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,

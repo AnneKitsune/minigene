@@ -11,7 +11,7 @@ extern crate crossterm;
 
 pub use bracket_lib::prelude::{
     a_star_search, BTerm, BTermBuilder, BaseMap, MultiTileSprite, NavigationPath, Point, SmallVec,
-    SpriteSheet, VirtualKeyCode, EMBED, INPUT, RGBA,
+    SpriteSheet, VirtualKeyCode, EMBED, INPUT, RGBA, main_loop, GREEN, RED, to_cp437, YELLOW, BLUE, Rect, BError, GameState, WHITE, add_wasm_support,
 };
 pub use game_features::*;
 pub use game_time::*;
@@ -159,18 +159,18 @@ pub fn mini_init(
     world.insert(Stopwatch::new());
     world.insert(Time::default());
 
-    //#[cfg(not(feature = "wasm"))]
-    //{
-    //    std::panic::set_hook(Box::new(|i| {
-    //        if let Some(s) = i.payload().downcast_ref::<&str>() {
-    //            eprintln!("panic occurred: {:?}", s);
-    //        } else {
-    //            eprintln!("panic occurred");
-    //        }
-    //        eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
-    //        std::fs::write("/tmp/err", "WE CRASHED").unwrap();
-    //    }));
-    //}
+    #[cfg(not(feature = "wasm"))]
+    {
+        std::panic::set_hook(Box::new(|i| {
+            if let Some(s) = i.payload().downcast_ref::<&str>() {
+                eprintln!("panic occurred: {:?}", s);
+            } else {
+                eprintln!("panic occurred");
+            }
+            eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
+            std::fs::write("/tmp/err", "WE CRASHED").unwrap();
+        }));
+    }
 
     (world, dispatcher, context)
 }

@@ -7,9 +7,8 @@ system!(
         K: Send + Sync + Hash + Eq + 'static,
         E: Send + Sync + Clone + Hash + Eq + 'static,
         S: Send + Sync + Hash + Eq + 'static,
-        I: Send + Sync + 'static,
-    >,
-    |skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I>>,
+        I: Send + Sync + 'static
+    >, |skill_defs: ReadExpect<'a, SkillDefinitions<K, E, S, I>>,
      skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>,
      stats: ReadStorage<'a, Comp<StatSet<K>>>,
      effector_defs: ReadExpect<'a, EffectorDefinitions<K, E>>,
