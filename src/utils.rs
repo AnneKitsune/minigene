@@ -43,10 +43,11 @@ pub fn init_thread_pool() -> Result<(), ThreadPoolBuildError> {
             #[cfg(not(feature = "wasm"))]
             {
                 std::panic::set_hook(Box::new(|i| {
+                    crossterm::terminal::disable_raw_mode().unwrap();
+                    let location = i.location().unwrap();
+                    println!("Panic occured at {}:{}", location.file(), location.line());
                     if let Some(s) = i.payload().downcast_ref::<&str>() {
-                        eprintln!("panic occurred: {:?}", s);
-                    } else {
-                        eprintln!("panic occurred");
+                        println!("Panic occured: {:?}", s);
                     }
                     eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
                     let _ = std::fs::write("/tmp/err", "WE CRASHED");
