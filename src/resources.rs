@@ -29,7 +29,7 @@ impl CollisionResource {
 }
 
 /// Sets the game speed multiplier.
-pub struct GameSpeed(f32);
+pub struct GameSpeed(pub f32);
 
 impl Default for GameSpeed {
     fn default() -> Self {
