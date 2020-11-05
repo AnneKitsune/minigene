@@ -28,12 +28,12 @@ pub fn render_ascii<'a>(
 /// Renders 2d tile sprites characters.
 /// Only available using the `opengl` feature.
 pub fn render_sprites<'a>(
-    _ctx: &mut BTerm,
-    _camera: &Camera,
+    ctx: &mut BTerm,
+    camera: &Camera,
     positions: ReadStorage<'a, Point>,
     sprites: ReadStorage<'a, SpriteIndex>,
 ) {
-    for (_pos, _sprite) in (&positions, &sprites).join() {
+    for (pos, sprite) in (&positions, &sprites).join() {
         #[cfg(feature = "opengl")]
         {
             ctx.add_sprite(

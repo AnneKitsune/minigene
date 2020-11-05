@@ -110,7 +110,7 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
-    _spritesheet: Option<SpriteSheet>,
+    spritesheet: Option<SpriteSheet>,
     dispatcher: Box<dyn UnifiedDispatcher + 'static>,
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
