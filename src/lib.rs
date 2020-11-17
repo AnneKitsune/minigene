@@ -14,7 +14,7 @@ pub use bracket_lib::prelude::{
     SpriteSheet, VirtualKeyCode, EMBED, INPUT, RGBA, main_loop, GREEN, RED, to_cp437, YELLOW, BLUE, Rect, BError, GameState, WHITE, add_wasm_support,
 };
 pub use game_features::*;
-pub use game_time::*;
+pub use game_clock::*;
 pub use hibitset::BitSet;
 pub use shrev::*;
 pub use specs::prelude::*;
@@ -95,8 +95,7 @@ pub fn mini_frame(
     #[cfg(feature = "wasm")]
     let elapsed = std::time::Duration::from_millis(16);
     let time = world.get_mut::<Time>().unwrap();
-    time.increment_frame_number();
-    time.set_delta_time(elapsed);
+    time.advance_frame(elapsed);
     #[cfg(not(feature = "wasm"))]
     {
         let stopwatch = world.get_mut::<Stopwatch>().unwrap();

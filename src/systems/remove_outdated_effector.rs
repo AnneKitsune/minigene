@@ -7,7 +7,7 @@ system!(
         for eff in (&mut effectors,).join() {
             (eff.0).0.effectors.retain(|e| {
                 if let Some(mut d) = e.disable_in {
-                    d -= time.delta_seconds() as f64;
+                    d -= time.delta_time().as_secs_f64();
                     d > 0.0
                 } else {
                     true
