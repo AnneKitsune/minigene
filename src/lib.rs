@@ -159,6 +159,7 @@ pub fn mini_init(
     world.insert(Stopwatch::new());
     world.insert(Time::default());
 
+    #[cfg(not(target_arch = "wasm32"))]
     init_thread_pool().unwrap();
 
     (world, dispatcher, context)
