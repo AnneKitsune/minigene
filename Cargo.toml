@@ -18,7 +18,7 @@ wasm = ["wasm-bindgen", "bracket-lib/opengl", "web_worker"]
 #bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded", "opengl"] }
 
 #bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded"] }
-bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["specs", "threaded"], rev = "c8538fd6461333a8f971afbdd08846c61b79e79a" }
+bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["specs", "threaded"], rev = "c51b8becf85bf7fb14dbcd7891c10ad33b957afd" }
 
 specs_declaration = "0.3.0"
 #game_features = { path = "../game_features" }
