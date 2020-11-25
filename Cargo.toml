@@ -18,7 +18,7 @@ wasm = ["wasm-bindgen", "bracket-lib/opengl", "web_worker"]
 #bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded", "opengl"] }
 
 #bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded"] }
-bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["specs", "threaded"] }
+bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["specs", "threaded"], rev = "c8538fd6461333a8f971afbdd08846c61b79e79a" }
 
 specs_declaration = "0.3.0"
 #game_features = { path = "../game_features" }
@@ -33,7 +33,7 @@ pushdown-automaton-macro = "0.1.0"
 wasm-bindgen = { version = "0.2.68", optional = true }
 web_worker = { version = "0.3.0", optional = true }
 game_clock = { version = "1.0.0" }
-stopwatch = { git = "https://github.com/jojolepro/rust-stopwatch"}
+stopwatch = { git = "https://github.com/jojolepro/rust-stopwatch", rev = "5ed6926a5aa5b21d58d2e67d179da1ec4cbc8a2e" }
 crossterm = { version = "0.18.0", optional = true }
 #web_worker = { path = "../web_worker", optional = true }
 
