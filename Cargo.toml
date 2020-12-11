@@ -22,8 +22,8 @@ bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "wini
 
 specs_declaration = "0.3.0"
 #game_features = { path = "../game_features" }
-game_features = { version = "0.3.0" }
-#game_features = { git = "https://github.com/jojolepro/game_features" }
+#game_features = { version = "0.3.0" }
+game_features = { git = "https://github.com/jojolepro/game_features" }
 specs = "0.16.1"
 specs-derive = "0.4.1"
 shrev = "1.1.1"
