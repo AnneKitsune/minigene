@@ -127,6 +127,10 @@ pub fn mini_init(
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
+    //#[cfg(not(feature = "opengl"))]
+    {
+        context = context.with_simple_console(width, height, "terminal8x8.png");
+    }
     #[cfg(feature = "opengl")]
     {
         if let Some(ss) = spritesheet {
@@ -135,10 +139,6 @@ pub fn mini_init(
         } else {
             println!("Using opengl mode without a spritesheet!");
         }
-    }
-    #[cfg(not(feature = "opengl"))]
-    {
-        context = context.with_simple_console(width, height, "terminal8x8.png");
     }
 
     let context = context
