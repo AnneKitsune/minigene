@@ -28,6 +28,8 @@ pub use derive_new::*;
 pub use specs_declaration::*;
 pub use specs_derive::*;
 
+pub use spin_sleep::LoopHelper;
+
 mod components;
 mod dispatcher;
 mod macros;
@@ -46,6 +48,7 @@ pub use self::utils::*;
 
 use std::collections::HashMap;
 
+
 use std::fmt::Debug;
 use std::hash::Hash;
 
@@ -60,11 +63,17 @@ pub fn mini_loop<I: State + 'static>(
     dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
     ctx: &mut BTerm,
     init_state: I,
+    max_fps: f32,
 ) {
+    let mut loop_helper = LoopHelper::builder().build_with_target_rate(max_fps);
     let mut state_machine = StateMachine::new(init_state);
     state_machine.start(world, dispatcher, ctx);
     while state_machine.is_running() {
+        let delta = loop_helper.loop_start();
+        let time = world.get_mut::<Time>().unwrap();
+        time.advance_frame(delta);
         mini_frame(world, dispatcher, ctx, &mut state_machine);
+        loop_helper.loop_sleep();
     }
 }
 
@@ -75,8 +84,8 @@ pub fn mini_frame(
     ctx: &mut BTerm,
     state_machine: &mut StateMachine,
 ) {
-    #[cfg(not(feature = "wasm"))]
-    world.get_mut::<Stopwatch>().unwrap().start();
+    //#[cfg(not(feature = "wasm"))]
+    //world.get_mut::<Stopwatch>().unwrap().start();
 
     let input = INPUT.lock();
     for key in input.key_pressed_set().iter() {
@@ -88,21 +97,20 @@ pub fn mini_frame(
     state_machine.update(world, dispatcher, ctx);
     world.maintain();
 
-    #[cfg(not(target_arch = "wasm32"))]
-    std::thread::sleep(std::time::Duration::from_millis(8));
+    //#[cfg(not(target_arch = "wasm32"))]
+    //std::thread::sleep(std::time::Duration::from_millis(8));
 
-    #[cfg(not(feature = "wasm"))]
-    let elapsed = world.fetch::<Stopwatch>().elapsed();
-    #[cfg(feature = "wasm")]
-    let elapsed = std::time::Duration::from_millis(16);
-    let time = world.get_mut::<Time>().unwrap();
-    time.advance_frame(elapsed);
-    #[cfg(not(feature = "wasm"))]
-    {
-        let stopwatch = world.get_mut::<Stopwatch>().unwrap();
-        stopwatch.stop();
-        stopwatch.restart();
-    }
+    //#[cfg(not(feature = "wasm"))]
+    //let elapsed = world.fetch::<Stopwatch>().elapsed();
+    //#[cfg(feature = "wasm")]
+    //let elapsed = std::time::Duration::from_millis(16);
+    //time.advance_frame(elapsed);
+    //#[cfg(not(feature = "wasm"))]
+    //{
+    //    let stopwatch = world.get_mut::<Stopwatch>().unwrap();
+    //    stopwatch.stop();
+    //    stopwatch.restart();
+    //}
 }
 
 /// Initializes the engine structures.
