@@ -109,6 +109,7 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
+    #[allow(unused)]
     spritesheet: Option<SpriteSheet>,
     dispatcher: Box<dyn UnifiedDispatcher + 'static>,
     mut world: World,

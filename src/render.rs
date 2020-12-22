@@ -27,6 +27,7 @@ pub fn render_ascii<'a>(
 
 /// Renders 2d tile sprites characters.
 /// Only available using the `opengl` feature.
+#[cfg(feature = "opengl")]
 pub fn render_sprites<'a>(
     ctx: &mut BTerm,
     camera: &Camera,
@@ -34,8 +35,6 @@ pub fn render_sprites<'a>(
     sprites: ReadStorage<'a, SpriteIndex>,
 ) {
     for (pos, sprite) in (&positions, &sprites).join() {
-        #[cfg(feature = "opengl")]
-        {
             ctx.add_sprite(
                 Rect::with_size(
                     (pos.x - camera.position.x) * 1,
@@ -48,6 +47,5 @@ pub fn render_sprites<'a>(
                 RGBA::named(WHITE),
                 sprite.0,
             );
-        }
     }
 }
