@@ -35,17 +35,17 @@ pub fn render_sprites<'a>(
     sprites: ReadStorage<'a, SpriteIndex>,
 ) {
     for (pos, sprite) in (&positions, &sprites).join() {
-            ctx.add_sprite(
-                Rect::with_size(
-                    (pos.x - camera.position.x) * 1,
-                    (pos.y - camera.position.y) * 1,
-                    // TODO make this dynamic.
-                    1,
-                    1,
-                ),
-                0,
-                RGBA::named(WHITE),
-                sprite.0,
-            );
+        ctx.add_sprite(
+            Rect::with_size(
+                (pos.x - camera.position.x) * 1,
+                (pos.y - camera.position.y) * 1,
+                // TODO make this dynamic.
+                1,
+                1,
+            ),
+            0,
+            RGBA::named(WHITE),
+            sprite.0,
+        );
     }
 }

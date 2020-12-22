@@ -10,11 +10,12 @@ pub extern crate specs;
 extern crate crossterm;
 
 pub use bracket_lib::prelude::{
-    a_star_search, BTerm, BTermBuilder, BaseMap, MultiTileSprite, NavigationPath, Point, SmallVec,
-    SpriteSheet, VirtualKeyCode, EMBED, INPUT, RGBA, main_loop, GREEN, RED, to_cp437, YELLOW, BLUE, Rect, BError, GameState, WHITE, BLACK, add_wasm_support,
+    a_star_search, add_wasm_support, main_loop, to_cp437, BError, BTerm, BTermBuilder, BaseMap,
+    GameState, MultiTileSprite, NavigationPath, Point, Rect, SmallVec, SpriteSheet, VirtualKeyCode,
+    BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW,
 };
-pub use game_features::*;
 pub use game_clock::*;
+pub use game_features::*;
 pub use hibitset::BitSet;
 pub use shrev::*;
 pub use specs::prelude::*;
@@ -109,8 +110,7 @@ pub fn mini_init(
     width: u32,
     height: u32,
     name: &str,
-    #[allow(unused)]
-    spritesheet: Option<SpriteSheet>,
+    #[allow(unused)] spritesheet: Option<SpriteSheet>,
     dispatcher: Box<dyn UnifiedDispatcher + 'static>,
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,

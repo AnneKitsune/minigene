@@ -1,5 +1,5 @@
-use specs::rayon::{ThreadPoolBuildError, ThreadPoolBuilder};
 use crate::*;
+use specs::rayon::{ThreadPoolBuildError, ThreadPoolBuilder};
 
 /// Get the euclidian distance between two points.
 pub fn dist(p1: &Point, p2: &Point) -> f32 {
@@ -50,7 +50,12 @@ pub fn init_thread_pool() -> Result<(), ThreadPoolBuildError> {
                     if let Some(s) = i.payload().downcast_ref::<&str>() {
                         println!("Panic occured: {:?}", s);
                     }
-                    eprintln!("Occured in file {} line {}:{}", i.location().unwrap().file(), i.location().unwrap().line(), i.location().unwrap().column());
+                    eprintln!(
+                        "Occured in file {} line {}:{}",
+                        i.location().unwrap().file(),
+                        i.location().unwrap().line(),
+                        i.location().unwrap().column()
+                    );
                     let _ = std::fs::write("/tmp/err", "WE CRASHED");
                 }));
             }
