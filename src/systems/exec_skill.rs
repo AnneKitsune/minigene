@@ -3,8 +3,8 @@ use crate::*;
 pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
     skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
     effector_defs: &Option<EffectorDefinitions<K, E>>,
-    effectors: &mut Components<EffectorSet<E>>,
     event_channel: &Vec<SkillTriggerEvent<S>>,
+    effectors: &mut Components<EffectorSet<E>>,
     skill_instances: &mut Components<SkillSet<S>>,
 ) -> SystemResult {
     for ev in event_channel.iter() {

@@ -15,8 +15,8 @@ pub fn trigger_passive_skill_system<
     stats: &Components<StatSet<K>>,
     stat_defs: &Option<StatDefinitions<K>>,
     inventories: &Components<Inventory<I, IT, CD>>,
-    event_channel: &mut Vec<SkillTriggerEvent<S>>,
     entities: &Entities,
+    event_channel: &mut Vec<SkillTriggerEvent<S>>,
     skill_instances: &mut Components<SkillSet<S>>,
 ) -> SystemResult {
     for (entity, skills, stat, inventory) in
