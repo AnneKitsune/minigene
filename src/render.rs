@@ -39,7 +39,9 @@ pub fn render_sprites<'a>(
     positions: &Components<Point>,
     sprites: &Components<SpriteIndex>,
 ) {
-    for (pos, sprite) in (&positions, &sprites).join() {
+    for (pos, sprite) in join!(&positions && &sprites) {
+        let pos = pos.unwrap();
+        let sprite = sprite.unwrap();
         ctx.add_sprite(
             Rect::with_size(
                 (pos.x - camera.position.x) * 1,
