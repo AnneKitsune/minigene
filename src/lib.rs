@@ -26,7 +26,6 @@ pub use derive_new::*;
 pub use spin_sleep::LoopHelper;
 
 mod components;
-//mod dispatcher;
 mod macros;
 mod render;
 mod resources;
@@ -34,7 +33,6 @@ mod systems;
 mod utils;
 
 pub use self::components::*;
-//pub use self::dispatcher::*;
 pub use self::macros::*;
 pub use self::render::*;
 pub use self::resources::*;
