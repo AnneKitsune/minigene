@@ -1,5 +1,5 @@
 use crate::*;
-use specs::rayon::{ThreadPoolBuildError, ThreadPoolBuilder};
+use rayon::{ThreadPoolBuildError, ThreadPoolBuilder};
 
 /// Get the euclidian distance between two points.
 pub fn dist(p1: &Point, p2: &Point) -> f32 {

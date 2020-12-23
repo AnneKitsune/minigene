@@ -3,8 +3,6 @@ pub extern crate bracket_lib;
 extern crate pushdown_automaton_macro;
 pub extern crate game_features;
 pub extern crate hibitset;
-//pub extern crate shrev;
-//pub extern crate specs;
 
 #[cfg(feature = "terminal")]
 extern crate crossterm;
@@ -17,10 +15,6 @@ pub use bracket_lib::prelude::{
 pub use game_clock::*;
 pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
-//pub use shrev::*;
-/*pub use specs::prelude::*;
-pub use specs::storage::MaskedStorage;
-pub use specs::world::EntitiesRes;*/
 pub use stopwatch::*;
 
 pub use entity_component::*;
@@ -28,8 +22,6 @@ pub use world_dispatcher::*;
 
 // macro re-export
 pub use derive_new::*;
-/*pub use specs_declaration::*;
-pub use specs_derive::*;*/
 
 pub use spin_sleep::LoopHelper;
 
@@ -50,7 +42,6 @@ pub use self::systems::*;
 pub use self::utils::*;
 
 use std::collections::HashMap;
-
 
 use std::fmt::Debug;
 use std::hash::Hash;
