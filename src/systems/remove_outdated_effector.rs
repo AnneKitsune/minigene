@@ -1,7 +1,7 @@
 use crate::*;
 
 // Run after ApplyEffectorsSystem
-pub fn RemoveOutdatedEffectorSystem<E: Send + Sync + 'static>
+pub fn remove_outdated_effector_system<E>
     (effectors: &mut Components<EffectorSet<E>>, time: Time) {
         for eff in effectors.iter_mut() {
             eff.effectors.retain(|e| {

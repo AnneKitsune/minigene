@@ -4,13 +4,13 @@ use crate::*;
 pub struct SkillTriggerEvent<K>(pub Entity, pub K);
 
 pub fn 
-    TriggerPassiveSkillSystem<
-        K: Send + Sync + Debug + Hash + Eq + 'static,
-        E: Send + Sync + 'static,
-        S: Send + Sync + Clone + Hash + Eq + 'static,
-        I: Send + Sync + 'static + Clone + PartialEq + Debug,
-        IT: Send + Sync + 'static + SlotType,
-        CD: Send + Sync + 'static + Default + Debug + Clone
+    trigger_passive_skill_system<
+        K: Debug + Hash + Eq,
+        E,
+        S: Clone + Hash + Eq,
+        I: Clone + PartialEq + Debug,
+        IT: SlotType,
+        CD: Default + Debug + Clone
     >
     (skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
      skill_instances: &mut Components<SkillSet<S>>,

@@ -1,13 +1,12 @@
 use crate::*;
 
-pub fn ExecSkillSystem<
-        K: Send + Sync + Hash + Eq + 'static,
-        E: Send + Sync + Clone + Hash + Eq + 'static,
-        S: Send + Sync + Hash + Eq + 'static,
-        I: Send + Sync + 'static
+pub fn exec_skill_system<
+        K: Hash + Eq,
+        E: Clone + Hash + Eq,
+        S: Hash + Eq,
+        I
     >(skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
      skill_instances: &mut Components<SkillSet<S>>,
-     stats: &Components<StatSet<K>>,
      effector_defs: &Option<EffectorDefinitions<K, E>>,
      effectors: &mut Components<EffectorSet<E>>,
      event_channel: &Vec<SkillTriggerEvent<S>>) {

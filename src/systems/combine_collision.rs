@@ -1,6 +1,6 @@
 use crate::*;
 
-pub fn CombineCollisionSystem(positions: &Components< Point,
+pub fn combine_collision_system(positions: &Components< Point,
 >, collisions: &Components< Collision, >, maps: &Components< CollisionMap, >, global_map: &mut Option< CollisionResource,
 >) {
     let global_map = global_map.as_mut().unwrap();

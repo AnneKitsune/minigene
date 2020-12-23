@@ -1,6 +1,6 @@
 use crate::*;
 
-pub fn AiMovementSystem(positions: &mut Components<Point>,
+pub fn ai_movement_system(positions: &mut Components<Point>,
                            paths: &mut Components<AiPath>,
                            global_map: &Option<CollisionResource>) {
     // doesn't handle two entities that want to go to the same tile.

@@ -1,6 +1,6 @@
 use crate::*;
 
-pub fn GotoEntitySimpleSystem(entities: &Entities,
+pub fn goto_entity_simple_system(entities: &Entities,
                                  positions: &mut Components<
     Point,
 >,

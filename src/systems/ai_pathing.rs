@@ -1,6 +1,6 @@
 use crate::*;
 
-pub fn AiPathingSystem(
+pub fn ai_pathing_system(
     dests: &Components<AiDestination>,
      global_map: &Option<CollisionResource>,
      positions: &Components<Point>,

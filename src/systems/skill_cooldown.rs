@@ -1,7 +1,7 @@
 use crate::*;
 
 pub fn 
-    SkillCooldownSystem<S: Send + Sync + Hash + Eq + 'static>
+    skill_cooldown_system<S: Hash + Eq>
     (skill_instances: &mut Components<SkillSet<S>>, time: &Time) {
         for inst in skill_instances.iter_mut() {
             for i in inst.skills.iter_mut() {

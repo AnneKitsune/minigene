@@ -1,7 +1,6 @@
 use crate::*;
 
-pub fn ApplyEffectorSystem<K: Send + Sync + Hash + Eq + 'static, E: Send + Sync + Hash + Eq + 'static> (
-    defs: &Option<StatDefinitions<K>>,
+pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq> (
      stats: &mut Components<StatSet<K>>,
      effector_defs: &Option<EffectorDefinitions<K, E>>,
      effectors: &Components<EffectorSet<E>>) {

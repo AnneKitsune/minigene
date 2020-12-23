@@ -1,6 +1,6 @@
 use crate::*;
 
-pub fn InputDriver<E: Clone + Send + Sync + 'static>(
+pub fn input_driver<E: Clone>(
     keymap: &HashMap<VirtualKeyCode, E>,
      inputs: &Vec<VirtualKeyCode>,
      events: &mut Vec<E>) {

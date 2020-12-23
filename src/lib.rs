@@ -97,9 +97,9 @@ pub fn mini_frame(
             .push(*key);
     }
     #[cfg(feature="wasm")]
-    dispatcher.run_seq(world);
+    dispatcher.run_seq(world).unwrap();
     #[cfg(not(feature="wasm"))]
-    dispatcher.run_par(world);
+    dispatcher.run_par(world).unwrap();
     state_machine.update(world, dispatcher, ctx);
 
     //#[cfg(not(target_arch = "wasm32"))]
@@ -125,7 +125,7 @@ pub fn mini_init(
     name: &str,
     #[allow(unused)] spritesheet: Option<SpriteSheet>,
     dispatcher: Dispatcher,
-    mut world: World,
+    world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Dispatcher, BTerm) {
     #[cfg(feature = "terminal")]
