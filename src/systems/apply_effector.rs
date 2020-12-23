@@ -1,10 +1,10 @@
 use crate::*;
 
 pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq>(
-    stats: &mut Components<StatSet<K>>,
     effector_defs: &Option<EffectorDefinitions<K, E>>,
     effectors: &Components<EffectorSet<E>>,
-) {
+    stats: &mut Components<StatSet<K>>,
+) -> SystemResult {
     for (stat, effector) in join!(&mut stats && &effectors) {
         let stat = stat.unwrap();
         let effector = effector.unwrap();
@@ -36,4 +36,5 @@ pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq>(
             }
         }
     }
+    Ok(())
 }

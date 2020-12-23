@@ -5,7 +5,7 @@ pub fn combine_collision_system(
     collisions: &Components<Collision>,
     maps: &Components<CollisionMap>,
     global_map: &mut Option<CollisionResource>,
-) {
+) -> SystemResult {
     let global_map = global_map.as_mut().unwrap();
 
     global_map.map.clear();
@@ -48,4 +48,5 @@ pub fn combine_collision_system(
             }
         }
     }
+    Ok(())
 }

@@ -1,6 +1,6 @@
 use crate::*;
 
-pub fn goto_straight_system(positions: &mut Components<Point>, gotos: &Components<GotoStraight>) {
+pub fn goto_straight_system(gotos: &Components<GotoStraight>,positions: &mut Components<Point>,) -> SystemResult {
     for (p, goto) in join!(&mut positions && &gotos) {
         let mut p = p.unwrap();
         let goto = goto.unwrap();
@@ -23,4 +23,5 @@ pub fn goto_straight_system(positions: &mut Components<Point>, gotos: &Component
             }
         }
     }
+    Ok(())
 }

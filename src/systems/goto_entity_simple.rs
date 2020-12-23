@@ -2,9 +2,9 @@ use crate::*;
 
 pub fn goto_entity_simple_system(
     entities: &Entities,
-    positions: &mut Components<Point>,
     gotos: &Components<GotoEntity>,
-) {
+    positions: &mut Components<Point>,
+) -> SystemResult {
     let mut v = vec![];
     for (e, _, goto) in join!(&entities && &positions && &gotos) {
         v.push((
@@ -36,4 +36,5 @@ pub fn goto_entity_simple_system(
             }
         }
     }
+    Ok(())
 }

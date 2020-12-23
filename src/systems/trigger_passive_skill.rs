@@ -10,15 +10,15 @@ pub fn trigger_passive_skill_system<
     I: Clone + PartialEq + Debug,
     IT: SlotType,
     CD: Default + Debug + Clone,
->(
+> (
     skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
-    skill_instances: &mut Components<SkillSet<S>>,
     stats: &Components<StatSet<K>>,
     stat_defs: &Option<StatDefinitions<K>>,
     inventories: &Components<Inventory<I, IT, CD>>,
     event_channel: &mut Vec<SkillTriggerEvent<S>>,
     entities: &Entities,
-) {
+    skill_instances: &mut Components<SkillSet<S>>,
+) -> SystemResult {
     for (entity, skills, stat, inventory) in
         join!(&entities && &mut skill_instances && &stats && &inventories)
     {
@@ -44,4 +44,5 @@ pub fn trigger_passive_skill_system<
             }
         }
     }
+    Ok(())
 }

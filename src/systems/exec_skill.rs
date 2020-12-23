@@ -2,11 +2,11 @@ use crate::*;
 
 pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
     skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
-    skill_instances: &mut Components<SkillSet<S>>,
     effector_defs: &Option<EffectorDefinitions<K, E>>,
     effectors: &mut Components<EffectorSet<E>>,
     event_channel: &Vec<SkillTriggerEvent<S>>,
-) {
+    skill_instances: &mut Components<SkillSet<S>>,
+) -> SystemResult {
     for ev in event_channel.iter() {
         // TODO consume item if needed
         let def = skill_defs
@@ -38,4 +38,5 @@ pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
             .expect("Skill instance doesn't exist for this entity")
             .current_cooldown = def.cooldown;
     }
+    Ok(())
 }

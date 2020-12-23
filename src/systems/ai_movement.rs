@@ -1,10 +1,10 @@
 use crate::*;
 
 pub fn ai_movement_system(
+    global_map: &Option<CollisionResource>,
     positions: &mut Components<Point>,
     paths: &mut Components<AiPath>,
-    global_map: &Option<CollisionResource>,
-) {
+) -> SystemResult {
     // doesn't handle two entities that want to go to the same tile.
     for (pos, path) in join!(&mut positions && &mut paths) {
         let pos = pos.unwrap();
@@ -18,4 +18,5 @@ pub fn ai_movement_system(
             );
         }
     }
+    Ok(())
 }

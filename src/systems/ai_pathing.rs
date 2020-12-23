@@ -5,7 +5,7 @@ pub fn ai_pathing_system(
     global_map: &Option<CollisionResource>,
     positions: &Components<Point>,
     paths: &mut Components<AiPath>,
-) {
+) -> SystemResult {
     for (pos, dest, path) in join!(&positions && &dests && &mut paths) {
         let pos = pos.unwrap();
         let dest = dest.unwrap();
@@ -26,4 +26,5 @@ pub fn ai_pathing_system(
         let p = a_star_search(d, t, &global_map.map);
         path.path = p;
     }
+    Ok(())
 }
