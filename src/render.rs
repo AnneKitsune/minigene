@@ -4,17 +4,19 @@ use crate::*;
 pub fn render_ascii<'a>(
     ctx: &mut BTerm,
     camera: &Camera,
-    positions: ReadStorage<'a, Point>,
-    multi_sprites: ReadStorage<'a, MultiSprite>,
-    sprites: ReadStorage<'a, Sprite>,
+    positions: &Components<Point>,
+    multi_sprites: &Components<MultiSprite>,
+    sprites: &Components<Sprite>,
 ) {
-    for (pos, sprite) in (&positions, &multi_sprites).join() {
-        sprite.tile.render(
+    for (pos, sprite) in join!(&positions && &multi_sprites) {
+        sprite.unwrap().tile.render(
             ctx,
-            Point::new(pos.x - camera.position.x, pos.y - camera.position.y),
+            Point::new(pos.unwrap().x - camera.position.x, pos.unwrap().y - camera.position.y),
         );
     }
-    for (pos, sprite) in (&positions, &sprites).join() {
+    for (pos, sprite) in join!(&positions && &sprites) {
+        let pos = pos.unwrap();
+        let sprite = sprite.unwrap();
         ctx.set(
             pos.x - camera.position.x,
             pos.y - camera.position.y,
@@ -31,8 +33,8 @@ pub fn render_ascii<'a>(
 pub fn render_sprites<'a>(
     ctx: &mut BTerm,
     camera: &Camera,
-    positions: ReadStorage<'a, Point>,
-    sprites: ReadStorage<'a, SpriteIndex>,
+    positions: &Components<Point>,
+    sprites: &Components<SpriteIndex>,
 ) {
     for (pos, sprite) in (&positions, &sprites).join() {
         ctx.add_sprite(

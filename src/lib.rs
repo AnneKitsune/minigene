@@ -3,8 +3,8 @@ pub extern crate bracket_lib;
 extern crate pushdown_automaton_macro;
 pub extern crate game_features;
 pub extern crate hibitset;
-pub extern crate shrev;
-pub extern crate specs;
+//pub extern crate shrev;
+//pub extern crate specs;
 
 #[cfg(feature = "terminal")]
 extern crate crossterm;
@@ -16,22 +16,25 @@ pub use bracket_lib::prelude::{
 };
 pub use game_clock::*;
 pub use game_features::*;
-pub use hibitset::BitSet;
-pub use shrev::*;
-pub use specs::prelude::*;
+pub use hibitset::BitSet as HBitSet;
+//pub use shrev::*;
+/*pub use specs::prelude::*;
 pub use specs::storage::MaskedStorage;
-pub use specs::world::EntitiesRes;
+pub use specs::world::EntitiesRes;*/
 pub use stopwatch::*;
+
+pub use entity_component::*;
+pub use world_dispatcher::*;
 
 // macro re-export
 pub use derive_new::*;
-pub use specs_declaration::*;
-pub use specs_derive::*;
+/*pub use specs_declaration::*;
+pub use specs_derive::*;*/
 
 pub use spin_sleep::LoopHelper;
 
 mod components;
-mod dispatcher;
+//mod dispatcher;
 mod macros;
 mod render;
 mod resources;
@@ -39,7 +42,7 @@ mod systems;
 mod utils;
 
 pub use self::components::*;
-pub use self::dispatcher::*;
+//pub use self::dispatcher::*;
 pub use self::macros::*;
 pub use self::render::*;
 pub use self::resources::*;
@@ -52,15 +55,12 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::hash::Hash;
 
-/// A dispatcher that can work for both single threaded and multi threaded situations.
-pub type MiniDispatcher = Box<dyn UnifiedDispatcher + 'static>;
-
-state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>, ctx: &mut BTerm);
+state_machine!(StateMachine; State; world: &mut World, dispatcher: &mut Dispatcher, ctx: &mut BTerm);
 
 /// Runs the engine until the state machine quits.
 pub fn mini_loop<I: State + 'static>(
     world: &mut World,
-    dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
+    dispatcher: &mut Dispatcher,
     ctx: &mut BTerm,
     init_state: I,
     max_fps: f32,
@@ -70,8 +70,10 @@ pub fn mini_loop<I: State + 'static>(
     state_machine.start(world, dispatcher, ctx);
     while state_machine.is_running() {
         let delta = loop_helper.loop_start();
-        let time = world.get_mut::<Time>().unwrap();
-        time.advance_frame(delta);
+        {
+            let mut time = world.get_mut::<Time>().unwrap();
+            time.advance_frame(delta);
+        }
         mini_frame(world, dispatcher, ctx, &mut state_machine);
         loop_helper.loop_sleep();
     }
@@ -80,7 +82,7 @@ pub fn mini_loop<I: State + 'static>(
 /// Runs a single game frame and updates the state machine.
 pub fn mini_frame(
     world: &mut World,
-    dispatcher: &mut Box<dyn UnifiedDispatcher + 'static>,
+    dispatcher: &mut Dispatcher,
     ctx: &mut BTerm,
     state_machine: &mut StateMachine,
 ) {
@@ -90,18 +92,21 @@ pub fn mini_frame(
     let input = INPUT.lock();
     for key in input.key_pressed_set().iter() {
         world
-            .fetch_mut::<EventChannel<VirtualKeyCode>>()
-            .single_write(*key);
+            .get_mut::<Vec<VirtualKeyCode>>()
+            .unwrap()
+            .push(*key);
     }
-    dispatcher.run_now(world);
+    #[cfg(feature="wasm")]
+    dispatcher.run_seq(world);
+    #[cfg(not(feature="wasm"))]
+    dispatcher.run_par(world);
     state_machine.update(world, dispatcher, ctx);
-    world.maintain();
 
     //#[cfg(not(target_arch = "wasm32"))]
     //std::thread::sleep(std::time::Duration::from_millis(8));
 
     //#[cfg(not(feature = "wasm"))]
-    //let elapsed = world.fetch::<Stopwatch>().elapsed();
+    //let elapsed = world.get::<Stopwatch>().elapsed();
     //#[cfg(feature = "wasm")]
     //let elapsed = std::time::Duration::from_millis(16);
     //time.advance_frame(elapsed);
@@ -119,10 +124,10 @@ pub fn mini_init(
     height: u32,
     name: &str,
     #[allow(unused)] spritesheet: Option<SpriteSheet>,
-    dispatcher: Box<dyn UnifiedDispatcher + 'static>,
+    dispatcher: Dispatcher,
     mut world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
-) -> (World, Box<dyn UnifiedDispatcher + 'static>, BTerm) {
+) -> (World, Dispatcher, BTerm) {
     #[cfg(feature = "terminal")]
     std::panic::set_hook(Box::new(|panic_info| {
         crossterm::terminal::disable_raw_mode().unwrap();
@@ -163,9 +168,6 @@ pub fn mini_init(
     //}
     //let mut dispatcher = dispatcher_builder.build();
     //dispatcher.setup(&mut world);
-    world.insert(EventChannel::<VirtualKeyCode>::new());
-    world.insert(Stopwatch::new());
-    world.insert(Time::default());
 
     #[cfg(not(target_arch = "wasm32"))]
     init_thread_pool().unwrap();

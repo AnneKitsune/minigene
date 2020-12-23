@@ -1,11 +1,10 @@
 use crate::*;
 
 // Run after ApplyEffectorsSystem
-system!(
-    RemoveOutdatedEffectorSystem<E: Send + Sync + 'static>,
-    |effectors: WriteStorage<'a, Comp<EffectorSet<E>>>, time: ReadExpect<'a, Time>| {
-        for eff in (&mut effectors,).join() {
-            (eff.0).0.effectors.retain(|e| {
+pub fn RemoveOutdatedEffectorSystem<E: Send + Sync + 'static>
+    (effectors: &mut Components<EffectorSet<E>>, time: Time) {
+        for eff in effectors.iter_mut() {
+            eff.effectors.retain(|e| {
                 if let Some(mut d) = e.disable_in {
                     d -= time.delta_time().as_secs_f64();
                     d > 0.0
@@ -15,4 +14,3 @@ system!(
             });
         }
     }
-);

@@ -37,3 +37,6 @@ stopwatch = { git = "https://github.com/jojolepro/rust-stopwatch", rev = "5ed692
 crossterm = { version = "0.18.0", optional = true }
 #web_worker = { path = "../web_worker", optional = true }
 spin_sleep = "1.0.0"
+
+entity_component = "0.99.0"
+world_dispatcher = { version = "0.99.0", features = ["parallel"] }

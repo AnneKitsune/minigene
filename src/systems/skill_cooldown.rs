@@ -1,12 +1,11 @@
 use crate::*;
 
-system!(
-    SkillCooldownSystem<S: Send + Sync + Hash + Eq + 'static>,
-    |skill_instances: WriteStorage<'a, Comp<SkillSet<S>>>, time: Read<'a, Time>| {
-        for inst in (&mut skill_instances,).join() {
-            for i in (inst.0).0.skills.iter_mut() {
+pub fn 
+    SkillCooldownSystem<S: Send + Sync + Hash + Eq + 'static>
+    (skill_instances: &mut Components<SkillSet<S>>, time: &Time) {
+        for inst in skill_instances.iter_mut() {
+            for i in inst.skills.iter_mut() {
                 i.1.current_cooldown -= time.delta_time().as_secs_f64();
             }
         }
     }
-);

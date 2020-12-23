@@ -1,11 +1,10 @@
 use crate::*;
 
-system!(GotoStraightSystem, |positions: WriteStorage<'a, Point>,
-                             gotos: ReadStorage<
-    'a,
-    GotoStraight,
->| {
-    for (mut p, goto) in (&mut positions, &gotos).join() {
+pub fn GotoStraightSystem(positions: &mut Components<Point>,
+                             gotos: &Components<GotoStraight>) {
+    for (mut p, goto) in join!(&mut positions && &gotos){
+        let mut p = p.unwrap();
+        let goto = goto.unwrap();
         // TODO improve when we have a Time struct
         for _i in 0..(goto.speed as usize) {
             let delta_x = goto.target.x - p.x;
@@ -25,4 +24,4 @@ system!(GotoStraightSystem, |positions: WriteStorage<'a, Point>,
             }
         }
     }
-});
+}

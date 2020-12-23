@@ -1,24 +1,14 @@
 use crate::*;
 
-system!(CombineCollisionSystem, |positions: ReadStorage<
-    'a,
-    Point,
->,
-                                 collisions: ReadStorage<
-    'a,
-    Collision,
->,
-                                 maps: ReadStorage<
-    'a,
-    CollisionMap,
->,
-                                 global_map: WriteExpect<
-    'a,
-    CollisionResource,
->| {
+pub fn CombineCollisionSystem(positions: &Components< Point,
+>, collisions: &Components< Collision, >, maps: &Components< CollisionMap, >, global_map: &mut Option< CollisionResource,
+>) {
+    let global_map = global_map.as_mut().unwrap();
+
     global_map.map.clear();
 
-    for (pos, _) in (&positions, &collisions).join() {
+    for (pos, _) in join!(&positions && &collisions){
+        let pos = pos.unwrap();
         let (x, y) = (pos.x, pos.y);
         if position_inside_rect(
             x,
@@ -33,7 +23,9 @@ system!(CombineCollisionSystem, |positions: ReadStorage<
         }
     }
 
-    for (pos, coll) in (&positions, &maps).join() {
+    for (pos, coll) in join!(&positions && &maps) {
+        let pos = pos.unwrap();
+        let coll = coll.unwrap();
         for i in 0..coll.size().0 as i32 {
             for j in 0..coll.size().1 as i32 {
                 let (x, y) = (pos.x + i, pos.y + j);
@@ -53,4 +45,4 @@ system!(CombineCollisionSystem, |positions: ReadStorage<
             }
         }
     }
-});
+}

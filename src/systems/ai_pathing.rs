@@ -1,12 +1,15 @@
 use crate::*;
 
-system!(
-    AiPathingSystem,
-    |dests: ReadStorage<'a, AiDestination>,
-     global_map: ReadExpect<'a, CollisionResource>,
-     positions: ReadStorage<'a, Point>,
-     paths: WriteStorage<'a, AiPath>| {
-        for (pos, dest, path) in (&positions, &dests, &mut paths).join() {
+pub fn AiPathingSystem(
+    dests: &Components<AiDestination>,
+     global_map: &Option<CollisionResource>,
+     positions: &Components<Point>,
+     paths: &mut Components<AiPath>) {
+        for (pos, dest, path) in join!(&positions && &dests && &mut paths) {
+            let pos = pos.unwrap();
+            let dest = dest.unwrap();
+            let path = path.unwrap();
+            let global_map = global_map.as_ref().unwrap();
             if pos.x == dest.target.x && pos.y == dest.target.y {
                 continue;
             }
@@ -22,5 +25,4 @@ system!(
             let p = a_star_search(d, t, &global_map.map);
             path.path = p;
         }
-    }
-);
+}

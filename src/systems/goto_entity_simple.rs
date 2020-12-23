@@ -1,17 +1,15 @@
 use crate::*;
 
-system!(GotoEntitySimpleSystem, |entities: Entities<'a>,
-                                 positions: WriteStorage<
-    'a,
+pub fn GotoEntitySimpleSystem(entities: &Entities,
+                                 positions: &mut Components<
     Point,
 >,
-                                 gotos: ReadStorage<
-    'a,
+                                 gotos: &Components<
     GotoEntity,
->| {
+>) {
     let mut v = vec![];
-    for (e, _, goto) in (&*entities, &positions, &gotos).join() {
-        v.push((e, goto.entity.clone(), goto.speed));
+    for (e, _, goto) in join!(&entities && &positions && &gotos){
+        v.push((e.unwrap(), goto.unwrap().entity.clone(), goto.unwrap().speed));
     }
     for (e, t, speed) in v {
         if let Some(target) = positions.get(t).map(|p| p.clone()) {
@@ -36,4 +34,4 @@ system!(GotoEntitySimpleSystem, |entities: Entities<'a>,
             }
         }
     }
-});
+}

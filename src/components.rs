@@ -1,14 +1,6 @@
 use crate::*;
 
-/// Wrapper around any type to make it a `Component`.
-#[derive(new)]
-pub struct Comp<T>(pub T);
-impl<T: Send + Sync + 'static> Component for Comp<T> {
-    type Storage = DenseVecStorage<Self>;
-}
-
 /// A single colored letter sprite.
-#[derive(Component)]
 pub struct Sprite {
     pub glyph: u16,
     pub fg: RGBA,
@@ -16,31 +8,30 @@ pub struct Sprite {
 }
 
 /// The index of a 2d sprite. Created from `SpriteSheet`'s index.
-#[derive(Component)]
 pub struct SpriteIndex(pub usize);
 
 /// A text-based sprite that is multiple tiles wide/high.
-#[derive(Component, new)]
+#[derive(new)]
 pub struct MultiSprite {
     pub tile: MultiTileSprite,
 }
 
 /// The path calculated by the Ai that it will follow.
-#[derive(Component, new)]
+#[derive(new)]
 pub struct AiPath {
     pub path: NavigationPath,
 }
 
 /// Indicates that the ai should calculate an AiPath from the current position
 /// towards this destination.
-#[derive(Component, new)]
+#[derive(new)]
 pub struct AiDestination {
     pub target: Point,
 }
 
 /// Indicates that the ai should calculate an AiPath from the current position
 /// towards this destination.
-#[derive(Component, new)]
+#[derive(new)]
 pub struct GotoStraight {
     pub target: Point,
     pub speed: f32,
@@ -48,20 +39,18 @@ pub struct GotoStraight {
 
 /// Indicates that the ai should calculate an AiPath from the current position
 /// towards this entity's position.
-#[derive(Component, new)]
+#[derive(new)]
 pub struct GotoEntity {
     pub entity: Entity,
     pub speed: f32,
 }
 
 /// Collision of a single tile entity
-#[derive(Component)]
 pub struct Collision;
 /// Collision of a multi tile entity. Not necessarily colliding everywhere.
 /// Can be both used as a global resource and as a component for individual entities.
-#[derive(Component)]
 pub struct CollisionMap {
-    bitset: BitSet,
+    bitset: HBitSet,
     width: u32,
     height: u32,
 }
@@ -70,7 +59,7 @@ impl CollisionMap {
     /// Create a new collision map.
     pub fn new(width: u32, height: u32) -> Self {
         Self {
-            bitset: BitSet::with_capacity(width * height),
+            bitset: HBitSet::with_capacity(width * height),
             width,
             height,
         }
@@ -169,7 +158,6 @@ pub struct Camera {
 }
 
 /// A direction towards one of the 3d axis.
-#[derive(Debug, Clone, Copy, Component)]
 pub enum Direction {
     North,
     East,

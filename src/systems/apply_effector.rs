@@ -1,21 +1,22 @@
 use crate::*;
 
-system!(
-    ApplyEffectorSystem<K: Send + Sync + Hash + Eq + 'static, E: Send + Sync + Hash + Eq + 'static>,
-    |defs: ReadExpect<'a, StatDefinitions<K>>,
-     stats: WriteStorage<'a, Comp<StatSet<K>>>,
-     effector_defs: ReadExpect<'a, EffectorDefinitions<K, E>>,
-     effectors: ReadStorage<'a, Comp<EffectorSet<E>>>| {
-        for (stat, effector) in (&mut stats, &effectors).join() {
+pub fn ApplyEffectorSystem<K: Send + Sync + Hash + Eq + 'static, E: Send + Sync + Hash + Eq + 'static> (
+    defs: &Option<StatDefinitions<K>>,
+     stats: &mut Components<StatSet<K>>,
+     effector_defs: &Option<EffectorDefinitions<K, E>>,
+     effectors: &Components<EffectorSet<E>>) {
+        for (stat, effector) in join!(&mut stats && &effectors) {
+            let stat = stat.unwrap();
+            let effector = effector.unwrap();
             // for each stat
-            for mut s in stat.0.stats.values_mut() {
+            for mut s in stat.stats.values_mut() {
                 s.value_with_effectors = s.value;
                 // find effectors affecting this stat
-                for e in effector.0.effectors.iter() {
-                    let def = effector_defs
+                for e in effector.effectors.iter() {
+                    let def = effector_defs.as_ref().unwrap()
                         .defs
                         .get(&e.effector_key)
-                        .expect("Tried to fetch unknown stat key.");
+                        .expect("Tried to get unknown stat key.");
                     // look into the effect of each effector
                     for (key, ty) in def.effects.iter() {
                         // if any matches
@@ -34,4 +35,3 @@ system!(
             }
         }
     }
-);
