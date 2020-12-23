@@ -1,8 +1,7 @@
 use crate::*;
 
-pub fn goto_straight_system(positions: &mut Components<Point>,
-                             gotos: &Components<GotoStraight>) {
-    for (p, goto) in join!(&mut positions && &gotos){
+pub fn goto_straight_system(positions: &mut Components<Point>, gotos: &Components<GotoStraight>) {
+    for (p, goto) in join!(&mut positions && &gotos) {
         let mut p = p.unwrap();
         let goto = goto.unwrap();
         // TODO improve when we have a Time struct

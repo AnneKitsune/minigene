@@ -1,34 +1,41 @@
 use crate::*;
 
-pub fn exec_skill_system<
-        K: Hash + Eq,
-        E: Clone + Hash + Eq,
-        S: Hash + Eq,
-        I
-    >(skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
-     skill_instances: &mut Components<SkillSet<S>>,
-     effector_defs: &Option<EffectorDefinitions<K, E>>,
-     effectors: &mut Components<EffectorSet<E>>,
-     event_channel: &Vec<SkillTriggerEvent<S>>) {
-        for ev in event_channel.iter() {
-            // TODO consume item if needed
-            let def = skill_defs.as_ref().unwrap()
+pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
+    skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
+    skill_instances: &mut Components<SkillSet<S>>,
+    effector_defs: &Option<EffectorDefinitions<K, E>>,
+    effectors: &mut Components<EffectorSet<E>>,
+    event_channel: &Vec<SkillTriggerEvent<S>>,
+) {
+    for ev in event_channel.iter() {
+        // TODO consume item if needed
+        let def = skill_defs
+            .as_ref()
+            .unwrap()
+            .defs
+            .get(&ev.1)
+            .expect("Received event for unknown skill key.");
+        for eff in def.stat_effectors.iter() {
+            let eff_def = effector_defs
+                .as_ref()
+                .unwrap()
                 .defs
-                .get(&ev.1)
-                .expect("Received event for unknown skill key.");
-            for eff in def.stat_effectors.iter() {
-                let eff_def = effector_defs.as_ref().unwrap().defs.get(&eff).expect("Unknown effector key.");
-                if effectors.get(ev.0).is_none() {
-                    effectors.insert(ev.0, EffectorSet::default());
-                }
-                effectors.get_mut(ev.0).unwrap().effectors
-                    .push(EffectorInstance::new(eff.clone(), eff_def.duration));
+                .get(&eff)
+                .expect("Unknown effector key.");
+            if effectors.get(ev.0).is_none() {
+                effectors.insert(ev.0, EffectorSet::default());
             }
-            skill_instances.get_mut(ev.0)
+            effectors
+                .get_mut(ev.0)
+                .unwrap()
+                .effectors
+                .push(EffectorInstance::new(eff.clone(), eff_def.duration));
+        }
+        skill_instances.get_mut(ev.0)
             .expect("Entity specified by event doesn't have an expected SkillInstance for this skill activation.")
             .skills
             .get_mut(&ev.1)
             .expect("Skill instance doesn't exist for this entity")
             .current_cooldown = def.cooldown;
-        }
     }
+}

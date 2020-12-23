@@ -1,13 +1,16 @@
 use crate::*;
 
-pub fn combine_collision_system(positions: &Components< Point,
->, collisions: &Components< Collision, >, maps: &Components< CollisionMap, >, global_map: &mut Option< CollisionResource,
->) {
+pub fn combine_collision_system(
+    positions: &Components<Point>,
+    collisions: &Components<Collision>,
+    maps: &Components<CollisionMap>,
+    global_map: &mut Option<CollisionResource>,
+) {
     let global_map = global_map.as_mut().unwrap();
 
     global_map.map.clear();
 
-    for (pos, _) in join!(&positions && &collisions){
+    for (pos, _) in join!(&positions && &collisions) {
         let pos = pos.unwrap();
         let (x, y) = (pos.x, pos.y);
         if position_inside_rect(

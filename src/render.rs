@@ -11,7 +11,10 @@ pub fn render_ascii<'a>(
     for (pos, sprite) in join!(&positions && &multi_sprites) {
         sprite.unwrap().tile.render(
             ctx,
-            Point::new(pos.unwrap().x - camera.position.x, pos.unwrap().y - camera.position.y),
+            Point::new(
+                pos.unwrap().x - camera.position.x,
+                pos.unwrap().y - camera.position.y,
+            ),
         );
     }
     for (pos, sprite) in join!(&positions && &sprites) {

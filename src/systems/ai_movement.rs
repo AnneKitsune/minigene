@@ -1,10 +1,12 @@
 use crate::*;
 
-pub fn ai_movement_system(positions: &mut Components<Point>,
-                           paths: &mut Components<AiPath>,
-                           global_map: &Option<CollisionResource>) {
+pub fn ai_movement_system(
+    positions: &mut Components<Point>,
+    paths: &mut Components<AiPath>,
+    global_map: &Option<CollisionResource>,
+) {
     // doesn't handle two entities that want to go to the same tile.
-    for (pos, path) in join!(&mut positions && &mut paths){
+    for (pos, path) in join!(&mut positions && &mut paths) {
         let pos = pos.unwrap();
         let path = path.unwrap();
         if path.path.success && path.path.steps.len() > 1 {

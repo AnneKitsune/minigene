@@ -1,15 +1,17 @@
 use crate::*;
 
-pub fn goto_entity_simple_system(entities: &Entities,
-                                 positions: &mut Components<
-    Point,
->,
-                                 gotos: &Components<
-    GotoEntity,
->) {
+pub fn goto_entity_simple_system(
+    entities: &Entities,
+    positions: &mut Components<Point>,
+    gotos: &Components<GotoEntity>,
+) {
     let mut v = vec![];
-    for (e, _, goto) in join!(&entities && &positions && &gotos){
-        v.push((e.unwrap(), goto.unwrap().entity.clone(), goto.unwrap().speed));
+    for (e, _, goto) in join!(&entities && &positions && &gotos) {
+        v.push((
+            e.unwrap(),
+            goto.unwrap().entity.clone(),
+            goto.unwrap().speed,
+        ));
     }
     for (e, t, speed) in v {
         if let Some(target) = positions.get(t).map(|p| p.clone()) {
