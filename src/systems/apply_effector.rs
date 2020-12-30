@@ -1,7 +1,7 @@
 use crate::*;
 
 pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq>(
-    effector_defs: &Option<EffectorDefinitions<K, E>>,
+    effector_defs: &EffectorDefinitions<K, E>,
     effectors: &Components<EffectorSet<E>>,
     stats: &mut Components<StatSet<K>>,
 ) -> SystemResult {
@@ -14,8 +14,6 @@ pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq>(
             // find effectors affecting this stat
             for e in effector.effectors.iter() {
                 let def = effector_defs
-                    .as_ref()
-                    .unwrap()
                     .defs
                     .get(&e.effector_key)
                     .expect("Tried to get unknown stat key.");

@@ -1,8 +1,8 @@
 use crate::*;
 
 pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
-    skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
-    effector_defs: &Option<EffectorDefinitions<K, E>>,
+    skill_defs: &SkillDefinitions<K, E, S, I>,
+    effector_defs: &EffectorDefinitions<K, E>,
     event_channel: &Vec<SkillTriggerEvent<S>>,
     effectors: &mut Components<EffectorSet<E>>,
     skill_instances: &mut Components<SkillSet<S>>,
@@ -10,15 +10,11 @@ pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
     for ev in event_channel.iter() {
         // TODO consume item if needed
         let def = skill_defs
-            .as_ref()
-            .unwrap()
             .defs
             .get(&ev.1)
             .expect("Received event for unknown skill key.");
         for eff in def.stat_effectors.iter() {
             let eff_def = effector_defs
-                .as_ref()
-                .unwrap()
                 .defs
                 .get(&eff)
                 .expect("Unknown effector key.");

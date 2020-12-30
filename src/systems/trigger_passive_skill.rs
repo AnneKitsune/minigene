@@ -11,9 +11,9 @@ pub fn trigger_passive_skill_system<
     IT: SlotType,
     CD: Default + Debug + Clone,
 > (
-    skill_defs: &Option<SkillDefinitions<K, E, S, I>>,
+    skill_defs: &SkillDefinitions<K, E, S, I>,
     stats: &Components<StatSet<K>>,
-    stat_defs: &Option<StatDefinitions<K>>,
+    stat_defs: &StatDefinitions<K>,
     inventories: &Components<Inventory<I, IT, CD>>,
     entities: &Entities,
     event_channel: &mut Vec<SkillTriggerEvent<S>>,
@@ -26,8 +26,6 @@ pub fn trigger_passive_skill_system<
             if skill.1.current_cooldown <= 0.0 {
                 // get def from skill key
                 let def = skill_defs
-                    .as_ref()
-                    .unwrap()
                     .defs
                     .get(&skill.0)
                     .expect("No skill definition for provided key");
@@ -35,7 +33,7 @@ pub fn trigger_passive_skill_system<
                     && def.check_conditions(
                         &stat.unwrap(),
                         &inventory.unwrap(),
-                        stat_defs.as_ref().unwrap(),
+                        stat_defs,
                     )
                 {
                     // Trigger skill
