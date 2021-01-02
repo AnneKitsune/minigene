@@ -34,6 +34,7 @@ crossterm = { version = "0.18.0", optional = true }
 #web_worker = { path = "../web_worker", optional = true }
 spin_sleep = "1.0.0"
 
-entity_component = "0.99.0"
-world_dispatcher = { version = "0.99.2", features = ["parallel", "big_systems"] }
+#entity_component = "0.99.0"
+#world_dispatcher = { version = "0.99.2", features = ["parallel", "big_systems"] }
+plank_ecs = { path = "../plank_ecs", features = ["parallel", "big_systems"] }
 rayon = { version = "1.4.0" }

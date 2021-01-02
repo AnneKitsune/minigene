@@ -17,8 +17,9 @@ pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
 pub use stopwatch::*;
 
-pub use entity_component::*;
-pub use world_dispatcher::*;
+//pub use entity_component::*;
+//pub use world_dispatcher::*;
+pub use plank_ecs::*;
 
 // macro re-export
 pub use derive_new::*;
