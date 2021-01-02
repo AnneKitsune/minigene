@@ -151,10 +151,19 @@ impl BaseMap for CollisionMap {
 }
 
 /// Used to change the visible space of the world on screen.
-#[derive(new, Default)]
+#[derive(new)]
 pub struct Camera {
     pub position: Point,
     pub size: Point,
+}
+
+impl Default for Camera {
+    fn default() -> Self {
+        Self {
+            position: Point::new(0, 0),
+            size: Point::new(80, 50),
+        }
+    }
 }
 
 /// A direction towards one of the 3d axis.
