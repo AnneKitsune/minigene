@@ -151,7 +151,7 @@ impl BaseMap for CollisionMap {
 }
 
 /// Used to change the visible space of the world on screen.
-#[derive(new)]
+#[derive(new, Default)]
 pub struct Camera {
     pub position: Point,
     pub size: Point,
