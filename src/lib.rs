@@ -88,6 +88,7 @@ pub fn mini_frame(
     #[cfg(not(feature = "wasm"))]
     dispatcher.run_par(world).unwrap();
     state_machine.update(world, dispatcher, ctx);
+    world.maintain();
 
     //#[cfg(not(target_arch = "wasm32"))]
     //std::thread::sleep(std::time::Duration::from_millis(8));
