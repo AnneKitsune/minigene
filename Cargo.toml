@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["terminal"]
+default = ["terminal", "plank_ecs/parallel"]
 terminal = ["bracket-lib/crossterm", "crossterm"]
 opengl = ["bracket-lib/opengl"]
 wasm = ["wasm-bindgen", "bracket-lib/opengl", "web_worker"]
@@ -36,5 +36,5 @@ spin_sleep = "1.0.0"
 
 #entity_component = "0.99.0"
 #world_dispatcher = { version = "0.99.2", features = ["parallel", "big_systems"] }
-plank_ecs = { path = "../plank_ecs", features = ["parallel", "big_systems"] }
+plank_ecs = { path = "../plank_ecs", features = ["big_systems"] }
 rayon = { version = "1.4.0" }
