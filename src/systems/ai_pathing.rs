@@ -40,19 +40,28 @@ mod tests {
         let mut dests = Components::<AiDestination>::default();
         let mut positions = Components::<Point>::default();
         let mut paths = Components::<AiPath>::default();
-        let global_map = Some(CollisionResource::new(CollisionMap::new(10, 10), Point::new(0, 0)));
+        let global_map = Some(CollisionResource::new(
+            CollisionMap::new(10, 10),
+            Point::new(0, 0),
+        ));
 
         let e = entities.create();
-        dests.insert(e, AiDestination::new(Point::new(1,3)));
-        positions.insert(e, Point::new(1,1));
+        dests.insert(e, AiDestination::new(Point::new(1, 3)));
+        positions.insert(e, Point::new(1, 1));
 
         ai_pathing_system(&entities, &dests, &global_map, &positions, &mut paths).unwrap();
         let steps = paths.get(e).unwrap().path.steps.clone();
         assert_eq!(steps.len(), 3);
-        assert_eq!(steps,
-            vec![Point::new(1,1), Point::new(1,2), Point::new(1,3)]
-            .into_iter().map(|p| global_map.as_ref().unwrap().map.index_of(p.x as u32, p.y as u32) as usize)
-            .collect::<Vec<_>>());
+        assert_eq!(
+            steps,
+            vec![Point::new(1, 1), Point::new(1, 2), Point::new(1, 3)]
+                .into_iter()
+                .map(|p| global_map
+                    .as_ref()
+                    .unwrap()
+                    .map
+                    .index_of(p.x as u32, p.y as u32) as usize)
+                .collect::<Vec<_>>()
+        );
     }
 }
-
