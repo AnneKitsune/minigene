@@ -14,10 +14,7 @@ pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
             .get(&ev.1)
             .expect("Received event for unknown skill key.");
         for eff in def.stat_effectors.iter() {
-            let eff_def = effector_defs
-                .defs
-                .get(&eff)
-                .expect("Unknown effector key.");
+            let eff_def = effector_defs.defs.get(&eff).expect("Unknown effector key.");
             if effectors.get(ev.0).is_none() {
                 effectors.insert(ev.0, EffectorSet::default());
             }

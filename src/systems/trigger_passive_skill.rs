@@ -10,7 +10,7 @@ pub fn trigger_passive_skill_system<
     I: Clone + PartialEq + Debug,
     IT: SlotType,
     CD: Default + Debug + Clone,
-> (
+>(
     skill_defs: &SkillDefinitions<K, E, S, I>,
     stats: &Components<StatSet<K>>,
     stat_defs: &StatDefinitions<K>,
@@ -30,11 +30,7 @@ pub fn trigger_passive_skill_system<
                     .get(&skill.0)
                     .expect("No skill definition for provided key");
                 if def.passive
-                    && def.check_conditions(
-                        &stat.unwrap(),
-                        &inventory.unwrap(),
-                        stat_defs,
-                    )
+                    && def.check_conditions(&stat.unwrap(), &inventory.unwrap(), stat_defs)
                 {
                     // Trigger skill
                     event_channel.push(SkillTriggerEvent(entity.unwrap(), skill.0.clone()));

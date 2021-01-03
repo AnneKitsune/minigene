@@ -1,7 +1,10 @@
 use crate::*;
 
 // Run after ApplyEffectorsSystem
-pub fn remove_outdated_effector_system<E>(time: &Time, effectors: &mut Components<EffectorSet<E>>) -> SystemResult {
+pub fn remove_outdated_effector_system<E>(
+    time: &Time,
+    effectors: &mut Components<EffectorSet<E>>,
+) -> SystemResult {
     for eff in effectors.iter_mut() {
         eff.effectors.retain(|e| {
             if let Some(mut d) = e.disable_in {
