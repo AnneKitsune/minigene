@@ -17,7 +17,7 @@ pub struct MultiSprite {
 }
 
 /// The path calculated by the Ai that it will follow.
-#[derive(new)]
+#[derive(new, Default)]
 pub struct AiPath {
     pub path: NavigationPath,
 }
