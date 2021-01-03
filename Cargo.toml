@@ -14,15 +14,14 @@ wasm = ["wasm-bindgen", "bracket-lib/opengl", "web_worker"]
 
 [dependencies]
 #bracket-lib = { path = "../bracket-lib", default-features = false, features = ["specs", "threaded", "crossterm"] }
-
 #bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "local", default-features = false, features = ["specs", "threaded", "opengl"] }
-
 bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "winit_serde", default-features = false, features = ["threaded", "serde"] }
 #bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["specs", "threaded", "serde"], rev = "c51b8becf85bf7fb14dbcd7891c10ad33b957afd" }
 
 #game_features = { path = "../game_features" }
 #game_features = { version = "0.3.0" }
 game_features = { git = "https://github.com/jojolepro/game_features" }
+
 hibitset = "0.6.3"
 derive-new = "0.5.8"
 pushdown-automaton-macro = "0.1.0"
@@ -31,10 +30,6 @@ web_worker = { version = "0.3.0", optional = true }
 game_clock = { version = "1.0.0" }
 stopwatch = { git = "https://github.com/jojolepro/rust-stopwatch", rev = "5ed6926a5aa5b21d58d2e67d179da1ec4cbc8a2e" }
 crossterm = { version = "0.18.0", optional = true }
-#web_worker = { path = "../web_worker", optional = true }
 spin_sleep = "1.0.0"
-
-#entity_component = "0.99.0"
-#world_dispatcher = { version = "0.99.2", features = ["parallel", "big_systems"] }
-plank_ecs = { path = "../plank_ecs", features = ["big_systems"] }
+plank_ecs = { version = "0.1.0", features = ["big_systems"] }
 rayon = { version = "1.4.0" }

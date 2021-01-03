@@ -83,10 +83,10 @@ pub fn mini_frame(
     for key in input.key_pressed_set().iter() {
         world.get_mut::<Vec<VirtualKeyCode>>().unwrap().push(*key);
     }
-    #[cfg(feature = "wasm")]
+    //#[cfg(feature = "wasm")]
     dispatcher.run_seq(world).unwrap();
-    #[cfg(not(feature = "wasm"))]
-    dispatcher.run_par(world).unwrap();
+    //#[cfg(not(feature = "wasm"))]
+    //dispatcher.run_par(world).unwrap();
     state_machine.update(world, dispatcher, ctx);
     world.maintain();
 
