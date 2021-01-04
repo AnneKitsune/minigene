@@ -1,5 +1,7 @@
 use crate::*;
 
+/// Combine individual entity's `CollisionMap` components into one single
+/// `CollisionResource` resource.
 pub fn combine_collision_system(
     positions: &Components<Point>,
     collisions: &Components<Collision>,

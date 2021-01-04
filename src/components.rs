@@ -2,8 +2,11 @@ use crate::*;
 
 /// A single colored letter sprite.
 pub struct Sprite {
+    /// The char symbol displayed.
     pub glyph: u16,
+    /// The foreground color.
     pub fg: RGBA,
+    /// The background color.
     pub bg: RGBA,
 }
 
@@ -13,12 +16,14 @@ pub struct SpriteIndex(pub usize);
 /// A text-based sprite that is multiple tiles wide/high.
 #[derive(new)]
 pub struct MultiSprite {
+    /// The tile.
     pub tile: MultiTileSprite,
 }
 
 /// The path calculated by the Ai that it will follow.
 #[derive(new, Default)]
 pub struct AiPath {
+    /// The path.
     pub path: NavigationPath,
 }
 
@@ -26,6 +31,7 @@ pub struct AiPath {
 /// towards this destination.
 #[derive(new)]
 pub struct AiDestination {
+    /// The destination position.
     pub target: Point,
 }
 
@@ -33,7 +39,9 @@ pub struct AiDestination {
 /// towards this destination.
 #[derive(new)]
 pub struct GotoStraight {
+    /// The destination position.
     pub target: Point,
+    /// The speed at which the entity moves in tiles/second.
     pub speed: f32,
 }
 
@@ -41,7 +49,9 @@ pub struct GotoStraight {
 /// towards this entity's position.
 #[derive(new)]
 pub struct GotoEntity {
+    /// The destination entity we are trying to reach.
     pub entity: Entity,
+    /// The speed at which the entity moves in tiles/second.
     pub speed: f32,
 }
 
@@ -150,10 +160,13 @@ impl BaseMap for CollisionMap {
     }
 }
 
+// TODO consider changing this to a component?
 /// Used to change the visible space of the world on screen.
 #[derive(new)]
 pub struct Camera {
+    /// The position of the camera.
     pub position: Point,
+    /// The size in tiles that the camera can view.
     pub size: Point,
 }
 
@@ -167,6 +180,7 @@ impl Default for Camera {
 }
 
 /// A direction towards one of the 3d axis.
+#[allow(missing_docs)]
 pub enum Direction {
     North,
     East,

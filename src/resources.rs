@@ -4,11 +4,14 @@ use crate::*;
 /// between entities and the map.
 #[derive(new)]
 pub struct CollisionResource {
+    /// The inner `CollisionMap`.
     pub map: CollisionMap,
+    /// The position at which the `CollisionMap` is located.
     pub position: Point,
 }
 
 impl CollisionResource {
+    /// Checks whether the position is located inside of the `CollisionMap`.
     pub fn is_inside(&self, p: &Point) -> bool {
         position_inside_rect(
             p.x - self.position.x,

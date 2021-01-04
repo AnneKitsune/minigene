@@ -1,5 +1,6 @@
 use crate::*;
 
+/// Uses the `SkillTriggerEvent`s to apply effectors to the correct entities.
 pub fn exec_skill_system<K: Hash + Eq, E: Clone + Hash + Eq, S: Hash + Eq, I>(
     skill_defs: &SkillDefinitions<K, E, S, I>,
     effector_defs: &EffectorDefinitions<K, E>,

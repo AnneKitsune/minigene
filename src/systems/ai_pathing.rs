@@ -1,5 +1,8 @@
 use crate::*;
 
+/// Calculates a path from the entity's current position towards the specified
+/// `AiDestination` and inserts it in a `AiPath` component.
+/// It uses a `CollisionResource` to take collisions into account.
 pub fn ai_pathing_system(
     entities: &Entities,
     dests: &Components<AiDestination>,

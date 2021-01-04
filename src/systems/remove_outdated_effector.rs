@@ -1,6 +1,7 @@
 use crate::*;
 
-// Run after ApplyEffectorsSystem
+/// Removes effectors where their time to live is expired.
+/// Note: Run after ApplyEffectorsSystem.
 pub fn remove_outdated_effector_system<E>(
     time: &Time,
     effectors: &mut Components<EffectorSet<E>>,

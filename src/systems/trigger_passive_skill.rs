@@ -1,8 +1,12 @@
 use crate::*;
 
+/// An event where a skill is activated by a specific entity.
 #[derive(Debug, Clone, new)]
 pub struct SkillTriggerEvent<K>(pub Entity, pub K);
 
+/// Activates passive skills for each entities where all conditions are met using
+/// their `SkillSet` component.
+/// Creates `SkillTriggerEvent` events.
 pub fn trigger_passive_skill_system<
     K: Debug + Hash + Eq,
     E,

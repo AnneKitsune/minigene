@@ -1,5 +1,6 @@
 use crate::*;
 
+/// Moves an entity one tile towards the target position, regardless of collisions.
 pub fn goto_straight_system(
     gotos: &Components<GotoStraight>,
     positions: &mut Components<Point>,

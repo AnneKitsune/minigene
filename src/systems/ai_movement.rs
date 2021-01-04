@@ -1,5 +1,7 @@
 use crate::*;
 
+/// Uses a `CollisionResource` and a `AiPath` component to move an entity
+/// one step towards the desired destination.
 pub fn ai_movement_system(
     global_map: &Option<CollisionResource>,
     positions: &mut Components<Point>,

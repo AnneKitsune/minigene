@@ -1,5 +1,6 @@
 use crate::*;
 
+/// Moves an entity one tile towards the targeted entity, regardless of collisions.
 pub fn goto_entity_simple_system(
     entities: &Entities,
     gotos: &Components<GotoEntity>,

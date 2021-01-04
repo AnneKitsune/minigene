@@ -1,5 +1,6 @@
 use crate::*;
 
+/// Ticks down the cooldown of skill instances for each entity having a `SkillSet` component.
 pub fn skill_cooldown_system<S: Hash + Eq>(
     time: &Time,
     skill_instances: &mut Components<SkillSet<S>>,
