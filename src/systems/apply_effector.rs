@@ -44,8 +44,8 @@ pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq>(
                 }
             }
             let multiplier = multiplicative_multiplier + additive_multiplier;
-            new_value *= multiplier;
             new_value += additive;
+            new_value *= multiplier;
             s.value_with_effectors = new_value;
         }
     }
