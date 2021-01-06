@@ -36,7 +36,9 @@ pub fn apply_effector_system<K: Hash + Eq, E: Hash + Eq>(
                         match ty {
                             EffectorType::Additive(v) => additive += v,
                             EffectorType::AdditiveMultiplier(v) => additive_multiplier += v,
-                            EffectorType::MultiplicativeMultiplier(v) => multiplicative_multiplier *= v,
+                            EffectorType::MultiplicativeMultiplier(v) => {
+                                multiplicative_multiplier *= v
+                            }
                         }
                     }
                 }
