@@ -17,8 +17,6 @@ pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
 pub use stopwatch::*;
 
-//pub use entity_component::*;
-//pub use world_dispatcher::*;
 pub use plank_ecs::*;
 
 // macro re-export
@@ -116,7 +114,7 @@ pub fn mini_init(
     world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Dispatcher, BTerm) {
-    #[cfg(feature = "terminal")]
+    /*#[cfg(feature = "terminal")]
     std::panic::set_hook(Box::new(|panic_info| {
         crossterm::terminal::disable_raw_mode().unwrap();
         let location = panic_info.location().unwrap();
@@ -125,7 +123,7 @@ pub fn mini_init(
             println!("Panic occured: {:?}", s);
         }
         //execute!(std::io::stdout(), crossterm::terminal::EnableLineWrap);
-    }));
+    }));*/
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
