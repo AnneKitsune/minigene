@@ -8,7 +8,7 @@ pub extern crate hibitset;
 extern crate crossterm;
 
 pub use bracket_lib::prelude::{
-    a_star_search, add_wasm_support, main_loop, to_cp437, BError, BTerm, BTermBuilder, BaseMap,
+    a_star_search, add_wasm_support, main_loop, to_cp437, BError, BEvent, BTerm, BTermBuilder, BaseMap,
     GameState, MultiTileSprite, NavigationPath, Point, Rect, SmallVec, SpriteSheet, VirtualKeyCode,
     BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW,
 };
@@ -77,9 +77,18 @@ pub fn mini_frame(
     //#[cfg(not(feature = "wasm"))]
     //world.get_mut::<Stopwatch>().unwrap().start();
 
-    let input = INPUT.lock();
-    for key in input.key_pressed_set().iter() {
-        world.get_mut::<Vec<VirtualKeyCode>>().unwrap().push(*key);
+    let mut close_requested = false;
+    let mut input = INPUT.lock();
+    while let Some(ev) = input.pop() {
+        match ev {
+            BEvent::KeyboardInput {key, ..} => world.get_mut::<Vec<VirtualKeyCode>>().unwrap().push(key),
+            BEvent::CloseRequested => close_requested = true,
+            _ => {},
+        }
+    }
+    if close_requested {
+        state_machine.stop(world, dispatcher, ctx);
+        return;
     }
     //#[cfg(feature = "wasm")]
     dispatcher.run_seq(world).unwrap();
@@ -114,7 +123,7 @@ pub fn mini_init(
     world: World,
     //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
 ) -> (World, Dispatcher, BTerm) {
-    /*#[cfg(feature = "terminal")]
+    #[cfg(feature = "terminal")]
     std::panic::set_hook(Box::new(|panic_info| {
         crossterm::terminal::disable_raw_mode().unwrap();
         let location = panic_info.location().unwrap();
@@ -123,7 +132,7 @@ pub fn mini_init(
             println!("Panic occured: {:?}", s);
         }
         //execute!(std::io::stdout(), crossterm::terminal::EnableLineWrap);
-    }));*/
+    }));
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
@@ -145,7 +154,7 @@ pub fn mini_init(
         .with_font("terminal8x8.png", 8, 8)
         .with_title(name)
         .with_vsync(false)
-        //.with_advanced_input(true)
+        .with_advanced_input(true)
         .build()
         .expect("Failed to build BTerm context.");
     //#[cfg(feature = "wasm")]
