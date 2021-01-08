@@ -147,7 +147,7 @@ pub fn mini_init(
         .with_font("terminal8x8.png", 8, 8)
         .with_title(name)
         .with_vsync(false)
-        .with_advanced_input(true)
+        //.with_advanced_input(true)
         .build()
         .expect("Failed to build BTerm context.");
     //#[cfg(feature = "wasm")]
