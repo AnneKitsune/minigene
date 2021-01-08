@@ -1,9 +1,9 @@
 use crate::*;
 
-/// Transforms `VirtualKeyCode` events into the desired event type using a keybindings map.
+/// Transforms `char` input events into the desired event type using a keybindings map.
 pub fn input_driver<E: Clone>(
-    keymap: &HashMap<VirtualKeyCode, E>,
-    inputs: &Vec<VirtualKeyCode>,
+    keymap: &HashMap<char, E>,
+    inputs: &Vec<char>,
     events: &mut Vec<E>,
 ) -> SystemResult {
     for i in inputs.iter() {
