@@ -82,6 +82,8 @@ pub fn mini_frame(
     while let Some(ev) = input.pop() {
         match ev {
             BEvent::KeyboardInput {key, ..} => world.get_mut::<Vec<VirtualKeyCode>>().unwrap().push(key),
+            //BEvent::Character {c} => world.get_mut::<Vec<VirtualKeyCode>>().unwrap().push(key),
+            BEvent::Character {c} => println!("input char: {}", c),
             BEvent::CloseRequested => close_requested = true,
             _ => {},
         }
