@@ -56,7 +56,7 @@ pub fn init_thread_pool() -> Result<(), ThreadPoolBuildError> {
                         i.location().unwrap().line(),
                         i.location().unwrap().column()
                     );
-                    let _ = std::fs::write("/tmp/err", "WE CRASHED");
+                    //let _ = std::fs::write("/tmp/err", "WE CRASHED");
                 }));
             }
         })

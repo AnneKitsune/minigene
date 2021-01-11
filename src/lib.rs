@@ -81,9 +81,14 @@ pub fn mini_frame(
     let mut input = INPUT.lock();
     while let Some(ev) = input.pop() {
         match ev {
-            //BEvent::KeyboardInput {key, ..} => world.get_mut::<Vec<>>().unwrap().push(key),
-            BEvent::Character {c} => world.get_mut::<Vec<char>>().unwrap().push(c),
-            //BEvent::Character {c} => println!("input char: {}", c),
+            /*BEvent::KeyboardInput {key, ..} => {
+                //world.get_mut::<Vec<>>().unwrap().push(key);
+                //println!("kb event");
+            }*/
+            BEvent::Character {c} => {
+                //println!("Input: {}", c);
+                world.get_mut::<Vec<char>>().unwrap().push(c);
+            }
             BEvent::CloseRequested => close_requested = true,
             _ => {},
         }
@@ -93,7 +98,7 @@ pub fn mini_frame(
         return;
     }
     //#[cfg(feature = "wasm")]
-    dispatcher.run_seq(world).unwrap();
+    dispatcher.run_seq(world).expect("Error during system execution.");
     //#[cfg(not(feature = "wasm"))]
     //dispatcher.run_par(world).unwrap();
     state_machine.update(world, dispatcher, ctx);
@@ -122,10 +127,9 @@ pub fn mini_init(
     name: &str,
     #[allow(unused)] spritesheet: Option<SpriteSheet>,
     dispatcher: Dispatcher,
-    world: World,
-    //mut dispatcher_builder: DispatcherBuilder<'static, 'static>,
+    mut world: World,
 ) -> (World, Dispatcher, BTerm) {
-    #[cfg(feature = "terminal")]
+    /*#[cfg(feature = "terminal")]
     std::panic::set_hook(Box::new(|panic_info| {
         crossterm::terminal::disable_raw_mode().unwrap();
         let location = panic_info.location().unwrap();
@@ -133,12 +137,11 @@ pub fn mini_init(
         if let Some(s) = panic_info.payload().downcast_ref::<&str>() {
             println!("Panic occured: {:?}", s);
         }
-        //execute!(std::io::stdout(), crossterm::terminal::EnableLineWrap);
-    }));
+    }));*/
+
     #[cfg(feature = "wasm")]
     web_worker::init_panic_hook();
     let mut context = BTermBuilder::new();
-    //#[cfg(not(feature = "opengl"))]
     {
         context = context.with_simple_console(width, height, "terminal8x8.png");
     }
@@ -166,8 +169,14 @@ pub fn mini_init(
     //let mut dispatcher = dispatcher_builder.build();
     //dispatcher.setup(&mut world);
 
-    #[cfg(not(target_arch = "wasm32"))]
-    init_thread_pool().unwrap();
+    world.initialize::<Vec<char>>();
+    world.initialize::<Components<MultiSprite>>();
+    world.initialize::<Components<Sprite>>();
+    world.initialize::<Components<Point>>();
+    world.initialize::<Camera>();
+
+    /*#[cfg(not(target_arch = "wasm32"))]
+    init_thread_pool().unwrap();*/
 
     (world, dispatcher, context)
 }
