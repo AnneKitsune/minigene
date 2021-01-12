@@ -8,9 +8,9 @@ pub extern crate hibitset;
 extern crate crossterm;
 
 pub use bracket_lib::prelude::{
-    a_star_search, add_wasm_support, main_loop, to_cp437, BError, BEvent, BTerm, BTermBuilder, BaseMap,
-    GameState, MultiTileSprite, NavigationPath, Point, Rect, SmallVec, SpriteSheet, VirtualKeyCode,
-    BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW,
+    a_star_search, add_wasm_support, main_loop, to_cp437, BError, BEvent, BTerm, BTermBuilder,
+    BaseMap, GameState, MultiTileSprite, NavigationPath, Point, Rect, SmallVec, SpriteSheet,
+    VirtualKeyCode, BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW,
 };
 pub use game_clock::*;
 pub use game_features::*;
@@ -85,12 +85,12 @@ pub fn mini_frame(
                 //world.get_mut::<Vec<>>().unwrap().push(key);
                 //println!("kb event");
             }*/
-            BEvent::Character {c} => {
+            BEvent::Character { c } => {
                 //println!("Input: {}", c);
                 world.get_mut::<Vec<char>>().unwrap().push(c);
             }
             BEvent::CloseRequested => close_requested = true,
-            _ => {},
+            _ => {}
         }
     }
     if close_requested {
@@ -98,7 +98,9 @@ pub fn mini_frame(
         return;
     }
     //#[cfg(feature = "wasm")]
-    dispatcher.run_seq(world).expect("Error during system execution.");
+    dispatcher
+        .run_seq(world)
+        .expect("Error during system execution.");
     //#[cfg(not(feature = "wasm"))]
     //dispatcher.run_par(world).unwrap();
     state_machine.update(world, dispatcher, ctx);
