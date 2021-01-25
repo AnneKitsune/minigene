@@ -38,21 +38,27 @@ pub fn render_sprites<'a>(
     camera: &Camera,
     positions: &Components<Point>,
     sprites: &Components<SpriteIndex>,
+    viewsheds: &Components<Viewshed>,
 ) {
-    for (pos, sprite) in join!(&positions && &sprites) {
-        let pos = pos.unwrap();
-        let sprite = sprite.unwrap();
-        ctx.add_sprite(
-            Rect::with_size(
-                (pos.x - camera.position.x) * 1,
-                (pos.y - camera.position.y) * 1,
-                // TODO make this dynamic.
-                1,
-                1,
-            ),
-            0,
-            RGBA::named(WHITE),
-            sprite.0,
-        );
+    for viewshed in viewsheds.iter() {
+        for (pos, sprite) in join!(&positions && &sprites) {
+            let pos = pos.unwrap();
+            let sprite = sprite.unwrap();
+            if viewshed.visible_tiles.contains(&pos) {
+                ctx.add_sprite(
+                    Rect::with_size(
+                        (pos.x - camera.position.x) * 1,
+                        (pos.y - camera.position.y) * 1,
+                        // TODO make this dynamic.
+                        1,
+                        1,
+                    ),
+                    0,
+                    RGBA::named(WHITE),
+                    sprite.0,
+                );
+            }
+        }
+
     }
 }

@@ -197,11 +197,21 @@ pub enum Direction {
 }
 
 /// What we can see from a certain point.
+#[derive(new)]
 pub struct Viewshed {
     /// Which tiles we can see.
     pub visible_tiles: Vec<Point>,
     /// How many tiles ahead we can see.
     pub range: i32,
+}
+
+impl Default for Viewshed {
+    fn default() -> Self {
+        Self {
+            visible_tiles: Vec::new(),
+            range: 0,
+        }
+    }
 }
 
 #[cfg(test)]
