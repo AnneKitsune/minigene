@@ -8,9 +8,9 @@ pub extern crate hibitset;
 extern crate crossterm;
 
 pub use bracket_lib::prelude::{
-    a_star_search, add_wasm_support, main_loop, to_cp437, BError, BEvent, BTerm, BTermBuilder,
+    a_star_search, add_wasm_support, main_loop, to_cp437, field_of_view, BError, BEvent, BTerm, BTermBuilder,
     BaseMap, GameState, MultiTileSprite, NavigationPath, Point, Rect, SmallVec, SpriteSheet,
-    VirtualKeyCode, BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW,
+    VirtualKeyCode, BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW, Algorithm2D,
 };
 pub use game_clock::*;
 pub use game_features::*;

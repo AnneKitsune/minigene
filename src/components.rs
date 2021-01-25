@@ -113,6 +113,12 @@ impl CollisionMap {
     }
 }
 
+impl Algorithm2D for CollisionMap {
+    fn dimensions(&self) -> Point {
+        Point::new(self.width, self.height)
+    }
+}
+
 impl BaseMap for CollisionMap {
     fn is_opaque(&self, idx: usize) -> bool {
         self.bitset.contains(idx as u32)
