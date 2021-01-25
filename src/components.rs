@@ -196,6 +196,14 @@ pub enum Direction {
     Down,
 }
 
+/// What we can see from a certain point.
+pub struct Viewshed {
+    /// Which tiles we can see.
+    pub visible_tiles: Vec<Point>,
+    /// How many tiles ahead we can see.
+    pub range: i32,
+}
+
 #[cfg(test)]
 mod tests {
     use crate::*;
