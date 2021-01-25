@@ -1,5 +1,7 @@
 use crate::*;
 
+use std::collections::HashSet;
+
 /// A single colored letter sprite.
 pub struct Sprite {
     /// The char symbol displayed.
@@ -196,20 +198,17 @@ pub enum Direction {
     Down,
 }
 
-/// What we can see from a certain point.
+/// Everything we can see from.
 #[derive(new)]
 pub struct Viewshed {
     /// Which tiles we can see.
-    pub visible_tiles: Vec<Point>,
-    /// How many tiles ahead we can see.
-    pub range: i32,
+    pub visible_tiles: HashSet<Point>,
 }
 
 impl Default for Viewshed {
     fn default() -> Self {
         Self {
-            visible_tiles: Vec::new(),
-            range: 0,
+            visible_tiles: HashSet::new(),
         }
     }
 }
