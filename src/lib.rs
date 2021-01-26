@@ -156,6 +156,10 @@ pub fn mini_init(
             println!("Using opengl mode without a spritesheet!");
         }
     }
+    #[cfg(feature = "headless")]
+    {
+        println!("Running headlessly...");
+    }
 
     let context = context
         .with_font("terminal8x8.png", 8, 8)
