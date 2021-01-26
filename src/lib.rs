@@ -10,7 +10,7 @@ extern crate crossterm;
 pub use bracket_lib::prelude::{
     a_star_search, add_wasm_support, field_of_view, main_loop, to_cp437, Algorithm2D, BError,
     BEvent, BTerm, BTermBuilder, BaseMap, GameState, MultiTileSprite, NavigationPath, Point, Rect,
-    SmallVec, SpriteSheet, VirtualKeyCode, BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE,
+    SmallVec, SpriteSheet, VirtualKeyCode, BLACK, BLUE, EMBED, GREEN, INPUT, RED, DIMGRAY, RGBA, WHITE,
     YELLOW,
 };
 pub use game_clock::*;
