@@ -68,7 +68,7 @@ pub fn render_sprites<'a>(
                     1,
                 ),
                 0,
-                RGBA::named(DIMGRAY),
+                RGBA::from_u8(160, 160, 160, 255),
                 sprite.0,
             );
         }
