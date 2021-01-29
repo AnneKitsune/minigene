@@ -10,6 +10,7 @@ edition = "2018"
 default = ["terminal", "plank_ecs/parallel"]
 terminal = ["bracket-lib/crossterm", "crossterm"]
 opengl = ["bracket-lib/opengl"]
+headless = []
 wasm = ["wasm-bindgen", "bracket-lib/opengl", "web_worker"]
 
 [dependencies]
