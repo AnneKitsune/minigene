@@ -8,25 +8,28 @@ pub fn render_ascii<'a>(
     multi_sprites: &Components<MultiSprite>,
     sprites: &Components<Sprite>,
 ) {
-    for (pos, sprite) in join!(&positions && &multi_sprites) {
-        sprite.unwrap().tile.render(
-            ctx,
-            Point::new(
-                pos.unwrap().x - camera.position.x,
-                pos.unwrap().y - camera.position.y,
-            ),
-        );
-    }
-    for (pos, sprite) in join!(&positions && &sprites) {
-        let pos = pos.unwrap();
-        let sprite = sprite.unwrap();
-        ctx.set(
-            pos.x - camera.position.x,
-            pos.y - camera.position.y,
-            sprite.fg,
-            sprite.bg,
-            sprite.glyph,
-        );
+    #[cfg(not(feature = "headless"))]
+    {
+        for (pos, sprite) in join!(&positions && &multi_sprites) {
+            sprite.unwrap().tile.render(
+                ctx,
+                Point::new(
+                    pos.unwrap().x - camera.position.x,
+                    pos.unwrap().y - camera.position.y,
+                ),
+            );
+        }
+        for (pos, sprite) in join!(&positions && &sprites) {
+            let pos = pos.unwrap();
+            let sprite = sprite.unwrap();
+            ctx.set(
+                pos.x - camera.position.x,
+                pos.y - camera.position.y,
+                sprite.fg,
+                sprite.bg,
+                sprite.glyph,
+            );
+        }
     }
 }
 
@@ -40,6 +43,7 @@ pub fn render_sprites<'a>(
     sprites: &Components<SpriteIndex>,
     viewshed: Option<&Viewshed>,
 ) {
+    #[cfg(not(feature = "headless"))]
     for (pos, sprite) in join!(&positions && &sprites) {
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
@@ -57,7 +61,6 @@ pub fn render_sprites<'a>(
                 RGBA::named(WHITE),
                 sprite.0,
             );
-
         // TODO this will not hide units that are not creeps, use a better way of checking for enemy units.
         } else if sprite.0 != 9 {
             ctx.add_sprite(
