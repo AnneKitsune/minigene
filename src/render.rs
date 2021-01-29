@@ -38,13 +38,13 @@ pub fn render_sprites<'a>(
     camera: &Camera,
     positions: &Components<Point>,
     sprites: &Components<SpriteIndex>,
-    viewshed: &Viewshed,
+    viewshed: Option<&Viewshed>,
 ) {
     for (pos, sprite) in join!(&positions && &sprites) {
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
-        if viewshed.visible_tiles.contains(&pos) {
+        if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
             ctx.add_sprite(
                 Rect::with_size(
                     (pos.x - camera.position.x) * 1,
@@ -57,6 +57,7 @@ pub fn render_sprites<'a>(
                 RGBA::named(WHITE),
                 sprite.0,
             );
+
         // TODO this will not hide units that are not creeps, use a better way of checking for enemy units.
         } else if sprite.0 != 9 {
             ctx.add_sprite(
