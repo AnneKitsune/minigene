@@ -1,5 +1,7 @@
 use crate::*;
 
+use std::collections::HashSet;
+
 /// A single colored letter sprite.
 pub struct Sprite {
     /// The char symbol displayed.
@@ -113,6 +115,12 @@ impl CollisionMap {
     }
 }
 
+impl Algorithm2D for CollisionMap {
+    fn dimensions(&self) -> Point {
+        Point::new(self.width, self.height)
+    }
+}
+
 impl BaseMap for CollisionMap {
     fn is_opaque(&self, idx: usize) -> bool {
         self.bitset.contains(idx as u32)
@@ -188,6 +196,21 @@ pub enum Direction {
     West,
     Up,
     Down,
+}
+
+/// Everything we can see from.
+#[derive(new)]
+pub struct Viewshed {
+    /// Which tiles we can see.
+    pub visible_tiles: HashSet<Point>,
+}
+
+impl Default for Viewshed {
+    fn default() -> Self {
+        Self {
+            visible_tiles: HashSet::new(),
+        }
+    }
 }
 
 #[cfg(test)]
