@@ -11,6 +11,7 @@ pub fn ai_movement_system(
     for (pos, path) in join!(&mut positions && &mut paths) {
         let pos = pos.unwrap();
         let path = path.unwrap();
+        // If target is reachable and there are steps to do:
         if path.path.success && path.path.steps.len() > 1 {
             let dest = path.path.steps.remove(1);
             let (x, y) = global_map.as_ref().unwrap().map.position_of(dest as u32);
