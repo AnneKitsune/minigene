@@ -10,7 +10,19 @@ pub fn ai_pathing_system(
     positions: &Components<Point>,
     paths: &mut Components<AiPath>,
 ) -> SystemResult {
-    for (e, pos, dest) in join!(&entities && &positions && &dests) {
+    'query: for (e, pos, dest) in join!(&entities && &positions && &dests) {
+        // Check if entity already has AIpath with the same destination:
+        if let Some(existing_path) = paths.get(e.unwrap()) {
+            let curr_dest = existing_path.path.destination as u32;
+            let new_dest = global_map
+                .as_ref()
+                .unwrap()
+                .map
+                .index_of(dest.unwrap().target.x as u32, dest.unwrap().target.y as u32);
+            if curr_dest == new_dest {
+                continue 'query;
+            }
+        }
         let pos = pos.unwrap();
         let dest = dest.unwrap();
         let mut path = AiPath::default();

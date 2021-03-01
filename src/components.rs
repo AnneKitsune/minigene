@@ -102,13 +102,15 @@ impl CollisionMap {
         self.bitset.clear();
     }
 
-    pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
+    // pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
+    pub fn index_of(&self, x: u32, y: u32) -> u32 {
         let idx = y * self.width + x;
         assert!(idx <= self.width * self.height - 1);
         idx
     }
 
-    pub(crate) fn position_of(&self, idx: u32) -> (u32, u32) {
+    // pub(crate) fn position_of(&self, idx: u32) -> (u32, u32) {
+    pub fn position_of(&self, idx: u32) -> (u32, u32) {
         assert!(self.width > 0);
         assert!(self.height > 0);
         (idx % self.width, idx / self.width)
