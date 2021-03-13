@@ -18,7 +18,7 @@ pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
 pub use stopwatch::*;
 
-pub use plank_ecs::*;
+pub use planck_ecs::*;
 
 // macro re-export
 pub use derive_new::*;
