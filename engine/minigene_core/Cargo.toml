@@ -15,3 +15,4 @@ game_clock = { version = "1.0.0" }
 spin_sleep = "1.0.0"
 planck_ecs = { version = "1.0.0" }
 game_state_machine = { path = "../../../game_state_machine" }
+derive-new = "0.5.8"

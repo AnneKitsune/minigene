@@ -1,5 +1,3 @@
-use crate::*;
-
 /// Holds the collision map used to calculate movements, ai pathing and collisions
 /// between entities and the map.
 #[derive(new)]
@@ -28,14 +26,5 @@ impl CollisionResource {
             (p.x - self.position.x) as u32,
             (p.y - self.position.y) as u32,
         )
-    }
-}
-
-/// Sets the game speed multiplier.
-pub struct GameSpeed(pub f32);
-
-impl Default for GameSpeed {
-    fn default() -> Self {
-        GameSpeed(1.0)
     }
 }

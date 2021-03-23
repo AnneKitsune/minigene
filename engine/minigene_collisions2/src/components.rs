@@ -1,61 +1,5 @@
-use crate::*;
-
-use std::collections::HashSet;
-
-/// A single colored letter sprite.
-pub struct Sprite {
-    /// The char symbol displayed.
-    pub glyph: u16,
-    /// The foreground color.
-    pub fg: RGBA,
-    /// The background color.
-    pub bg: RGBA,
-}
-
-/// The index of a 2d sprite. Created from `SpriteSheet`'s index.
-pub struct SpriteIndex(pub usize);
-
-/// A text-based sprite that is multiple tiles wide/high.
-#[derive(new)]
-pub struct MultiSprite {
-    /// The tile.
-    pub tile: MultiTileSprite,
-}
-
-/// The path calculated by the Ai that it will follow.
-#[derive(new, Default)]
-pub struct AiPath {
-    /// The path.
-    pub path: NavigationPath,
-}
-
-/// Indicates that the ai should calculate an AiPath from the current position
-/// towards this destination.
-#[derive(new)]
-pub struct AiDestination {
-    /// The destination position.
-    pub target: Point,
-}
-
-/// Indicates that the ai should calculate an AiPath from the current position
-/// towards this destination.
-#[derive(new)]
-pub struct GotoStraight {
-    /// The destination position.
-    pub target: Point,
-    /// The speed at which the entity moves in tiles/second.
-    pub speed: f32,
-}
-
-/// Indicates that the ai should calculate an AiPath from the current position
-/// towards this entity's position.
-#[derive(new)]
-pub struct GotoEntity {
-    /// The destination entity we are trying to reach.
-    pub entity: Entity,
-    /// The speed at which the entity moves in tiles/second.
-    pub speed: f32,
-}
+#[cfg(feature="bracket")]
+use minigene_bracket::bracket::{BaseMap, Algorithm2D, Point};
 
 /// Collision of a single tile entity
 pub struct Collision;
@@ -117,12 +61,14 @@ impl CollisionMap {
     }
 }
 
+#[cfg(feature="bracket")]
 impl Algorithm2D for CollisionMap {
     fn dimensions(&self) -> Point {
         Point::new(self.width, self.height)
     }
 }
 
+#[cfg(feature="bracket")]
 impl BaseMap for CollisionMap {
     fn is_opaque(&self, idx: usize) -> bool {
         self.bitset.contains(idx as u32)
@@ -170,50 +116,6 @@ impl BaseMap for CollisionMap {
     }
 }
 
-// TODO consider changing this to a component?
-/// Used to change the visible space of the world on screen.
-#[derive(new)]
-pub struct Camera {
-    /// The position of the camera.
-    pub position: Point,
-    /// The size in tiles that the camera can view.
-    pub size: Point,
-}
-
-impl Default for Camera {
-    fn default() -> Self {
-        Self {
-            position: Point::new(0, 0),
-            size: Point::new(80, 50),
-        }
-    }
-}
-
-/// A direction towards one of the 3d axis.
-#[allow(missing_docs)]
-pub enum Direction {
-    North,
-    East,
-    South,
-    West,
-    Up,
-    Down,
-}
-
-/// Everything we can see from.
-#[derive(new)]
-pub struct Viewshed {
-    /// Which tiles we can see.
-    pub visible_tiles: HashSet<Point>,
-}
-
-impl Default for Viewshed {
-    fn default() -> Self {
-        Self {
-            visible_tiles: HashSet::new(),
-        }
-    }
-}
 
 #[cfg(test)]
 mod tests {

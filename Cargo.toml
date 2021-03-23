@@ -19,6 +19,7 @@ big_systems = ["minigene_core/big_systems"]
 [dependencies]
 minigene_core = { version = "0.1.0", path = "engine/minigene_core" }
 minigene_bracket = { version = "0.1.0", path = "engine/minigene_bracket" }
+minigene_utils = { version = "0.1.0", path = "engine/minigene_utils" }
 #bracket-lib = { git = "https://github.com/jojolepro/bracket-lib", branch = "winit_serde", default-features = false, features = ["threaded", "serde"] }
 
 #game_features = { path = "../game_features" }

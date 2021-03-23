@@ -1,9 +1,4 @@
-//! Transform constructs for minigene.
-
-pub use cgmath::*;
-
-mod utils;
-pub use crate::utils::*;
+use hibitset::BitSet as HBitSet;
 
 #[cfg(test)]
 mod tests {
