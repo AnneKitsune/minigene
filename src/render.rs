@@ -22,7 +22,12 @@ pub fn render_ascii<'a>(
         for (pos, sprite) in join!(&positions && &sprites) {
             let pos = pos.unwrap();
             let sprite = sprite.unwrap();
-            if position_inside_rect(
+
+            // the position of the camera is its position in the world, not
+            // its offset on screen.
+            // TODO make it so we can define the camera on screen as a square.
+            // (add screenspace coords)
+            if camera.size.x > 0 && camera.size.y > 0 && position_inside_rect(
                 pos.x,
                 pos.y,
                 camera.position.x,
@@ -57,7 +62,7 @@ pub fn render_sprites<'a>(
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
-        if position_inside_rect(
+        if camera.size.x > 0 && camera.size.y > 0 && position_inside_rect(
             pos.x,
             pos.y,
             camera.position.x,

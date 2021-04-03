@@ -15,9 +15,9 @@ pub fn position_inside_rect(
     size_x: u32,
     size_y: u32,
 ) -> bool {
-    assert!(size_x > 0);
-    assert!(size_y > 0);
-    pos_x >= rect_x
+    size_x > 0
+        && size_y > 0
+        && pos_x >= rect_x
         && pos_y >= rect_y
         && pos_x < rect_x + size_x as i32
         && pos_y < rect_y + size_y as i32
