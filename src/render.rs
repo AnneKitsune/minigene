@@ -22,6 +22,8 @@ pub fn render_ascii<'a>(
         for (pos, sprite) in join!(&positions && &sprites) {
             let pos = pos.unwrap();
             let sprite = sprite.unwrap();
+            if position_inside_rect (pos.x, pos.y, camera.position.x, camera.position.y,
+                camera.size.x as u32, camera.size.y as u32) {
             ctx.set(
                 pos.x - camera.position.x,
                 pos.y - camera.position.y,
@@ -29,6 +31,7 @@ pub fn render_ascii<'a>(
                 sprite.bg,
                 sprite.glyph,
             );
+            }
         }
     }
 }
@@ -48,6 +51,8 @@ pub fn render_sprites<'a>(
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
+            if position_inside_rect (pos.x, pos.y, camera.position.x, camera.position.y,
+                camera.size.x as u32, camera.size.y as u32) {
         if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
             ctx.add_sprite(
                 Rect::with_size(
@@ -76,5 +81,6 @@ pub fn render_sprites<'a>(
                 sprite.0,
             );
         }
+            }
     }
 }
