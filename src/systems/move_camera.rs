@@ -1,7 +1,7 @@
 use crate::*;
 /// Consumes `MoveCameraEvent` to move all cameras in the world.
 /// Events are cleared by this system.
-pub fn move_camera_system(cameras: &Components<Camera>, points: &mut Components<Point>, events: &mut Vec<MoveCameraEvent>) {
+pub fn move_camera_system(cameras: &Components<Camera>, points: &mut Components<Point>, events: &mut Vec<MoveCameraEvent>) -> SystemResult {
     for ev in events.iter() {
         let (mut off_x, mut off_y) = match ev.direction {
             Direction::North => (0, -1),
@@ -17,4 +17,5 @@ pub fn move_camera_system(cameras: &Components<Camera>, points: &mut Components<
             p.as_mut().unwrap().y += off_y;
         }
     }
+    Ok(())
 }
