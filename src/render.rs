@@ -25,8 +25,8 @@ pub fn render_ascii<'a>(
             if position_inside_rect(
                 pos.x,
                 pos.y,
-                camera.position.x,
-                camera.position.y,
+                -camera.position.x,
+                -camera.position.y,
                 camera.size.x as u32,
                 camera.size.y as u32,
             ) {
@@ -60,8 +60,8 @@ pub fn render_sprites<'a>(
         if position_inside_rect(
             pos.x,
             pos.y,
-            camera.position.x,
-            camera.position.y,
+            -camera.position.x,
+            -camera.position.y,
             camera.size.x as u32,
             camera.size.y as u32,
         ) {
