@@ -32,7 +32,7 @@ pub fn render_ascii<'a>(
                 pos.x,
                 pos.y,
                 pos.x + camera.position.x,
-                pos.x + camera.position.y,
+                pos.y + camera.position.y,
                 camera.size.x as u32,
                 camera.size.y as u32,
             ) {
@@ -67,7 +67,7 @@ pub fn render_sprites<'a>(
             pos.x,
             pos.y,
             pos.x + camera.position.x,
-            pos.x + camera.position.y,
+            pos.y + camera.position.y,
             camera.size.x as u32,
             camera.size.y as u32,
         ) {
