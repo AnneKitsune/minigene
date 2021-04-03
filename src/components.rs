@@ -191,6 +191,7 @@ impl Default for Camera {
 
 /// A direction towards one of the 3d axis.
 #[allow(missing_docs)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub enum Direction {
     North,
     East,

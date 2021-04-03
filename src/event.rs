@@ -2,6 +2,7 @@ use crate::*;
 
 /// Moves all cameras in the world by `distance` towards `direction`.
 /// Consumed by `move_camera_system`.
+#[derive(Hash, PartialEq, Eq, Clone, Copy, Debug)]
 pub struct MoveCameraEvent {
     /// The direction in which to move the camera.
     pub direction: Direction,
