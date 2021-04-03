@@ -28,17 +28,17 @@ pub fn render_ascii<'a>(
             // its offset on screen.
             // TODO make it so we can define the camera on screen as a square.
             // (add screenspace coords)
-            if camera.size.x > 0 && camera.size.y > 0 && position_inside_rect(
-                pos.x - camera.position.x,
-                pos.y - camera.position.y,
-                0,
-                0,
+            if position_inside_rect(
+                pos.x - camera.position.x - camera.screen_position.x,
+                pos.y - camera.position.y - camera.screen_position.y,
+                camera.screen_position.x,
+                camera.screen_position.y,
                 camera.size.x as u32,
                 camera.size.y as u32,
             ) {
                 ctx.set(
-                    pos.x - camera.position.x,
-                    pos.y - camera.position.y,
+                    pos.x - camera.position.x - camera.screen_position.x,
+                    pos.y - camera.position.y - camera.screen_position.y,
                     sprite.fg,
                     sprite.bg,
                     sprite.glyph,
@@ -63,19 +63,19 @@ pub fn render_sprites<'a>(
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
-        if camera.size.x > 0 && camera.size.y > 0 && position_inside_rect(
-            pos.x - camera.position.x,
-            pos.y - camera.position.y,
-            0,
-            0,
+        if position_inside_rect(
+            pos.x - camera.position.x - camera.screen_position.x,
+            pos.y - camera.position.y - camera.screen_position.y,
+            camera.screen_position.x,
+            camera.screen_position.y,
             camera.size.x as u32,
             camera.size.y as u32,
         ) {
             if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
                 ctx.add_sprite(
                     Rect::with_size(
-                        (pos.x - camera.position.x) * 1,
-                        (pos.y - camera.position.y) * 1,
+                        (pos.x - camera.position.x - camera.screen_position.x) * 1,
+                        (pos.y - camera.position.y - camera.screen_position.y) * 1,
                         // TODO make this dynamic.
                         1,
                         1,

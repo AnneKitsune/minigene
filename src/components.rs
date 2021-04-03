@@ -174,8 +174,10 @@ impl BaseMap for CollisionMap {
 /// Used to change the visible space of the world on screen.
 #[derive(new, Clone, Debug)]
 pub struct Camera {
-    /// The position of the camera.
+    /// The position of the camera in the world.
     pub position: Point,
+    /// The position of the camera on screen.
+    pub screen_position: Point,
     /// The size in tiles that the camera can view.
     pub size: Point,
 }
@@ -184,6 +186,7 @@ impl Default for Camera {
     fn default() -> Self {
         Self {
             position: Point::new(0, 0),
+            screen_position: Point::new(0, 0),
             size: Point::new(80, 50),
         }
     }
