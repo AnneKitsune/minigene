@@ -1,6 +1,7 @@
 mod ai_pathing;
 mod apply_effector;
 mod combine_collision;
+mod event_retrigger;
 mod exec_skill;
 mod goto_entity_simple;
 mod goto_straight;
@@ -13,6 +14,7 @@ mod trigger_passive_skill;
 pub use self::ai_pathing::*;
 pub use self::apply_effector::*;
 pub use self::combine_collision::*;
+pub use self::event_retrigger::*;
 pub use self::exec_skill::*;
 pub use self::goto_entity_simple::*;
 pub use self::goto_straight::*;
