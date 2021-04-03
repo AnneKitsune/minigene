@@ -10,6 +10,7 @@ pub fn render_ascii<'a>(
 ) {
     #[cfg(not(feature = "headless"))]
     {
+        // TODO add the camera check to multisprites
         for (pos, sprite) in join!(&positions && &multi_sprites) {
             sprite.unwrap().tile.render(
                 ctx,
@@ -84,6 +85,7 @@ pub fn render_sprites<'a>(
                     sprite.0,
                 );
             // TODO this will not hide units that are not creeps, use a better way of checking for enemy units.
+            // TODO this shouldn't even be in the engine at all.
             } else if sprite.0 != 9 {
                 ctx.add_sprite(
                     Rect::with_size(
