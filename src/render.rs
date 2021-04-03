@@ -29,8 +29,8 @@ pub fn render_ascii<'a>(
             // TODO make it so we can define the camera on screen as a square.
             // (add screenspace coords)
             if position_inside_rect(
-                pos.x - camera.position.x - camera.screen_position.x,
-                pos.y - camera.position.y - camera.screen_position.y,
+                pos.x - camera.position.x,
+                pos.y - camera.position.y,
                 camera.screen_position.x,
                 camera.screen_position.y,
                 camera.size.x as u32,
@@ -64,8 +64,8 @@ pub fn render_sprites<'a>(
         let sprite = sprite.unwrap();
 
         if position_inside_rect(
-            pos.x - camera.position.x - camera.screen_position.x,
-            pos.y - camera.position.y - camera.screen_position.y,
+            pos.x - camera.position.x,
+            pos.y - camera.position.y,
             camera.screen_position.x,
             camera.screen_position.y,
             camera.size.x as u32,
