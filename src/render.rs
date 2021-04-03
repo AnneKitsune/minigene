@@ -22,15 +22,21 @@ pub fn render_ascii<'a>(
         for (pos, sprite) in join!(&positions && &sprites) {
             let pos = pos.unwrap();
             let sprite = sprite.unwrap();
-            if position_inside_rect (pos.x, pos.y, camera.position.x, camera.position.y,
-                camera.size.x as u32, camera.size.y as u32) {
-            ctx.set(
-                pos.x - camera.position.x,
-                pos.y - camera.position.y,
-                sprite.fg,
-                sprite.bg,
-                sprite.glyph,
-            );
+            if position_inside_rect(
+                pos.x,
+                pos.y,
+                camera.position.x,
+                camera.position.y,
+                camera.size.x as u32,
+                camera.size.y as u32,
+            ) {
+                ctx.set(
+                    pos.x - camera.position.x,
+                    pos.y - camera.position.y,
+                    sprite.fg,
+                    sprite.bg,
+                    sprite.glyph,
+                );
             }
         }
     }
@@ -51,36 +57,42 @@ pub fn render_sprites<'a>(
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
-            if position_inside_rect (pos.x, pos.y, camera.position.x, camera.position.y,
-                camera.size.x as u32, camera.size.y as u32) {
-        if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
-            ctx.add_sprite(
-                Rect::with_size(
-                    (pos.x - camera.position.x) * 1,
-                    (pos.y - camera.position.y) * 1,
-                    // TODO make this dynamic.
-                    1,
-                    1,
-                ),
-                0,
-                RGBA::named(WHITE),
-                sprite.0,
-            );
-        // TODO this will not hide units that are not creeps, use a better way of checking for enemy units.
-        } else if sprite.0 != 9 {
-            ctx.add_sprite(
-                Rect::with_size(
-                    (pos.x - camera.position.x) * 1,
-                    (pos.y - camera.position.y) * 1,
-                    // TODO make this dynamic.
-                    1,
-                    1,
-                ),
-                0,
-                RGBA::from_u8(160, 160, 160, 255),
-                sprite.0,
-            );
-        }
+        if position_inside_rect(
+            pos.x,
+            pos.y,
+            camera.position.x,
+            camera.position.y,
+            camera.size.x as u32,
+            camera.size.y as u32,
+        ) {
+            if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
+                ctx.add_sprite(
+                    Rect::with_size(
+                        (pos.x - camera.position.x) * 1,
+                        (pos.y - camera.position.y) * 1,
+                        // TODO make this dynamic.
+                        1,
+                        1,
+                    ),
+                    0,
+                    RGBA::named(WHITE),
+                    sprite.0,
+                );
+            // TODO this will not hide units that are not creeps, use a better way of checking for enemy units.
+            } else if sprite.0 != 9 {
+                ctx.add_sprite(
+                    Rect::with_size(
+                        (pos.x - camera.position.x) * 1,
+                        (pos.y - camera.position.y) * 1,
+                        // TODO make this dynamic.
+                        1,
+                        1,
+                    ),
+                    0,
+                    RGBA::from_u8(160, 160, 160, 255),
+                    sprite.0,
+                );
             }
+        }
     }
 }
