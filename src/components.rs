@@ -170,7 +170,7 @@ impl BaseMap for CollisionMap {
     }
 }
 
-// TODO consider changing this to a component?
+// TODO consider changing this to a component or keep as a resource?
 /// Used to change the visible space of the world on screen.
 #[derive(new)]
 pub struct Camera {
