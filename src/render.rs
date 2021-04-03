@@ -89,8 +89,8 @@ pub fn render_sprites<'a>(
             } else if sprite.0 != 9 {
                 ctx.add_sprite(
                     Rect::with_size(
-                        (pos.x - camera.position.x) * 1,
-                        (pos.y - camera.position.y) * 1,
+                        (pos.x - camera.position.x - camera.screen_position.x) * 1,
+                        (pos.y - camera.position.y - camera.screen_position.y) * 1,
                         // TODO make this dynamic.
                         1,
                         1,
