@@ -37,8 +37,8 @@ pub fn render_ascii<'a>(
                 camera.size.y as u32,
             ) {
                 ctx.set(
-                    pos.x - camera.position.x - camera.screen_position.x,
-                    pos.y - camera.position.y - camera.screen_position.y,
+                    pos.x - camera.position.x + camera.screen_position.x,
+                    pos.y - camera.position.y + camera.screen_position.y,
                     sprite.fg,
                     sprite.bg,
                     sprite.glyph,
@@ -74,8 +74,8 @@ pub fn render_sprites<'a>(
             if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
                 ctx.add_sprite(
                     Rect::with_size(
-                        (pos.x - camera.position.x - camera.screen_position.x) * 1,
-                        (pos.y - camera.position.y - camera.screen_position.y) * 1,
+                        (pos.x - camera.position.x + camera.screen_position.x) * 1,
+                        (pos.y - camera.position.y + camera.screen_position.y) * 1,
                         // TODO make this dynamic.
                         1,
                         1,
@@ -89,8 +89,8 @@ pub fn render_sprites<'a>(
             } else if sprite.0 != 9 {
                 ctx.add_sprite(
                     Rect::with_size(
-                        (pos.x - camera.position.x - camera.screen_position.x) * 1,
-                        (pos.y - camera.position.y - camera.screen_position.y) * 1,
+                        (pos.x - camera.position.x + camera.screen_position.x) * 1,
+                        (pos.y - camera.position.y + camera.screen_position.y) * 1,
                         // TODO make this dynamic.
                         1,
                         1,
