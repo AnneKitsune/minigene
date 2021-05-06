@@ -57,16 +57,18 @@ pub fn render_sprites<'a>(
     positions: &Components<Point>,
     sprites: &Components<SpriteIndex>,
     targets: &Components<RenderTarget>,
+    entities: &Entities,
     viewshed: Option<&Viewshed>,
 ) {
     #[cfg(not(feature = "headless"))]
-    for (pos, sprite, target) in join!(&positions && &sprites || &targets) {
-        if let Some(target) = target {
+    for (entity, pos, sprite) in join!(&entities, &positions && &sprites) {
+        if let Some(target) = targets.get(&entity) {
             ctx.set_active_console(target.0);
         } else {
             ctx.set_active_console(1);
         }
 
+        // will crash for entities that have no position or sprite but a target.
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
