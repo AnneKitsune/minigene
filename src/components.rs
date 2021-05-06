@@ -29,6 +29,9 @@ pub struct AiPath {
     pub path: NavigationPath,
 }
 
+/// The target terminal id to render to.
+pub struct RenderTarget(u32);
+
 /// Indicates that the ai should calculate an AiPath from the current position
 /// towards this destination.
 #[derive(new)]

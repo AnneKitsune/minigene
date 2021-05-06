@@ -56,10 +56,17 @@ pub fn render_sprites<'a>(
     camera: &Camera,
     positions: &Components<Point>,
     sprites: &Components<SpriteIndex>,
+    targets: &Components<RenderTarget>,
     viewshed: Option<&Viewshed>,
 ) {
     #[cfg(not(feature = "headless"))]
-    for (pos, sprite) in join!(&positions && &sprites) {
+    for (pos, sprite, target) in join!(&positions && &sprites || &targets) {
+        if let Some(target) = target {
+            ctx.set_active_console(target.0);
+        } else {
+            ctx.set_active_console(1);
+        }
+
         let pos = pos.unwrap();
         let sprite = sprite.unwrap();
 
