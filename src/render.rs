@@ -61,8 +61,8 @@ pub fn render_sprites<'a>(
     viewshed: Option<&Viewshed>,
 ) {
     #[cfg(not(feature = "headless"))]
-    for (entity, pos, sprite) in join!(&entities, &positions && &sprites) {
-        if let Some(target) = targets.get(&entity) {
+    for (entity, pos, sprite) in join!(&entities && &positions && &sprites) {
+        if let Some(target) = targets.get(entity.unwrap()) {
             ctx.set_active_console(target.0);
         } else {
             ctx.set_active_console(1);
