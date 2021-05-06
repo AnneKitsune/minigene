@@ -30,7 +30,7 @@ pub struct AiPath {
 }
 
 /// The target terminal id to render to.
-pub struct RenderTarget(u32);
+pub struct RenderTarget(pub usize);
 
 /// Indicates that the ai should calculate an AiPath from the current position
 /// towards this destination.
