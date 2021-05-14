@@ -36,5 +36,5 @@ game_clock = { version = "1.0.0" }
 stopwatch = { git = "https://github.com/jojolepro/rust-stopwatch", rev = "5ed6926a5aa5b21d58d2e67d179da1ec4cbc8a2e" }
 crossterm = { version = "0.18.0", optional = true }
 spin_sleep = "1.0.0"
-planck_ecs = { version = "1.0.0", features = ["big_systems"] }
+planck_ecs = { version = "1.2.0", features = ["big_systems"] }
 rayon = { version = "1.4.0" }
