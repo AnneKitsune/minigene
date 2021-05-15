@@ -38,3 +38,4 @@ crossterm = { version = "0.18.0", optional = true }
 spin_sleep = "1.0.0"
 planck_ecs = { version = "1.2.0", features = ["big_systems"] }
 rayon = { version = "1.4.0" }
+oorandom = "11.1.3"
