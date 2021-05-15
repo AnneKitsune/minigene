@@ -24,7 +24,7 @@ bracket-lib = { git = "https://github.com/thebracket/bracket-lib", branch = "mas
 #bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["specs", "threaded", "serde"], rev = "c51b8becf85bf7fb14dbcd7891c10ad33b957afd" }
 
 #game_features = { path = "../game_features" }
-game_features = { version = "0.6.0" }
+game_features = { version = "0.7.0" }
 #game_features = { git = "https://github.com/jojolepro/game_features" }
 
 hibitset = "0.6.3"
