@@ -64,6 +64,7 @@ pub struct GotoEntity {
 pub struct Collision;
 /// Collision of a multi tile entity. Not necessarily colliding everywhere.
 /// Can be both used as a global resource and as a component for individual entities.
+#[derive(Debug, Clone)]
 pub struct CollisionMap {
     bitset: HBitSet,
     width: u32,
