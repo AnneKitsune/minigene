@@ -11,9 +11,9 @@ pub fn trigger_passive_skill_system<
     K: Debug + Hash + Eq,
     E,
     S: Clone + Hash + Eq,
-    I: Clone + PartialEq + Debug,
+    I: Clone + PartialEq + Debug + Hash + Eq,
     IT: SlotType,
-    CD: Default + Debug + Clone,
+    CD: Default + Debug + Clone + PartialEq,
 >(
     skill_defs: &SkillDefinitions<K, E, S, I>,
     stats: &Components<StatSet<K>>,
