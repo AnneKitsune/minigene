@@ -18,8 +18,8 @@ pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
 pub use stopwatch::*;
 
-pub use planck_ecs::*;
 pub use game_engine_core::*;
+pub use planck_ecs::*;
 
 // macro re-export
 pub use derive_new::*;
@@ -46,4 +46,3 @@ use std::collections::HashMap;
 
 use std::fmt::Debug;
 use std::hash::Hash;
-
