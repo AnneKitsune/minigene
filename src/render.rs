@@ -11,14 +11,14 @@ pub fn render_ascii<'a>(
     #[cfg(not(feature = "headless"))]
     {
         // TODO add the camera check to multisprites
-        for (pos, sprite) in join!(&positions && &multi_sprites) {
-            sprite.unwrap().tile.render(
-                ctx,
-                Point::new(
-                    pos.unwrap().x - camera.position.x,
-                    pos.unwrap().y - camera.position.y,
-                ),
-            );
+        for (pos, multi) in join!(&positions && &multi_sprites) {
+            let multi = multi.unwrap();
+            for y in 0..multi.height as i32 {
+                for x in 0..multi.width as i32 {
+                    let idx = (x + y * multi.width as i32) as usize;
+                    ctx.print_color(pos.unwrap().x + x - camera.position.x, pos.unwrap().y + y - camera.position.y, multi.fg[idx], multi.bg[idx], multi.ascii.chars().nth(idx).unwrap());
+                }
+            }
         }
         for (pos, sprite) in join!(&positions && &sprites) {
             let pos = pos.unwrap();
@@ -80,7 +80,7 @@ pub fn render_sprites<'a>(
             camera.size.x as u32,
             camera.size.y as u32,
         ) {
-            if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
+            //if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
                 ctx.add_sprite(
                     Rect::with_size(
                         (pos.x - camera.position.x + camera.screen_position.x) * 1,
@@ -95,7 +95,7 @@ pub fn render_sprites<'a>(
                 );
             // TODO this will not hide units that are not creeps, use a better way of checking for enemy units.
             // TODO this shouldn't even be in the engine at all.
-            } else if sprite.0 != 9 {
+            /*} else if sprite.0 != 9 {
                 ctx.add_sprite(
                     Rect::with_size(
                         (pos.x - camera.position.x + camera.screen_position.x) * 1,
@@ -108,6 +108,47 @@ pub fn render_sprites<'a>(
                     RGBA::from_u8(160, 160, 160, 255),
                     sprite.0,
                 );
+            }*/
+        }
+    }
+    #[cfg(not(feature = "headless"))]
+    for (entity, pos, multi) in join!(&entities && &positions && &multi_sprites) {
+        if let Some(target) = targets.get(entity.unwrap()) {
+            ctx.set_active_console(target.0);
+        } else {
+            ctx.set_active_console(1);
+        }
+
+        // will crash for entities that have no position or sprite but a target.
+        let pos = pos.unwrap();
+        let multi = multi.unwrap();
+
+        if position_inside_rect(
+            pos.x - camera.position.x,
+            pos.y - camera.position.y,
+            0,
+            0,
+            camera.size.x as u32,
+            camera.size.y as u32,
+        ) {
+            for (pos, multi) in join!(&positions && &multi_sprites) {
+                let multi = multi.unwrap();
+                for y in 0..multi.height as i32 {
+                    for x in 0..multi.width as i32 {
+                        let idx = (x + y * multi.width as i32) as usize;
+                        ctx.add_sprite(
+                            Rect::with_size(
+                                (pos.x + x - camera.position.x + camera.screen_position.x) * 1,
+                                (pos.y + y - camera.position.y + camera.screen_position.y) * 1,
+                                1,
+                                1,
+                            ),
+                            0,
+                            RGBA::named(WHITE),
+                            multi.sprite_indices[idx],
+                        );
+                    }
+                }
             }
         }
     }

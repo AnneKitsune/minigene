@@ -18,8 +18,12 @@ pub struct SpriteIndex(pub usize);
 /// A text-based sprite that is multiple tiles wide/high.
 #[derive(new)]
 pub struct MultiSprite {
-    /// The tile.
-    pub tile: MultiTileSprite,
+    pub ascii: String,
+    pub width: u32,
+    pub height: u32,
+    pub fg: Vec<RGBA>,
+    pub bg: Vec<RGBA>,
+    pub sprite_indices: Vec<usize>,
 }
 
 /// The path calculated by the Ai that it will follow.
