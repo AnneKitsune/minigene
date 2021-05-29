@@ -63,6 +63,7 @@ pub fn render_sprites<'a>(
     positions: &Components<Point>,
     sprites: &Components<SpriteIndex>,
     targets: &Components<RenderTarget>,
+    multi_sprites: &Components<MultiSprite>,
     entities: &Entities,
     viewshed: Option<&Viewshed>,
 ) {
