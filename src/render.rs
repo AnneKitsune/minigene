@@ -117,7 +117,6 @@ pub fn render_sprites<'a>(
             }*/
         }
     }
-    #[cfg(not(feature = "headless"))]
     for (entity, pos, multi) in join!(&entities && &positions && &multi_sprites) {
         if let Some(target) = targets.get(entity.unwrap()) {
             ctx.set_active_console(target.0);
@@ -144,8 +143,8 @@ pub fn render_sprites<'a>(
                         let idx = (x + y * multi.width as i32) as usize;
                         ctx.add_sprite(
                             Rect::with_size(
-                                (pos.x + x - camera.position.x + camera.screen_position.x) * 1,
-                                (pos.y + y - camera.position.y + camera.screen_position.y) * 1,
+                                (pos.unwrap().x + x - camera.position.x + camera.screen_position.x) * 1,
+                                (pos.unwrap().y + y - camera.position.y + camera.screen_position.y) * 1,
                                 1,
                                 1,
                             ),
