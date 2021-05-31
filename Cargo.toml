@@ -1,6 +1,6 @@
 [package]
 name = "minigene"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Joël Lupien (Jojolepro) <jojolepro@jojolepro.com>"]
 edition = "2018"
 
