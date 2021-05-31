@@ -14,7 +14,7 @@ pub use bracket_lib::prelude::{
 pub use game_clock::*;
 pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
-pub use stopwatch::*;
+pub use stopwatch2::*;
 
 pub use game_engine_core::*;
 pub use planck_ecs::*;
