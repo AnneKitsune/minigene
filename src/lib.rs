@@ -1,6 +1,4 @@
 pub extern crate bracket_lib;
-#[macro_use]
-extern crate pushdown_automaton_macro;
 pub extern crate game_features;
 pub extern crate hibitset;
 

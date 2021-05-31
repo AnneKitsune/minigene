@@ -29,7 +29,6 @@ game_features = { version = "0.8.1" }
 
 hibitset = "0.6.3"
 derive-new = "0.5.8"
-pushdown-automaton-macro = "0.1.0"
 wasm-bindgen = { version = "0.2.68", optional = true }
 web_worker = { version = "0.3.0", optional = true }
 game_clock = { version = "1.0.0" }
