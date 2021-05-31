@@ -29,7 +29,13 @@ Read the [documentation](https://docs.rs/minigene).
 # Usage
 Add the following to you Cargo.toml file:
 ```
-minigene = "*"
+minigene = { git = "https://github.com/jojolepro/minigene" }
+```
+
+By default, Minigene will have the `terminal` feature enabled.
+If you want it to create a window and use 2D tiling mode, use:
+```
+minigene = { git = "https://github.com/jojolepro/minigene", default-features = false, features = ["opengl"] }
 ```
 
 Look in the examples/minimal folder for a game template.
