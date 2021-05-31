@@ -22,8 +22,6 @@ pub use planck_ecs::*;
 // macro re-export
 pub use derive_new::*;
 
-pub use spin_sleep::LoopHelper;
-
 mod components;
 mod event;
 mod macros;
