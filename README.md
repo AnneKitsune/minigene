@@ -12,8 +12,6 @@ game development.
 
 For more information on the design choices of Minigene, visit the [blog](https://jojolepro.com/blog/2021-05-31_minigene_and_the_future/index.html).
 
-Read the [documentation](https://docs.rs/minigene).
-
 # Why would you use this engine?
 
 * Gets out of your way and lets you choose how you want to build your game
@@ -35,6 +33,11 @@ minigene = { git = "https://github.com/jojolepro/minigene", default-features = f
 ```
 
 Look in the examples/minimal folder for a game template.
+
+See Minigene used in:
+- [Shotcaller](https://github.com/amethyst/shotcaller)
+- [World Of The Fox God](https://github.com/jojolepro/wotfg)
+
 
 ### Maintainer Information
 
