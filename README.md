@@ -1,7 +1,3 @@
-<img src="repo/splash.png" alt="Minigene" />
-<a href="https://crates.io/crates/minigene">
-    <img src="https://img.shields.io/crates/v/minigene.svg" alt="Minigene" />
-</a>
 
 # Minigene - A Minimalist Game Ecosystem
 
