@@ -19,6 +19,7 @@ pub use stopwatch2::*;
 pub use game_engine_core::*;
 pub use planck_ecs::*;
 pub use planck_ecs_bundle::*;
+pub use planck_game_features::*;
 
 // macro re-export
 pub use derive_new::*;
