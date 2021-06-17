@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["terminal", "planck_ecs/parallel"]
+default = ["terminal", "planck_ecs/parallel", "commands"]
 
 # Rendering backends
 # Currently, only one can be enabled at the same time
@@ -17,6 +17,8 @@ opengl = ["bracket-lib/opengl"]
 # Enables WASM compatibility mode.
 # Only works if using the opengl backend.
 wasm = ["wasm-bindgen", "opengl", "web_worker"]
+
+commands = ["structopt"]
 
 [dependencies]
 bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["threaded", "serde"], rev = "d8c8af87173d0a26662fde108f7dc988ad3bed48" }
@@ -34,8 +36,10 @@ game_engine_core = "1.1.1"
 palette = { version = "0.5.0", features = ["serializing"] }
 planck_ecs_bundle = "1.1.0"
 planck_game_features = { git = "https://github.com/jojolepro/planck_game_features" }
+structopt = { version = "0.3.21", optional = true }
 
 crossterm = { version = "0.18.0", optional = true }
 
 wasm-bindgen = { version = "0.2.68", optional = true }
 web_worker = { version = "0.3.0", optional = true }
+
