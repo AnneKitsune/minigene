@@ -260,8 +260,10 @@ mod tests {
         let mut map = CollisionMap::new(1000, 1000);
         map.set(999, 999);
     }
+
+    // TODO Test disabled on wasm because should_panic is not supported. Should we be using panic at all instead of throwing a soft error?
     #[test]
-    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
+    //#[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     #[should_panic]
     fn small_map_out_of_bounds() {
         let mut map = CollisionMap::new(0, 0);
@@ -269,7 +271,7 @@ mod tests {
         assert!(map.is_set(0, 0));
     }
     #[test]
-    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
+    //#[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     #[should_panic]
     fn big_map_out_of_bounds() {
         let mut map = CollisionMap::new(1000, 1000);
