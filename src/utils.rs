@@ -37,7 +37,11 @@ pub fn move_position(old_position: &Point, dir: Direction) -> Point {
 #[cfg(test)]
 mod tests {
     use crate::*;
+    #[cfg(target_family = "wasm")]
+    use wasm_bindgen_test::*;
+
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn distance() {
         assert_eq!(dist(&Point::new(0, 0), &Point::new(0, 0)), 0.0);
         assert_eq!(dist(&Point::new(0, 0), &Point::new(5, 0)), 5.0);
@@ -48,6 +52,7 @@ mod tests {
         assert_eq!(dist(&Point::new(0, 0), &Point::new(3, 4)), 5.0);
     }
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn check_inside_rect() {
         assert!(position_inside_rect(0, 0, 0, 0, 1, 1));
         assert!(!position_inside_rect(0, 0, 1, 1, 1, 1));

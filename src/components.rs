@@ -230,7 +230,11 @@ impl Default for Viewshed {
 #[cfg(test)]
 mod tests {
     use crate::*;
+    #[cfg(target_family = "wasm")]
+    use wasm_bindgen_test::*;
+
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn collision_map_set_unset_clear() {
         let mut map = CollisionMap::new(5, 5);
         assert!(!map.is_set(3, 3));
@@ -243,6 +247,7 @@ mod tests {
         assert!(!map.is_set(3, 3));
     }
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn small_map() {
         let _ = CollisionMap::new(0, 0);
         let mut map = CollisionMap::new(1, 1);
@@ -250,11 +255,13 @@ mod tests {
         assert!(map.is_set(0, 0));
     }
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn huge_map() {
         let mut map = CollisionMap::new(1000, 1000);
         map.set(999, 999);
     }
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     #[should_panic]
     fn small_map_out_of_bounds() {
         let mut map = CollisionMap::new(0, 0);
@@ -262,6 +269,7 @@ mod tests {
         assert!(map.is_set(0, 0));
     }
     #[test]
+    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     #[should_panic]
     fn big_map_out_of_bounds() {
         let mut map = CollisionMap::new(1000, 1000);
