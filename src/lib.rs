@@ -18,6 +18,7 @@ pub use derive_new::*;
 
 mod components;
 mod event;
+mod pathfinding;
 mod render;
 mod resources;
 mod systems;
@@ -26,6 +27,7 @@ mod utils;
 
 pub use self::components::*;
 pub use self::event::*;
+pub use self::pathfinding::*;
 pub use self::render::*;
 pub use self::resources::*;
 pub use self::systems::*;

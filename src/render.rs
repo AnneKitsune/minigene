@@ -2,7 +2,7 @@ use crate::*;
 
 /// Renders ascii characters.
 pub fn render_ascii<'a>(
-    ctx: &mut BTerm,
+    ctx: &mut Terminal,
     camera: &Camera,
     positions: &Components<Point>,
     multi_sprites: &Components<MultiSprite>,
@@ -41,7 +41,7 @@ pub fn render_ascii<'a>(
                 camera.size.x as u32,
                 camera.size.y as u32,
             ) {
-                ctx.set(
+                ctx.print_color(
                     pos.x - camera.position.x + camera.screen_position.x,
                     pos.y - camera.position.y + camera.screen_position.y,
                     sprite.fg,
@@ -50,5 +50,6 @@ pub fn render_ascii<'a>(
                 );
             }
         }
+        ctx.flush();
     }
 }

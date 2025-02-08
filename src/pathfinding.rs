@@ -1,6 +1,11 @@
 use crate::components::{CollisionMap, Point};
 use std::collections::{BinaryHeap, HashMap};
 
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
+pub struct Path {
+    pub path: Vec<Point>,
+}
+
 #[derive(Debug, PartialEq, Eq)]
 struct Node {
     position: Point,
@@ -25,11 +30,7 @@ fn heuristic(a: Point, b: Point) -> i32 {
     ((a.x - b.x).abs() + (a.y - b.y).abs()) as i32
 }
 
-pub fn astar(
-    start: Point,
-    goal: Point,
-    collision_map: &CollisionMap,
-) -> Option<Vec<Point>> {
+pub fn astar(start: Point, goal: Point, collision_map: &CollisionMap) -> Option<Path> {
     let mut open_set = BinaryHeap::new();
     let mut came_from = HashMap::new();
     let mut g_score = HashMap::new();
@@ -53,15 +54,10 @@ pub fn astar(
         for neighbor in get_neighbors(current.position, collision_map) {
             let tentative_g_score = g_score[&current.position] + 1;
 
-            if !g_score.contains_key(&neighbor)
-                || tentative_g_score < g_score[&neighbor]
-            {
+            if !g_score.contains_key(&neighbor) || tentative_g_score < g_score[&neighbor] {
                 came_from.insert(neighbor, current.position);
                 g_score.insert(neighbor, tentative_g_score);
-                f_score.insert(
-                    neighbor,
-                    tentative_g_score + heuristic(neighbor, goal),
-                );
+                f_score.insert(neighbor, tentative_g_score + heuristic(neighbor, goal));
                 open_set.push(Node {
                     position: neighbor,
                     g_score: tentative_g_score,
@@ -75,14 +71,14 @@ pub fn astar(
     None
 }
 
-fn reconstruct_path(came_from: &HashMap<Point, Point>, current: Point) -> Option<Vec<Point>> {
+fn reconstruct_path(came_from: &HashMap<Point, Point>, mut current: Point) -> Option<Path> {
     let mut total_path = vec![current];
     while let Some(&next) = came_from.get(&current) {
         total_path.push(next);
         current = next;
     }
     total_path.reverse();
-    Some(total_path)
+    Some(Path { path: total_path })
 }
 
 fn get_neighbors(position: Point, collision_map: &CollisionMap) -> Vec<Point> {
@@ -99,7 +95,12 @@ fn get_neighbors(position: Point, collision_map: &CollisionMap) -> Vec<Point> {
             x: position.x + direction.x,
             y: position.y + direction.y,
         };
-        if !collision_map.is_set(neighbor.x as u32, neighbor.y as u32) {
+        if neighbor.x < 0 || neighbor.y < 0 {
+            continue;
+        }
+        if collision_map.is_inbound(neighbor.x as u32, neighbor.y as u32)
+            && !collision_map.is_set(neighbor.x as u32, neighbor.y as u32)
+        {
             neighbors.push(neighbor);
         }
     }
@@ -117,7 +118,7 @@ mod tests {
         let start = Point { x: 0, y: 0 };
         let goal = Point { x: 4, y: 4 };
         let path = astar(start, goal, &collision_map).unwrap();
-        assert_eq!(path.len(), 9); // Start to goal is 8 steps + start
+        assert_eq!(path.path.len(), 9); // Start to goal is 8 steps + start
     }
 
     #[test]
@@ -128,7 +129,7 @@ mod tests {
         let start = Point { x: 0, y: 0 };
         let goal = Point { x: 4, y: 4 };
         let path = astar(start, goal, &collision_map).unwrap();
-        assert_eq!(path.len(), 10); // Start to goal is 9 steps + start
+        assert_eq!(path.path.len(), 9); // Start to goal is 9 steps + start
     }
 
     #[test]
@@ -149,6 +150,6 @@ mod tests {
         let start = Point { x: 2, y: 2 };
         let goal = Point { x: 2, y: 2 };
         let path = astar(start, goal, &collision_map).unwrap();
-        assert_eq!(path.len(), 1); // Only the start point
+        assert_eq!(path.path.len(), 1); // Only the start point
     }
 }

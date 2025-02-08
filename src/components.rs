@@ -1,7 +1,7 @@
 use crate::*;
 
+pub use crossterm::style::Color;
 use std::collections::HashSet;
-use crossterm::style::Color;
 
 #[derive(Default, Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Point {
@@ -18,7 +18,7 @@ impl Point {
 /// A single colored letter sprite.
 pub struct Sprite {
     /// The char symbol displayed.
-    pub glyph: u16,
+    pub glyph: char,
     /// The foreground color.
     pub fg: Color,
     /// The background color.
@@ -39,7 +39,7 @@ pub struct MultiSprite {
 #[derive(new, Default)]
 pub struct AiPath {
     /// The path.
-    pub path: NavigationPath,
+    pub path: Path,
 }
 
 /// The target terminal id to render to.
@@ -132,58 +132,9 @@ impl CollisionMap {
         assert!(self.height > 0);
         (idx % self.width, idx / self.width)
     }
-}
 
-impl Algorithm2D for CollisionMap {
-    fn dimensions(&self) -> Point {
-        Point::new(self.width, self.height)
-    }
-}
-
-impl BaseMap for CollisionMap {
-    fn is_opaque(&self, idx: usize) -> bool {
-        self.bitset.contains(idx as u32)
-    }
-
-    fn get_available_exits(&self, idx: usize) -> [Option<usize>; 4] {
-        let mut o = [None; 4];
-        //println!("idx: {}", idx);
-        // right
-        if (idx % self.width as usize) < (self.width as usize - 1) {
-            let n = idx + 1;
-            if !self.is_opaque(n) {
-                //println!("ADDING AT {},{}, while it is {} opaque.", self.position_of(idx as u32).0, self.position_of(idx as u32).1, self.is_opaque(idx));
-                o[0] = Some(n);
-            }
-        }
-        // left
-        if (idx % self.width as usize) > 0 {
-            let n = idx - 1;
-            if !self.is_opaque(n) {
-                o[1] = Some(n);
-            }
-        }
-        // down
-        if (idx / self.width as usize) < (self.height as usize - 1) {
-            let n = idx + self.width as usize;
-            if !self.is_opaque(n) {
-                o[2] = Some(n);
-            }
-        }
-        // up
-        if idx >= (self.width as usize) {
-            let n = idx - self.width as usize;
-            if !self.is_opaque(n) {
-                o[3] = Some(n);
-            }
-        }
-        o
-    }
-
-    fn get_pathing_distance(&self, idx1: usize, idx2: usize) -> f32 {
-        let (x1, y1) = self.position_of(idx1 as u32);
-        let (x2, y2) = self.position_of(idx2 as u32);
-        ((x2 as f32 - x1 as f32).powf(2.0) + (y2 as f32 - y1 as f32).powf(2.0)).sqrt()
+    pub fn is_inbound(&self, x: u32, y: u32) -> bool {
+        x < self.width && y < self.height
     }
 }
 

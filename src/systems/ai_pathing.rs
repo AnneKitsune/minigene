@@ -13,13 +13,9 @@ pub fn ai_pathing_system(
     'query: for (e, pos, dest) in join!(&entities && &positions && &dests) {
         // Check if entity already has AIpath with the same destination:
         if let Some(existing_path) = paths.get(e.unwrap()) {
-            let curr_dest = existing_path.path.destination as u32;
-            let new_dest = global_map
-                .as_ref()
-                .unwrap()
-                .map
-                .index_of(dest.unwrap().target.x as u32, dest.unwrap().target.y as u32);
-            if curr_dest == new_dest {
+            let curr_dest = existing_path.path.path.last();
+            let new_dest = Point::new(dest.unwrap().target.x, dest.unwrap().target.y);
+            if curr_dest == Some(&new_dest) {
                 continue 'query;
             }
         }
@@ -31,17 +27,15 @@ pub fn ai_pathing_system(
             continue;
         }
         // TODO Safety check for < 0 or out of map bounds
-        let d = global_map.map.index_of(
-            (pos.x - global_map.position.x) as u32,
-            (pos.y - global_map.position.y) as u32,
+        let d = Point::new(pos.x - global_map.position.x, pos.y - global_map.position.y);
+        let t = Point::new(
+            dest.target.x - global_map.position.x,
+            dest.target.y - global_map.position.y,
         );
-        let t = global_map.map.index_of(
-            (dest.target.x - global_map.position.x) as u32,
-            (dest.target.y - global_map.position.y) as u32,
-        );
-        let p = a_star_search(d, t, &global_map.map);
-        path.path = p;
-        paths.insert(e.unwrap(), path);
+        if let Some(p) = astar(d, t, &global_map.map) {
+            path.path = p;
+            paths.insert(e.unwrap(), path);
+        }
     }
     Ok(())
 }
@@ -66,18 +60,11 @@ mod tests {
         positions.insert(e, Point::new(1, 1));
 
         ai_pathing_system(&entities, &dests, &global_map, &positions, &mut paths).unwrap();
-        let steps = paths.get(e).unwrap().path.steps.clone();
+        let steps = &paths.get(e).unwrap().path.path;
         assert_eq!(steps.len(), 3);
         assert_eq!(
             steps,
-            vec![Point::new(1, 1), Point::new(1, 2), Point::new(1, 3)]
-                .into_iter()
-                .map(|p| global_map
-                    .as_ref()
-                    .unwrap()
-                    .map
-                    .index_of(p.x as u32, p.y as u32) as usize)
-                .collect::<Vec<_>>()
+            &vec![Point::new(1, 1), Point::new(1, 2), Point::new(1, 3)]
         );
     }
 }
