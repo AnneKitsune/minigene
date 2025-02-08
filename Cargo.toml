@@ -3,6 +3,8 @@ name = "minigene"
 version = "0.7.0"
 authors = ["Anne Kitsune <annekitsunefox@gmail.com>"]
 edition = "2021"
+description = "A minimalist terminal game engine."
+license = "AGPLv3"
 
 [dependencies]
 
