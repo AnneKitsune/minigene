@@ -49,11 +49,8 @@ pub fn ai_pathing_system(
 #[cfg(test)]
 mod tests {
     use crate::*;
-    #[cfg(target_family = "wasm")]
-    use wasm_bindgen_test::*;
 
     #[test]
-    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn correct_path() {
         let mut entities = Entities::default();
         let mut dests = Components::<AiDestination>::default();
