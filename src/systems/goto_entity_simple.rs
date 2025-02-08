@@ -16,7 +16,7 @@ pub fn goto_entity_simple_system(
     }
     for (e, t, speed) in v {
         if let Some(target) = positions.get(t).map(|p| p.clone()) {
-            let mut p = positions.get_mut(e).unwrap();
+            let p = positions.get_mut(e).unwrap();
             // TODO improve when we have a Time struct
             for _i in 0..(speed as usize) {
                 let delta_x = target.x - p.x;

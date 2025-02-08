@@ -6,7 +6,7 @@ pub fn goto_straight_system(
     positions: &mut Components<Point>,
 ) -> SystemResult {
     for (p, goto) in join!(&mut positions && &gotos) {
-        let mut p = p.unwrap();
+        let p = p.unwrap();
         let goto = goto.unwrap();
         // TODO improve when we have a Time struct
         for _i in 0..(goto.speed as usize) {

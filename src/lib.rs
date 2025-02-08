@@ -36,7 +36,6 @@ mod utils;
 //pub use self::commands::*;
 pub use self::components::*;
 pub use self::event::*;
-pub use self::macros::*;
 pub use self::render::*;
 pub use self::resources::*;
 pub use self::systems::*;
