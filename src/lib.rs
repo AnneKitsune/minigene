@@ -2,7 +2,6 @@ pub extern crate bracket_lib;
 pub extern crate game_features;
 pub extern crate hibitset;
 
-#[cfg(feature = "terminal")]
 extern crate crossterm;
 
 pub use bracket_lib::prelude::{

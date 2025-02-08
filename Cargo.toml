@@ -8,17 +8,7 @@ edition = "2021"
 
 [features]
 #default = ["terminal", "planck_ecs/parallel", "commands"]
-default = ["opengl", "planck_ecs/parallel"]
-
-headless = []
-terminal = []
-
-# Rendering backends
-# Currently, only one can be enabled at the same time
-#terminal = ["bracket-lib/crossterm", "crossterm"]
-
-# WASM works only with opengl.
-opengl = ["bracket-lib/opengl"]
+default = ["bracket-lib/crossterm", "crossterm", "planck_ecs/parallel"]
 
 [dependencies]
 bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["threaded", "serde"], rev = "d8c8af87173d0a26662fde108f7dc988ad3bed48" }

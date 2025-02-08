@@ -12,9 +12,6 @@ pub struct Sprite {
     pub bg: RGBA,
 }
 
-/// The index of a 2d sprite. Created from `SpriteSheet`'s index.
-pub struct SpriteIndex(pub usize);
-
 /// A text-based sprite that is multiple tiles wide/high.
 #[derive(new)]
 pub struct MultiSprite {
@@ -23,7 +20,6 @@ pub struct MultiSprite {
     pub height: u32,
     pub fg: Vec<RGBA>,
     pub bg: Vec<RGBA>,
-    pub sprite_indices: Vec<usize>,
 }
 
 /// The path calculated by the Ai that it will follow.
@@ -230,11 +226,8 @@ impl Default for Viewshed {
 #[cfg(test)]
 mod tests {
     use crate::*;
-    #[cfg(target_family = "wasm")]
-    use wasm_bindgen_test::*;
 
     #[test]
-    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn collision_map_set_unset_clear() {
         let mut map = CollisionMap::new(5, 5);
         assert!(!map.is_set(3, 3));
@@ -247,7 +240,6 @@ mod tests {
         assert!(!map.is_set(3, 3));
     }
     #[test]
-    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn small_map() {
         let _ = CollisionMap::new(0, 0);
         let mut map = CollisionMap::new(1, 1);
@@ -255,15 +247,12 @@ mod tests {
         assert!(map.is_set(0, 0));
     }
     #[test]
-    #[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     fn huge_map() {
         let mut map = CollisionMap::new(1000, 1000);
         map.set(999, 999);
     }
 
-    // TODO Test disabled on wasm because should_panic is not supported. Should we be using panic at all instead of throwing a soft error?
     #[test]
-    //#[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     #[should_panic]
     fn small_map_out_of_bounds() {
         let mut map = CollisionMap::new(0, 0);
@@ -271,7 +260,6 @@ mod tests {
         assert!(map.is_set(0, 0));
     }
     #[test]
-    //#[cfg_attr(target_family = "wasm", wasm_bindgen_test)]
     #[should_panic]
     fn big_map_out_of_bounds() {
         let mut map = CollisionMap::new(1000, 1000);
