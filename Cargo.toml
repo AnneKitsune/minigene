@@ -10,6 +10,9 @@ edition = "2021"
 #default = ["terminal", "planck_ecs/parallel", "commands"]
 default = ["opengl", "planck_ecs/parallel", "commands"]
 
+headless = []
+terminal = []
+
 # Rendering backends
 # Currently, only one can be enabled at the same time
 #terminal = ["bracket-lib/crossterm", "crossterm"]

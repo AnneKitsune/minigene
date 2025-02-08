@@ -65,7 +65,6 @@ pub fn render_sprites<'a>(
     targets: &Components<RenderTarget>,
     multi_sprites: &Components<MultiSprite>,
     entities: &Entities,
-    viewshed: Option<&Viewshed>,
 ) {
     #[cfg(not(feature = "headless"))]
     for (entity, pos, sprite) in join!(&entities && &positions && &sprites) {
@@ -87,7 +86,6 @@ pub fn render_sprites<'a>(
             camera.size.x as u32,
             camera.size.y as u32,
         ) {
-            //if viewshed.is_none() || viewshed.unwrap().visible_tiles.contains(&pos) {
             ctx.add_sprite(
                 Rect::with_size(
                     (pos.x - camera.position.x + camera.screen_position.x) * 1,
@@ -118,7 +116,7 @@ pub fn render_sprites<'a>(
             }*/
         }
     }
-    for (entity, pos, multi) in join!(&entities && &positions && &multi_sprites) {
+    for (entity, pos, _multi) in join!(&entities && &positions && &multi_sprites) {
         if let Some(target) = targets.get(entity.unwrap()) {
             ctx.set_active_console(target.0);
         } else {
@@ -127,7 +125,6 @@ pub fn render_sprites<'a>(
 
         // will crash for entities that have no position or sprite but a target.
         let pos = pos.unwrap();
-        let multi = multi.unwrap();
 
         if position_inside_rect(
             pos.x - camera.position.x,
