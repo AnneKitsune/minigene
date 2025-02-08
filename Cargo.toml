@@ -1,6 +1,6 @@
 [package]
 name = "minigene"
-version = "0.6.1"
+version = "0.7.0"
 authors = ["Anne Kitsune <annekitsunefox@gmail.com>"]
 edition = "2021"
 
@@ -15,7 +15,6 @@ planck_ecs = { version = "1.2.0", features = ["big_systems", "parallel"] }
 oorandom = "11.1.4"
 game_engine_core = "1.1.1"
 planck_ecs_bundle = "1.1.0"
-planck_game_features = { git = "https://github.com/jojolepro/planck_game_features" }
-
+planck_game_features = "0.1.0"
 crossterm = { version = "0.28.1" }
 
