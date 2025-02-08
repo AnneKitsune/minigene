@@ -4,24 +4,19 @@ version = "0.6.1"
 authors = ["Anne Kitsune <annekitsunefox@gmail.com>"]
 edition = "2021"
 
-[features]
-default = ["bracket-lib/crossterm", "crossterm", "planck_ecs/parallel"]
-
 [dependencies]
-bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["threaded", "serde"], rev = "d8c8af87173d0a26662fde108f7dc988ad3bed48" }
 
 game_features = "0.8.1"
-
 hibitset = "0.6.4"
 derive-new = "0.7.0"
 game_clock = "1.0.0"
 stopwatch2 = "2.0.0"
-planck_ecs = { version = "1.2.0", features = ["big_systems"] }
+planck_ecs = { version = "1.2.0", features = ["big_systems", "parallel"] }
 oorandom = "11.1.4"
 game_engine_core = "1.1.1"
 palette = { version = "0.7.6", features = ["serializing"] }
 planck_ecs_bundle = "1.1.0"
 planck_game_features = { git = "https://github.com/jojolepro/planck_game_features" }
 
-crossterm = { version = "0.28.1", optional = true }
+crossterm = { version = "0.28.1" }
 

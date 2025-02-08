@@ -1,15 +1,28 @@
 use crate::*;
 
 use std::collections::HashSet;
+use crossterm::style::Color;
+
+#[derive(Default, Debug, Clone, Copy, Hash, PartialEq, Eq)]
+pub struct Point {
+    pub x: i32,
+    pub y: i32,
+}
+
+impl Point {
+    pub fn new(x: i32, y: i32) -> Self {
+        Self { x, y }
+    }
+}
 
 /// A single colored letter sprite.
 pub struct Sprite {
     /// The char symbol displayed.
     pub glyph: u16,
     /// The foreground color.
-    pub fg: RGBA,
+    pub fg: Color,
     /// The background color.
-    pub bg: RGBA,
+    pub bg: Color,
 }
 
 /// A text-based sprite that is multiple tiles wide/high.
@@ -18,8 +31,8 @@ pub struct MultiSprite {
     pub ascii: String,
     pub width: u32,
     pub height: u32,
-    pub fg: Vec<RGBA>,
-    pub bg: Vec<RGBA>,
+    pub fg: Vec<Color>,
+    pub bg: Vec<Color>,
 }
 
 /// The path calculated by the Ai that it will follow.
@@ -132,36 +145,36 @@ impl BaseMap for CollisionMap {
         self.bitset.contains(idx as u32)
     }
 
-    fn get_available_exits(&self, idx: usize) -> SmallVec<[(usize, f32); 10]> {
-        let mut o = SmallVec::new();
+    fn get_available_exits(&self, idx: usize) -> [Option<usize>; 4] {
+        let mut o = [None; 4];
         //println!("idx: {}", idx);
         // right
         if (idx % self.width as usize) < (self.width as usize - 1) {
             let n = idx + 1;
             if !self.is_opaque(n) {
                 //println!("ADDING AT {},{}, while it is {} opaque.", self.position_of(idx as u32).0, self.position_of(idx as u32).1, self.is_opaque(idx));
-                o.push((n, 1.0));
+                o[0] = Some(n);
             }
         }
         // left
         if (idx % self.width as usize) > 0 {
             let n = idx - 1;
             if !self.is_opaque(n) {
-                o.push((n, 1.0));
+                o[1] = Some(n);
             }
         }
         // down
         if (idx / self.width as usize) < (self.height as usize - 1) {
             let n = idx + self.width as usize;
             if !self.is_opaque(n) {
-                o.push((n, 1.0));
+                o[2] = Some(n);
             }
         }
         // up
         if idx >= (self.width as usize) {
             let n = idx - self.width as usize;
             if !self.is_opaque(n) {
-                o.push((n, 1.0));
+                o[3] = Some(n);
             }
         }
         o

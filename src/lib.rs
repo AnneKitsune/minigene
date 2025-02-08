@@ -1,14 +1,8 @@
-pub extern crate bracket_lib;
 pub extern crate game_features;
 pub extern crate hibitset;
 
 extern crate crossterm;
 
-pub use bracket_lib::prelude::{
-    a_star_search, field_of_view, main_loop, to_cp437, Algorithm2D, BError, BEvent, BTerm,
-    BTermBuilder, BaseMap, GameState, MultiTileSprite, NavigationPath, Point, Rect, SmallVec,
-    SpriteSheet, VirtualKeyCode, BLACK, BLUE, EMBED, GREEN, INPUT, RED, RGBA, WHITE, YELLOW,
-};
 pub use game_clock::*;
 pub use game_features::*;
 pub use hibitset::BitSet as HBitSet;
@@ -27,6 +21,7 @@ mod event;
 mod render;
 mod resources;
 mod systems;
+mod terminal;
 mod utils;
 
 pub use self::components::*;
@@ -34,6 +29,7 @@ pub use self::event::*;
 pub use self::render::*;
 pub use self::resources::*;
 pub use self::systems::*;
+pub use self::terminal::*;
 pub use self::utils::*;
 
 use std::collections::HashMap;
