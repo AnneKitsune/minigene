@@ -22,16 +22,13 @@ pub use planck_game_features::*;
 // macro re-export
 pub use derive_new::*;
 
-//mod commands;
 mod components;
 mod event;
-mod macros;
 mod render;
 mod resources;
 mod systems;
 mod utils;
 
-//pub use self::commands::*;
 pub use self::components::*;
 pub use self::event::*;
 pub use self::render::*;

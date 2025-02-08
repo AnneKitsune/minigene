@@ -4,16 +4,12 @@ version = "0.6.1"
 authors = ["Anne Kitsune <annekitsunefox@gmail.com>"]
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [features]
-#default = ["terminal", "planck_ecs/parallel", "commands"]
 default = ["bracket-lib/crossterm", "crossterm", "planck_ecs/parallel"]
 
 [dependencies]
 bracket-lib = { git = "https://github.com/thebracket/bracket-lib", default-features = false, features = ["threaded", "serde"], rev = "d8c8af87173d0a26662fde108f7dc988ad3bed48" }
 
-#game_features = { path = "../game_features" }
 game_features = "0.8.1"
 
 hibitset = "0.6.4"
