@@ -15,7 +15,9 @@ impl State<GameData> for DefaultState {
     /// Called every game frame.
     fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
         // Run the systems contained in the dispatcher using data contained in world.
-        data.dispatcher.run_seq(&mut data.world).expect("One of the systems returned an error!");
+        data.dispatcher
+            .run_seq(&mut data.world)
+            .expect("One of the systems returned an error!");
         // Stay in this state; perform no transition.
         StateTransition::None
     }
@@ -24,10 +26,14 @@ impl State<GameData> for DefaultState {
 fn main() {
     let mut world = World::default();
     let dispatcher = DispatcherBuilder::new().build(&mut world);
-    let gd = GameData {
-        world,
-        dispatcher,
-    };
+    {
+        let mut term = world.get_mut_or_default::<Terminal>();
+        *term = Terminal::new();
+        term.clear();
+        term.flush();
+    }
+    let gd = GameData { world, dispatcher };
+
     // Create the core engine.
     let mut engine = Engine::new(DefaultState, gd, |_, _| {}, 60.0);
     // Run the engine until we decide to quit.

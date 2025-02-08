@@ -10,6 +10,12 @@ pub struct Terminal {
     stdout: std::io::Stdout,
 }
 
+impl Default for Terminal {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Terminal {
     pub fn new() -> Self {
         let stdout = std::io::stdout();
