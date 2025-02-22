@@ -43,6 +43,48 @@ impl Terminal {
             .queue(style::PrintStyledContent(character.with(fg).on(bg)))
             .unwrap();
     }
+
+    pub fn print_string(&mut self, x: i32, y: i32, fg: Color, bg: Color, string: String) {
+        string.chars().enumerate().for_each(|(i, c)| {
+            self.print_color(x + i as i32, y, fg, bg, c);
+        });
+    }
+
+    pub fn print_box(&mut self, x: i32, y: i32, width: u32, height: u32, fg: Color, bg: Color) {
+        for y_offset in 0..height {
+            let current_y = y + y_offset as i32;
+            for x_offset in 0..width {
+                let current_x = x + x_offset as i32;
+                let c: char = if y_offset == 0 {
+                    // Top border
+                    if x_offset == 0 {
+                        '╭'
+                    } else if x_offset == width - 1 {
+                        '╮'
+                    } else {
+                        '─'
+                    }
+                } else if y_offset == height - 1 {
+                    // Bottom border
+                    if x_offset == 0 {
+                        '╰'
+                    } else if x_offset == width - 1 {
+                        '╯'
+                    } else {
+                        '─'
+                    }
+                } else {
+                    // Middle rows
+                    if x_offset == 0 || x_offset == width - 1 {
+                        '│'
+                    } else {
+                        ' '
+                    }
+                };
+                self.print_color(current_x, current_y, fg, bg, c);
+            }
+        }
+    }
 }
 
 impl Drop for Terminal {
