@@ -31,6 +31,11 @@ impl CollisionResource {
     }
 }
 
+#[derive(Default, Clone)]
+pub struct EngineRunning {
+    pub running: bool,
+}
+
 /// Random Number Generator
 /// It is suggested to create it manually if it is important that the numbers can't be guessed
 /// easily.
