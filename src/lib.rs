@@ -17,6 +17,7 @@ pub use planck_game_features::*;
 pub use derive_new::*;
 
 mod components;
+mod engine;
 mod event;
 mod pathfinding;
 mod render;
@@ -25,7 +26,10 @@ mod systems;
 mod terminal;
 mod utils;
 
+pub mod prelude;
+
 pub use self::components::*;
+pub use self::engine::*;
 pub use self::event::*;
 pub use self::pathfinding::*;
 pub use self::render::*;

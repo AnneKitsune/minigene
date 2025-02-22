@@ -44,7 +44,7 @@ impl Terminal {
             .unwrap();
     }
 
-    pub fn print_string(&mut self, x: i32, y: i32, fg: Color, bg: Color, string: String) {
+    pub fn print_string(&mut self, x: i32, y: i32, fg: Color, bg: Color, string: &str) {
         string.chars().enumerate().for_each(|(i, c)| {
             self.print_color(x + i as i32, y, fg, bg, c);
         });
