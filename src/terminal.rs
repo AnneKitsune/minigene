@@ -1,10 +1,11 @@
 use crate::Color;
 use crossterm::{
     cursor,
+    event::{self, Event, KeyCode},
     style::{self, Stylize},
     terminal, ExecutableCommand, QueueableCommand,
 };
-use std::io::Write;
+use std::io::{stdout, Error as IoError, Write};
 
 pub struct Terminal {
     stdout: std::io::Stdout,
@@ -12,15 +13,16 @@ pub struct Terminal {
 
 impl Default for Terminal {
     fn default() -> Self {
-        Self::new()
+        Self::new().unwrap()
     }
 }
 
 impl Terminal {
-    pub fn new() -> Self {
-        let stdout = std::io::stdout();
-        crossterm::terminal::enable_raw_mode().unwrap();
-        Self { stdout }
+    // TODO log errors
+    pub fn new() -> Result<Self, IoError> {
+        let stdout = stdout();
+        terminal::enable_raw_mode()?;
+        Ok(Self { stdout })
     }
 
     pub fn clear(&mut self) {
@@ -45,9 +47,16 @@ impl Terminal {
     }
 
     pub fn print_string(&mut self, x: i32, y: i32, fg: Color, bg: Color, string: &str) {
-        string.chars().enumerate().for_each(|(i, c)| {
+        if x < 0 || y < 0 {
+            return;
+        }
+        let width = terminal::size().unwrap().0 as i32;
+        for (i, c) in string.chars().enumerate() {
+            if x + i as i32 >= width {
+                break;
+            }
             self.print_color(x + i as i32, y, fg, bg, c);
-        });
+        }
     }
 
     pub fn print_box(&mut self, x: i32, y: i32, width: u32, height: u32, fg: Color, bg: Color) {
@@ -85,10 +94,22 @@ impl Terminal {
             }
         }
     }
+
+    pub fn get_input(&self) -> Option<KeyCode> {
+        // Check if there is any input available without blocking
+        if event::poll(std::time::Duration::from_millis(0)).unwrap() {
+            match event::read().unwrap() {
+                Event::Key(key_event) => Some(key_event.code),
+                _ => None,
+            }
+        } else {
+            None
+        }
+    }
 }
 
 impl Drop for Terminal {
     fn drop(&mut self) {
-        crossterm::terminal::disable_raw_mode().unwrap();
+        let _ = terminal::disable_raw_mode();
     }
 }

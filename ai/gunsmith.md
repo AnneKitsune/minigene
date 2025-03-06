@@ -1,0 +1,10 @@
+Implement a PartKind enum in Rust representing all gun part types (barrel, scope, ammo, grip, stock, mag, tripod, laser, flashlight, foregrip, silencer) and a Part struct with fields for weight, fire_rate_mod, accuracy_mod, durability_loss, reliability_base, and conspicuousness, including unit tests for enum variants and struct initialization.
+Create a Gun struct in Rust with optional fields for each PartKind and an add_part method that validates part type uniqueness, returning Result<(), String>, with unit tests for valid/invalid part additions and error handling.
+Implement Gun methods to calculate total weight, fire rate, accuracy, durability loss rate, reliability base, and conspicuousness by aggregating attached parts' attributes, including unit tests for empty gun, full attachments, and negative/zero modifiers.
+Add a Durability struct to track current/max durability and a method to calculate failure rate based on reliability base at 50% durability, with unit tests for durability decay and failure rate interpolation.
+Create a PartBuilder utility to construct predefined parts (e.g., lightweight barrel, high-capacity mag) with validated attribute ranges, including unit tests for builder constraints and edge cases like negative weights.
+Implement serialization/deserialization for Gun and Part using serde to support save/load functionality, with unit tests for round-trip consistency and error handling for invalid data.
+Add a validate_build method to Gun that checks for incompatible combinations (e.g., silencer + high conspicuousness parts), including unit tests for valid/invalid builds and error messages.
+Implement a stats_summary method for Gun that returns a formatted string of all aggregated stats, with unit tests for output correctness with mixed attachments.
+Create benchmark tests for performance-critical methods like stat aggregation and durability calculations to ensure scalability with large attachments.
+Add documentation comments for all public types/methods explaining gunsmithing mechanics and tradeoffs, with unit tests verifying examples in docstrings.
