@@ -18,12 +18,10 @@ pub fn goto_straight_system(
                 } else if delta_x < 0 {
                     p.x -= 1;
                 }
-            } else {
-                if delta_y > 0 {
-                    p.y += 1;
-                } else if delta_y < 0 {
-                    p.y -= 1;
-                }
+            } else if delta_y > 0 {
+                p.y += 1;
+            } else if delta_y < 0 {
+                p.y -= 1;
             }
         }
     }

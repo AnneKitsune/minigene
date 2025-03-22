@@ -122,7 +122,7 @@ impl CollisionMap {
     // pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
     pub fn index_of(&self, x: u32, y: u32) -> u32 {
         let idx = y * self.width + x;
-        assert!(idx <= self.width * self.height - 1);
+        assert!(idx < self.width * self.height);
         idx
     }
 
@@ -173,18 +173,10 @@ pub enum Direction {
 }
 
 /// Everything we can see from.
-#[derive(new)]
+#[derive(new, Default)]
 pub struct Viewshed {
     /// Which tiles we can see.
     pub visible_tiles: HashSet<Point>,
-}
-
-impl Default for Viewshed {
-    fn default() -> Self {
-        Self {
-            visible_tiles: HashSet::new(),
-        }
-    }
 }
 
 #[cfg(test)]

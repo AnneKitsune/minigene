@@ -8,14 +8,10 @@ pub fn goto_entity_simple_system(
 ) -> SystemResult {
     let mut v = vec![];
     for (e, _, goto) in join!(&entities && &positions && &gotos) {
-        v.push((
-            e.unwrap(),
-            goto.unwrap().entity.clone(),
-            goto.unwrap().speed,
-        ));
+        v.push((e.unwrap(), goto.unwrap().entity, goto.unwrap().speed));
     }
     for (e, t, speed) in v {
-        if let Some(target) = positions.get(t).map(|p| p.clone()) {
+        if let Some(target) = positions.get(t).copied() {
             let p = positions.get_mut(e).unwrap();
             // TODO improve when we have a Time struct
             for _i in 0..(speed as usize) {
@@ -27,12 +23,10 @@ pub fn goto_entity_simple_system(
                     } else if delta_x < 0 {
                         p.x -= 1;
                     }
-                } else {
-                    if delta_y > 0 {
-                        p.y += 1;
-                    } else if delta_y < 0 {
-                        p.y -= 1;
-                    }
+                } else if delta_y > 0 {
+                    p.y += 1;
+                } else if delta_y < 0 {
+                    p.y -= 1;
                 }
             }
         }

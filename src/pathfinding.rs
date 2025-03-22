@@ -27,7 +27,7 @@ impl PartialOrd for Node {
 }
 
 fn heuristic(a: Point, b: Point) -> i32 {
-    ((a.x - b.x).abs() + (a.y - b.y).abs()) as i32
+    (a.x - b.x).abs() + (a.y - b.y).abs()
 }
 
 pub fn astar(start: Point, goal: Point, collision_map: &CollisionMap) -> Option<Path> {
