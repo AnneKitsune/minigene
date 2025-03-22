@@ -1,10 +1,12 @@
 use crate::*;
 use std::collections::HashMap;
+use std::hash::Hash;
+
 /// Sends input events to output events using a map to link the input to the
 /// output in O(1).
 /// Does not consume input events.
 pub fn event_retrigger_system<I: Hash + Eq, O: Clone>(
-    inputs: &Vec<I>,
+    inputs: &[I],
     mapping: &HashMap<I, O>,
     outputs: &mut Vec<O>,
 ) -> SystemResult {
