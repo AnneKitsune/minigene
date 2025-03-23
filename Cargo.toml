@@ -19,4 +19,4 @@ game_engine_core = "1.1.2"
 planck_ecs_bundle = "1.1.0"
 planck_game_features = "0.1.0"
 crossterm = { version = "0.28.1" }
-
+uuidmap = "0.1"

@@ -4,13 +4,13 @@ However, instead of entities and components, we use in-memory tables from a libr
 
 ## Defining Systems in Planck ECS
 
-Systems in Planck ECS are simply functions that operate on components and entities. Here's how to work with them:
+Systems in Planck ECS are simply functions that operate on resources, which can be any type implementing Default. Most often, those resources will be of type Table<T>. Here's how to work with them:
 
 ### Regular Function System
 
 ```rust
 // Define a system as a regular function
-fn change_color_system(colors: &mut Components<Color>) -> SystemResult {
+fn change_color_system(colors: &mut Table<Color>) -> SystemResult {
     // System logic here
     Ok(())
 }
@@ -20,6 +20,7 @@ fn change_color_system(colors: &mut Components<Color>) -> SystemResult {
 ### Converting to System for Dispatcher
 
 ```rust
+use planck_ecs::*;
 // Create world
 let mut world = World::default();
 
@@ -42,6 +43,7 @@ world.maintain();
 ### Adding System to a Bundle
 
 ```rust
+use planck_ecs::*;
 // Define a bundle
 struct GameBundle;
 
@@ -70,10 +72,9 @@ When defining system parameters, you must follow this rule:
 
 ```rust
 fn correct_system(
-    entities: &Entities,           // Immutable references first
-    colors: &Components<Color>,
-    positions: &mut Components<Position>,  // Mutable references after
-    velocities: &mut Components<Velocity>
+    colors: &Table<Color>,
+    positions: &mut Table<Position>,  // Mutable references after
+    velocities: &mut Table<Velocity>
 ) -> SystemResult {
     // System logic
     Ok(())
@@ -85,9 +86,9 @@ fn correct_system(
 ```rust
 // This won't work!
 fn incorrect_system(
-    positions: &mut Components<Position>,  // Mutable reference
-    colors: &Components<Color>,            // Immutable reference
-    velocities: &mut Components<Velocity>  // Mutable reference
+    positions: &mut Table<Position>,  // Mutable reference
+    colors: &Table<Color>,            // Immutable reference
+    velocities: &mut Table<Velocity>  // Mutable reference
 ) -> SystemResult {
     // System logic
     Ok(())
@@ -98,9 +99,9 @@ The correct version would be:
 
 ```rust
 fn corrected_system(
-    colors: &Components<Color>,            // Immutable reference first
-    positions: &mut Components<Position>,  // Then mutable references
-    velocities: &mut Components<Velocity>
+    colors: &Table<Color>,            // Immutable reference first
+    positions: &mut Table<Position>,  // Then mutable references
+    velocities: &mut Table<Velocity>
 ) -> SystemResult {
     // System logic
     Ok(())
@@ -115,25 +116,31 @@ let mut table = Table::<MyDataType>::default();
 let uuid: u128 = table.add(my_data);
 ```
 
-Get/GetMut
+Function reference for Table<T>:
 ```rust
-// Get a reference to data by UUID
-if let Some(data) = table.get(uuid) {
-    println!("Found data: {:?}", data);
-}
-
-// Get a mutable reference
-if let Some(data) = table.get_mut(uuid) {
-    data.some_field = new_value;
-}
+/// Add a new value with random key.
+/// This is what you want to use 95% of the time.
+pub fn add(&mut self, value: T) -> u128
+/// Add a new value with manual key. Usually used during deserialization.
+/// Might be used for performance reasons when using a Table as a Map.
+/// For example, a map KeyCode -> GameEvent.
+pub fn add_with_key(&mut self, key: u128, value: T)
+/// Get a value by key.
+pub fn get(&self, key: u128) -> Option<&T>
+/// Get a value by key.
+pub fn get_mut(&mut self, key: u128) -> Option<&mut T>
+/// Remove an element using it's key.
+pub fn remove(&mut self, key: u128) -> Option<T>
+/// Get an iterator over the contained values.
+pub fn values(&self) -> impl Iterator<Item = &T>
+pub fn values_mut(&mut self) -> impl Iterator<Item = &mut T>
+/// Return an iterator over keys.
+pub fn keys(&self) -> std::collections::hash_map::Keys<u128, usize>
+/// Creates a Table with a specific initial capacity.
+pub fn with_capacity(capacity: usize) -> Self
+/// Get the number of elements stored.
+pub fn count(&self) -> usize
+/// Empty out everything.
+pub fn clear(&mut self)
 
 ```
-
-Remove
-```rust
-// Remove data by UUID
-if let Some(removed_data) = table.remove(uuid) {
-    println!("Removed: {:?}", removed_data);
-}
-```
-
