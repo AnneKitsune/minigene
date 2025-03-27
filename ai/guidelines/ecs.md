@@ -2,6 +2,8 @@
 We use an entity-component-system like library called planck_ecs.
 However, instead of entities and components, we use in-memory tables from a library called uuidmap, like in a relational database.
 
+You must use planck_ecs and uuidmap rather than other entity component systems.
+
 ## Defining Systems in Planck ECS
 
 Systems in Planck ECS are simply functions that operate on resources, which can be any type implementing Default. Most often, those resources will be of type Table<T>. Here's how to work with them:
@@ -142,5 +144,22 @@ pub fn with_capacity(capacity: usize) -> Self
 pub fn count(&self) -> usize
 /// Empty out everything.
 pub fn clear(&mut self)
-
 ```
+
+How to do iterate and join operations:
+```rust
+struct A {
+    b_key: u128,
+};
+struct B {};
+const table1 = Table::<A>::default();
+const table2 = Table::<B>::default();
+
+// Join table A and table B
+for value_a in table1.values() {
+    const value_b = table2.get(value_a.b_key).unwrap(); // you should check for None rather than unwrap here.
+    // Do some operation on values a and b here.
+}
+```
+
+For events, rather than using Vec<EventType> or VecDeque<EventType>, you can use Table<EventType> and delete clear() the table at the very end of the frame. This will improve code consistency.
