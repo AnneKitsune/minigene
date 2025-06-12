@@ -1,0 +1,1 @@
+I want you to replace all mentions of Components and Entity / Entities by refactoring the code to use uuidmap and planck_ecs as described in the guidelines. Make sure to not modify unrelated code and to keep behavior as close as possible to the existing one.
