@@ -30,7 +30,7 @@ fn main() {
     run(
         vec![init_keybinds.system()],
         vec![
-            input_driver.system(),
+            input_driver_blocking.system(),
             input_processor::<InputEvent>.system(),
             render_system.system(),
             quit_system.system(),

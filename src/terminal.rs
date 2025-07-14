@@ -106,6 +106,16 @@ impl Terminal {
             None
         }
     }
+
+    pub fn wait_input(&self) -> KeyCode {
+        // Check if there is any input available without blocking
+        loop {
+            match event::read().unwrap() {
+                Event::Key(key_event) => return key_event.code,
+                _ => {}
+            }
+        }
+    }
 }
 
 impl Drop for Terminal {
