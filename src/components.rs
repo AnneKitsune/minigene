@@ -3,6 +3,8 @@ use crate::*;
 pub use crossterm::style::Color;
 use std::collections::HashSet;
 
+// TODO convert to tables
+
 #[derive(Default, Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Point {
     pub x: i32,

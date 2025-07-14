@@ -1,15 +1,20 @@
 use crate::*;
-use std::collections::HashMap;
+use uuidmap::Table;
+
+// TODO convert to tables
 
 /// Transforms `char` input events into the desired event type using a keybindings map.
-pub fn input_driver<E: Clone>(
-    keymap: &HashMap<char, E>,
-    inputs: &[char],
-    events: &mut Vec<E>,
+pub fn input_driver(
+    keymap: &Table<Keybind>,
+    inputs: &Table<KeyboardEvent>,
+    events: &mut Table<InputEvent>,
 ) -> SystemResult {
-    for i in inputs.iter() {
-        if let Some(e) = keymap.get(i) {
-            events.push(e.clone());
+    for i in inputs.values() {
+        let KeyboardEvent::KeyPress { c: key } = i;
+        for kb in keymap.values() {
+            if kb.key == *key {
+                events.add(kb.event);
+            }
         }
     }
     Ok(())
