@@ -87,7 +87,7 @@ impl Terminal {
             let current_y = y + y_offset as i32;
             for x_offset in 0..width {
                 let current_x = x + x_offset as i32;
-                let c: char = if y_offset == 0 {
+                let character: char = if y_offset == 0 {
                     // Top border
                     if x_offset == 0 {
                         '╭'
@@ -113,7 +113,7 @@ impl Terminal {
                         ' '
                     }
                 };
-                self.print_color(current_x, current_y, fg, bg, c);
+                self.print_color(current_x, current_y, fg, bg, character);
             }
         }
     }
