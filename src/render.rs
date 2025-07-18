@@ -1,6 +1,9 @@
 use crate::*;
 
 /// Renders ascii characters.
+///
+/// # Panics
+/// This function cannot panic under normal circumstances.
 pub fn render_ascii(
     ctx: &mut Terminal,
     camera: &Camera,
@@ -9,23 +12,28 @@ pub fn render_ascii(
     sprites: &Components<Sprite>,
 ) {
     for (pos, multi) in join!(&positions && &multi_sprites) {
-        let multi = multi.unwrap();
+        let multi = multi.expect("Entity in MultiSprite join should have MultiSprite component");
+        let pos = pos.expect("Entity in MultiSprite join should have Point component");
         for y in 0..multi.height as i32 {
             for x in 0..multi.width as i32 {
                 let idx = (x + y * multi.width as i32) as usize;
                 ctx.print_color(
-                    pos.unwrap().x + x - camera.position.x,
-                    pos.unwrap().y + y - camera.position.y,
+                    pos.x + x - camera.position.x,
+                    pos.y + y - camera.position.y,
                     multi.fg[idx],
                     multi.bg[idx],
-                    multi.ascii.chars().nth(idx).unwrap(),
+                    multi
+                        .ascii
+                        .chars()
+                        .nth(idx)
+                        .expect("Index out of bounds for MultiSprite ascii"),
                 );
             }
         }
     }
     for (pos, sprite) in join!(&positions && &sprites) {
-        let pos = pos.unwrap();
-        let sprite = sprite.unwrap();
+        let pos = pos.expect("Entity in Sprite join should have Point component");
+        let sprite = sprite.expect("Entity in Sprite join should have Sprite component");
 
         if position_inside_rect(
             pos.x - camera.position.x,
