@@ -5,6 +5,9 @@ authors = ["Anne Kitsune <annekitsunefox@gmail.com>"]
 edition = "2021"
 description = "A minimalist terminal game engine."
 license = "AGPL-3.0-or-later"
+repository = "https://github.com/AnneKitsune/minigene"
+keywords = ["game-engine", "terminal", "ecs"]
+categories = ["command-line", "game-development"]
 
 [dependencies]
 
