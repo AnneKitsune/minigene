@@ -10,6 +10,10 @@ fn build_dispatcher(world: &mut World, systems: Vec<System>) -> Dispatcher {
 }
 
 /// Run the engine using a single global dispatcher.
+///
+/// # Panics
+///
+/// Panics if the initial `EngineRunning` resource is not present after setup.
 pub fn run(init_systems: Vec<System>, run_systems: Vec<System>) {
     let mut world = World::default();
     {
@@ -22,7 +26,11 @@ pub fn run(init_systems: Vec<System>, run_systems: Vec<System>) {
 
     let _ = init_dispatcher.run_seq(&world);
 
-    while world.get::<EngineRunning>().unwrap().running {
+    while world
+        .get::<EngineRunning>()
+        .expect("EngineRunning resource missing")
+        .running
+    {
         let _ = run_dispatcher.run_seq(&world);
     }
 }
