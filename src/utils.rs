@@ -2,11 +2,11 @@ use crate::*;
 
 /// Get the euclidian distance between two points.
 pub fn dist(p1: &Point, p2: &Point) -> f32 {
-    ((p2.x as f32 - p1.x as f32).powf(2.0) + (p2.y as f32 - p1.y as f32).powf(2.0)).sqrt()
+    ((p2.x as f32 - p1.x as f32).powi(2) + (p2.y as f32 - p1.y as f32).powi(2)).sqrt()
 }
 
 /// Checks if the given position is inside of the given rectangle.
-pub fn position_inside_rect(
+pub const fn position_inside_rect(
     pos_x: i32,
     pos_y: i32,
     rect_x: i32,
