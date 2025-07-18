@@ -125,7 +125,9 @@ impl Terminal {
     /// May panic if the attached terminal is closed.
     pub fn get_input(&self) -> Option<KeyCode> {
         // Check if there is any input available without blocking
-        if event::poll(std::time::Duration::from_millis(0)).expect("Failed to poll for terminal events") {
+        if event::poll(std::time::Duration::from_millis(0))
+            .expect("Failed to poll for terminal events")
+        {
             if let Event::Key(key_event) = event::read().expect("Failed to read terminal event.") {
                 Some(key_event.code)
             } else {

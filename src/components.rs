@@ -12,7 +12,7 @@ pub struct Point {
 }
 
 impl Point {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub const fn new(x: i32, y: i32) -> Self {
         Self { x, y }
     }
 }
@@ -47,7 +47,7 @@ pub struct AiPath {
 /// The target terminal id to render to.
 pub struct RenderTarget(pub usize);
 
-/// Indicates that the ai should calculate an AiPath from the current position
+/// Indicates that the ai should calculate an `AiPath` from the current position
 /// towards this destination.
 #[derive(new)]
 pub struct AiDestination {
@@ -55,7 +55,7 @@ pub struct AiDestination {
     pub target: Point,
 }
 
-/// Indicates that the ai should calculate an AiPath from the current position
+/// Indicates that the ai should calculate an `AiPath` from the current position
 /// towards this destination.
 #[derive(new)]
 pub struct GotoStraight {
@@ -65,7 +65,7 @@ pub struct GotoStraight {
     pub speed: f32,
 }
 
-/// Indicates that the ai should calculate an AiPath from the current position
+/// Indicates that the ai should calculate an `AiPath` from the current position
 /// towards this entity's position.
 #[derive(new)]
 pub struct GotoEntity {
@@ -112,7 +112,7 @@ impl CollisionMap {
     }
 
     /// Gives the size of the collision map.
-    pub fn size(&self) -> (u32, u32) {
+    pub const fn size(&self) -> (u32, u32) {
         (self.width, self.height)
     }
 
@@ -122,20 +122,38 @@ impl CollisionMap {
     }
 
     // pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
+    /// Gives the index of the given (x, y) position.
+    ///
+    /// # Panics
+    /// Panics if the position is out of bounds.
     pub fn index_of(&self, x: u32, y: u32) -> u32 {
         let idx = y * self.width + x;
-        assert!(idx < self.width * self.height);
+        assert!(
+            idx < self.width * self.height,
+            "Position ({}, {}) is out of bounds for collision map of size ({}, {})",
+            x,
+            y,
+            self.width,
+            self.height
+        );
         idx
     }
 
     // pub(crate) fn position_of(&self, idx: u32) -> (u32, u32) {
+    /// Gives the (x, y) position of the given index.
+    ///
+    /// # Panics
+    /// Panics if the index is out of bounds or if the collision map has zero width or height.
     pub fn position_of(&self, idx: u32) -> (u32, u32) {
-        assert!(self.width > 0);
-        assert!(self.height > 0);
+        assert!(self.width > 0, "CollisionMap width must be greater than 0");
+        assert!(
+            self.height > 0,
+            "CollisionMap height must be greater than 0"
+        );
         (idx % self.width, idx / self.width)
     }
 
-    pub fn is_inbound(&self, x: u32, y: u32) -> bool {
+    pub const fn is_inbound(&self, x: u32, y: u32) -> bool {
         x < self.width && y < self.height
     }
 }
