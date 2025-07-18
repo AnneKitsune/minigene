@@ -26,7 +26,7 @@ impl PartialOrd for Node {
     }
 }
 
-fn heuristic(a: Point, b: Point) -> i32 {
+const fn heuristic(a: Point, b: Point) -> i32 {
     (a.x - b.x).abs() + (a.y - b.y).abs()
 }
 
