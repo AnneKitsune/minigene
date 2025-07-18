@@ -3,5 +3,9 @@ use crossterm::event::KeyCode;
 /// A raw keyboard event.
 #[derive(Debug, Clone, Copy)]
 pub enum KeyboardEvent {
-    KeyPress { keycode: KeyCode },
+    /// Represents a key press event
+    KeyPress {
+        /// The key that was pressed
+        keycode: KeyCode,
+    },
 }

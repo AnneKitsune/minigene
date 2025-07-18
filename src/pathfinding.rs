@@ -1,8 +1,12 @@
 use crate::components::{CollisionMap, Point};
 use std::collections::{BinaryHeap, HashMap};
 
+/// Represents a computed path from start to goal
+///
+/// Contains a series of points to traverse in order
 #[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct Path {
+    /// The sequence of points that form the path
     pub path: Vec<Point>,
 }
 
@@ -30,6 +34,17 @@ const fn heuristic(a: Point, b: Point) -> i32 {
     (a.x - b.x).abs() + (a.y - b.y).abs()
 }
 
+/// Implementation of A* pathfinding algorithm
+///
+/// Computes the shortest path between two points avoiding collisions
+///
+/// # Arguments
+/// * `start` - Starting point of path
+/// * `goal` - Target point of path
+/// * `collision_map` - Map of impassable areas
+///
+/// # Returns
+/// `Some(Path)` if valid path exists, otherwise `None`
 pub fn astar(start: Point, goal: Point, collision_map: &CollisionMap) -> Option<Path> {
     let mut open_set = BinaryHeap::new();
     let mut came_from = HashMap::new();

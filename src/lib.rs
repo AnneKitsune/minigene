@@ -1,3 +1,11 @@
+//! A minimal game engine for turn-based and action games with ECS architecture.
+//!
+//! This crate provides:
+//! - Entity Component System (ECS) with `planck_ecs`
+//! - Terminal rendering with `crossterm`
+//! - Pathfinding algorithms
+//! - Common game components and systems
+
 pub extern crate game_features;
 pub extern crate hibitset;
 
@@ -27,6 +35,12 @@ mod systems;
 mod terminal;
 mod utils;
 
+/// Contains commonly used imports for game development with this engine.
+///
+/// Import this module to conveniently access:
+/// - Default components like `Point`, `Sprite`
+/// - Systems like `render_system`, `input_driver`
+/// - Terminal utilities
 pub mod prelude;
 
 pub use self::components::*;

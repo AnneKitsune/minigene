@@ -5,13 +5,19 @@ use std::collections::HashSet;
 
 // TODO convert to tables
 
+/// Represents a position in 2D space with integer coordinates.
+///
+/// Used for entities, camera positions, and rendering.
 #[derive(Default, Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct Point {
+    /// The x-coordinate (horizontal axis, increases rightward relative to the screen)
     pub x: i32,
+    /// The y-coordinate (vertical axis, increases upward relative to the screen)
     pub y: i32,
 }
 
 impl Point {
+    /// Creates a new `Point` from the given coordinates.
     pub const fn new(x: i32, y: i32) -> Self {
         Self { x, y }
     }
@@ -30,10 +36,15 @@ pub struct Sprite {
 /// A text-based sprite that is multiple tiles wide/high.
 #[derive(new)]
 pub struct MultiSprite {
+    /// The ASCII characters to render (stored row-major, length = width * height)
     pub ascii: String,
+    /// The width of the sprite in tiles
     pub width: u32,
+    /// The height of the sprite in tiles
     pub height: u32,
+    /// Foreground colors for each tile (length = width * height)
     pub fg: Vec<Color>,
+    /// Background colors for each tile (length = width * height)
     pub bg: Vec<Color>,
 }
 
@@ -153,6 +164,7 @@ impl CollisionMap {
         (idx % self.width, idx / self.width)
     }
 
+    /// Checks if the given coordinates are within the collision map boundaries.
     pub const fn is_inbound(&self, x: u32, y: u32) -> bool {
         x < self.width && y < self.height
     }

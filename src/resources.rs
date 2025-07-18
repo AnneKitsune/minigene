@@ -31,8 +31,10 @@ impl CollisionResource {
     }
 }
 
+/// Tracks the current running state of the engine
 #[derive(Default, Clone)]
 pub struct EngineRunning {
+    /// Whether the engine should continue running (`true`) or exit (`false`)
     pub running: bool,
 }
 

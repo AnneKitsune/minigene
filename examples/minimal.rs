@@ -1,7 +1,20 @@
+//! A minimal example demonstrating the game engine's basic structure
+//!
+//! This example shows how to:
+//! - Set up key bindings
+//! - Handle input events
+//! - Implement simple rendering
+//! - Control the engine's run loop
+
 use minigene::prelude::*;
 
+/// User input events for the minimal example
+///
+/// These events are generated from keyboard input
+/// and processed by engine systems
 #[derive(Clone, Copy, Debug)]
 pub enum InputEvent {
+    /// Signals that the engine should stop running
     Quit,
 }
 

@@ -7,6 +7,9 @@ use crossterm::{
 };
 use std::io::{stdout, Error as IoError, Write as _};
 
+/// Terminal handles rendering and input for console applications
+///
+/// Wraps `crossterm` functionality for drawing to the terminal
 pub struct Terminal {
     stdout: std::io::Stdout,
 }
@@ -82,6 +85,9 @@ impl Terminal {
         }
     }
 
+    /// Draws a box at given position with specified dimensions and colors
+    ///
+    /// Uses UTF-8 characters to draw the box borders
     pub fn print_box(&mut self, x: i32, y: i32, width: u32, height: u32, fg: Color, bg: Color) {
         for y_offset in 0..height {
             let current_y = y + y_offset as i32;
