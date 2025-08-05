@@ -1,77 +1,77 @@
 use crate::*;
+use uuidmap::Table;
 
-/// Calculates a path from the entity's current position towards the specified
-/// `AiDestination` and inserts it in a `AiPath` component.
-/// It uses a `CollisionResource` to take collisions into account.
+/// Calculates a path from an entity's current position towards its `GotoStraight` target
+/// and stores it in the `AiPath` component.
 ///
 /// # Panics
-/// This function panics under the following circumstances:
-/// - If the `global_map` resource is not present (i.e., `None`), then it will panic when trying to access it.
-/// - If an entity does not have a `Point` or `AiDestination` component, but that should be impossible in this iterator.
-///
-/// # Errors
-/// Currently, this function always returns `Ok(())`. There are no recoverable errors it returns at this time.
+/// This function may panic under the following circumstances:
+/// - If the `global_map` resource is `None` when needed
+/// - If expected component tables are missing
 pub fn ai_pathing_system(
-    entities: &Entities,
-    dests: &Components<AiDestination>,
+    gotos: &Table<GotoStraight>,
     global_map: &Option<CollisionResource>,
-    positions: &Components<Point>,
-    paths: &mut Components<AiPath>,
-) -> SystemResult {
-    'query: for (e, pos, dest) in join!(&entities && &positions && &dests) {
-        // Unwrap the entity and components with meaningful error messages
-        let entity = e.expect("Entity should be present in join iterator");
-        let pos = pos.expect("Point component should be present for entity with AiDestination");
-        let dest =
-            dest.expect("AiDestination component should be present for entity in join iterator");
-
-        // Check if entity already has AIpath with the same destination:
-        if let Some(existing_path) = paths.get(entity) {
-            let curr_dest = existing_path.path.path.last();
-            let new_dest = Point::new(dest.target.x, dest.target.y);
-            if curr_dest == Some(&new_dest) {
-                continue 'query;
-            }
-        }
-        if pos.x == dest.target.x && pos.y == dest.target.y {
+    positions: &Table<Point>,
+    paths: &mut Table<AiPath>,
+) {
+    for goto in gotos.values() {
+        // Get current position from positions table
+        let Some(current_point) = positions.get(goto.current_position_id) else {
             continue;
-        }
-        // TODO Safety check for < 0 or out of map bounds
+        };
+
+        // Calculate path
         let global_map = global_map
             .as_ref()
-            .expect("global_map resource is missing, but required for ai_pathing_system");
-        let d = Point::new(pos.x - global_map.position.x, pos.y - global_map.position.y);
-        let t = Point::new(
-            dest.target.x - global_map.position.x,
-            dest.target.y - global_map.position.y,
+            .expect("global_map resource is required for ai_pathing_system");
+        let start = Point::new(
+            current_point.x - global_map.position.x,
+            current_point.y - global_map.position.y,
         );
-        if let Some(path) = astar(d, t, &global_map.map).map(|p| AiPath { path: p }) {
-            paths.insert(entity, path);
+        let Some(dest) = positions.get(goto.destination_id) else {
+            continue;
+        };
+
+        let target = Point::new(
+            dest.x - global_map.position.x,
+            dest.y - global_map.position.y,
+        );
+
+        if let Some(path) = astar(start, target, &global_map.map) {
+            paths.add_with_key(goto.ai_path, AiPath { path: path.clone() });
         }
     }
-    Ok(())
 }
 
 #[cfg(test)]
 mod tests {
     use crate::*;
+    use uuidmap::Table;
 
     #[test]
     fn correct_path() {
-        let mut entities = Entities::default();
-        let mut dests = Components::<AiDestination>::default();
-        let mut positions = Components::<Point>::default();
-        let mut paths = Components::<AiPath>::default();
+        let mut gotos = Table::<GotoStraight>::default();
+        let mut positions = Table::<Point>::default();
+        let mut paths = Table::<AiPath>::default();
         let global_map = Some(CollisionResource::new(
             CollisionMap::new(10, 10),
             Point::new(0, 0),
         ));
 
-        let e = entities.create();
-        dests.insert(e, AiDestination::new(Point::new(1, 3)));
-        positions.insert(e, Point::new(1, 1));
+        let e = 1; // arbitrary entity id
+                   // Set destination position for id 999
+        positions.add_with_key(999, Point::new(1, 3));
+        gotos.add_with_key(
+            e,
+            GotoStraight {
+                destination_id: 999,
+                current_position_id: e,
+                ai_path: e,
+            },
+        );
+        positions.add_with_key(e, Point::new(1, 1));
 
-        ai_pathing_system(&entities, &dests, &global_map, &positions, &mut paths).unwrap();
+        ai_pathing_system(&gotos, &global_map, &positions, &mut paths);
         let steps = &paths.get(e).unwrap().path.path;
         assert_eq!(steps.len(), 3);
         assert_eq!(

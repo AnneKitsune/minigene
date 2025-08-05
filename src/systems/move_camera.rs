@@ -2,10 +2,7 @@ use crate::*;
 
 /// Consumes `MoveCameraEvent` to move the camera resource.
 /// Events are cleared by this system.
-///
-/// # Errors
-/// No errors are returned.
-pub fn move_camera_system(camera: &mut Camera, events: &mut Vec<MoveCameraEvent>) -> SystemResult {
+pub fn move_camera_system(camera: &mut Camera, events: &mut Vec<MoveCameraEvent>) {
     for ev in events.iter() {
         let (mut off_x, mut off_y) = match ev.direction {
             Direction::North => (0, -1),
@@ -20,5 +17,4 @@ pub fn move_camera_system(camera: &mut Camera, events: &mut Vec<MoveCameraEvent>
         camera.position.y += off_y;
     }
     events.clear();
-    Ok(())
 }

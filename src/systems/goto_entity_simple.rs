@@ -2,9 +2,6 @@ use crate::*;
 
 /// Moves an entity one tile towards the targeted entity, regardless of collisions.
 ///
-/// # Errors
-/// This function returns `Ok(())` under all conditions since it does not generate any errors. It may only panic in case of internal inconsistency.
-///
 /// # Panics
 /// This function panics if:
 ///   - An entity that has a `GotoEntity` and `Point` component (as found in the first pass) is missing the `Point` component in the second pass (which should be impossible).
@@ -14,7 +11,7 @@ pub fn goto_entity_simple_system(
     entities: &Entities,
     gotos: &Components<GotoEntity>,
     positions: &mut Components<Point>,
-) -> SystemResult {
+) {
     let mut v = vec![];
     for (e, _, goto) in join!(&entities && &positions && &gotos) {
         let entity_id = e.expect("Expected an entity id to exist");
@@ -42,5 +39,4 @@ pub fn goto_entity_simple_system(
             }
         }
     }
-    Ok(())
 }

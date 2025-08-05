@@ -18,25 +18,22 @@ pub enum InputEvent {
     Quit,
 }
 
-fn init_keybinds(keybinds: &mut Table<Keybind<InputEvent>>) -> SystemResult {
+fn init_keybinds(keybinds: &mut Table<Keybind<InputEvent>>) {
     keybinds.add(Keybind::new(KeyCode::Esc, InputEvent::Quit));
-    Ok(())
 }
 
-fn render_system(term: &mut Terminal) -> SystemResult {
+fn render_system(term: &mut Terminal) {
     term.clear();
     term.print_string(10, 10, Color::White, Color::Black, "Hello World!");
     term.flush();
-    Ok(())
 }
 
-fn quit_system(events: &Table<InputEvent>, running: &mut EngineRunning) -> SystemResult {
+fn quit_system(events: &Table<InputEvent>, running: &mut EngineRunning) {
     for ev in events.values() {
         match ev {
             InputEvent::Quit => running.running = false,
         }
     }
-    Ok(())
 }
 
 fn main() {

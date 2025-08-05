@@ -1,6 +1,7 @@
 use crate::*;
 
 pub use crossterm::style::Color;
+use hibitset::BitSet as HBitSet;
 use std::collections::HashSet;
 
 // TODO convert to tables
@@ -31,6 +32,10 @@ pub struct Sprite {
     pub fg: Color,
     /// The background color.
     pub bg: Color,
+    /// Reference to a Point table row for position
+    pub point_id: u128,
+    /// Whether this sprite collides
+    pub has_collision: bool,
 }
 
 /// A text-based sprite that is multiple tiles wide/high.
@@ -46,6 +51,10 @@ pub struct MultiSprite {
     pub fg: Vec<Color>,
     /// Background colors for each tile (length = width * height)
     pub bg: Vec<Color>,
+    /// Reference to a Point table row for position
+    pub point_id: u128,
+    /// Reference to a `CollisionMap` table row
+    pub collision_map: u128,
 }
 
 /// The path calculated by the Ai that it will follow.
@@ -58,36 +67,17 @@ pub struct AiPath {
 /// The target terminal id to render to.
 pub struct RenderTarget(pub usize);
 
-/// Indicates that the ai should calculate an `AiPath` from the current position
-/// towards this destination.
-#[derive(new)]
-pub struct AiDestination {
-    /// The destination position.
-    pub target: Point,
-}
-
-/// Indicates that the ai should calculate an `AiPath` from the current position
-/// towards this destination.
+/// Indicates that the ai should move towards a destination point.
 #[derive(new)]
 pub struct GotoStraight {
-    /// The destination position.
-    pub target: Point,
-    /// The speed at which the entity moves in tiles/second.
-    pub speed: f32,
+    /// Reference to a destination Point table row
+    pub destination_id: u128,
+    /// Reference to an origin Point table row
+    pub current_position_id: u128,
+    /// Reference to an `AiPath` table row
+    pub ai_path: u128,
 }
 
-/// Indicates that the ai should calculate an `AiPath` from the current position
-/// towards this entity's position.
-#[derive(new)]
-pub struct GotoEntity {
-    /// The destination entity we are trying to reach.
-    pub entity: Entity,
-    /// The speed at which the entity moves in tiles/second.
-    pub speed: f32,
-}
-
-/// Collision of a single tile entity
-pub struct Collision;
 /// Collision of a multi tile entity. Not necessarily colliding everywhere.
 /// Can be both used as a global resource and as a component for individual entities.
 #[derive(Debug, Clone)]
@@ -132,7 +122,6 @@ impl CollisionMap {
         self.bitset.clear();
     }
 
-    // pub(crate) fn index_of(&self, x: u32, y: u32) -> u32 {
     /// Gives the index of the given (x, y) position.
     ///
     /// # Panics
@@ -150,7 +139,6 @@ impl CollisionMap {
         idx
     }
 
-    // pub(crate) fn position_of(&self, idx: u32) -> (u32, u32) {
     /// Gives the (x, y) position of the given index.
     ///
     /// # Panics
@@ -170,8 +158,8 @@ impl CollisionMap {
     }
 }
 
-// TODO consider changing this to a component or keep as a resource?
 /// Used to change the visible space of the world on screen.
+/// TODO move to resources.rs
 #[derive(new, Clone, Debug)]
 pub struct Camera {
     /// The position of the camera in the world.
@@ -192,6 +180,7 @@ impl Default for Camera {
     }
 }
 
+// TODO move somewhere else. This is not a component.
 /// A direction towards one of the 3d axis.
 #[allow(missing_docs, reason = "trivial names")]
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
@@ -204,9 +193,12 @@ pub enum Direction {
     Down,
 }
 
-/// Everything we can see from.
+/// Everything that can be seen from a specific position.
+/// Runtime only.
 #[derive(new, Default)]
 pub struct Viewshed {
+    /// Reference to a Point table row for viewer position
+    pub from_point_id: u128,
     /// Which tiles we can see.
     pub visible_tiles: HashSet<Point>,
 }
