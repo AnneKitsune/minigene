@@ -9,13 +9,16 @@ repository = "https://github.com/AnneKitsune/minigene"
 keywords = ["game-engine", "terminal", "ecs"]
 categories = ["command-line", "game-development"]
 
-[dependencies]
+[features]
+thread_profiler = []
 
+[dependencies]
 game_features = "0.8.3"
 hibitset = "0.6.4"
 derive-new = "0.7.0"
 game_clock = "1.1.1"
 stopwatch2 = "2.0.0"
+thread_profiler = "0.3.0"
 planck_ecs = { version = "1.2.1", features = ["big_systems", "parallel"] }
 oorandom = "11.1.4"
 game_engine_core = "1.1.2"
