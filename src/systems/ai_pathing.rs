@@ -72,7 +72,7 @@ mod tests {
         positions.add_with_key(e, Point::new(1, 1));
 
         ai_pathing_system(&gotos, &global_map, &positions, &mut paths);
-        let steps = &paths.get(e).unwrap().path.path;
+        let steps = &paths.get(e).expect("Failed to calculate path").path.path;
         assert_eq!(steps.len(), 3);
         assert_eq!(
             steps,

@@ -34,19 +34,32 @@ pub fn move_position(old_position: &Point, dir: Direction) -> Point {
     }
 }
 
+/// Verifies that v1 is approximately equal to v2.
+pub fn approx_eq(v1: f32, v2: f32) -> bool {
+    (v2 - v1).abs() < 0.000001
+}
+
+/// Asserts if `approx_eq` is false.
+///
+/// # Panics
+/// Will panic if v1 is not equal to v2 within a reasonnable margin.
+pub fn assert_approx_eq(v1: f32, v2: f32) {
+    assert!(approx_eq(v1, v2), "v1 is different than v2");
+}
+
 #[cfg(test)]
 mod tests {
     use crate::*;
 
     #[test]
     fn distance() {
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(0, 0)), 0.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(5, 0)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(-5, 0)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(0, 5)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(0, -5)), 5.0);
-        assert_eq!(dist(&Point::new(0, -5), &Point::new(0, 0)), 5.0);
-        assert_eq!(dist(&Point::new(0, 0), &Point::new(3, 4)), 5.0);
+        assert_approx_eq(dist(&Point::new(0, 0), &Point::new(0, 0)), 0.0);
+        assert_approx_eq(dist(&Point::new(0, 0), &Point::new(5, 0)), 5.0);
+        assert_approx_eq(dist(&Point::new(0, 0), &Point::new(-5, 0)), 5.0);
+        assert_approx_eq(dist(&Point::new(0, 0), &Point::new(0, 5)), 5.0);
+        assert_approx_eq(dist(&Point::new(0, 0), &Point::new(0, -5)), 5.0);
+        assert_approx_eq(dist(&Point::new(0, -5), &Point::new(0, 0)), 5.0);
+        assert_approx_eq(dist(&Point::new(0, 0), &Point::new(3, 4)), 5.0);
     }
     #[test]
     fn check_inside_rect() {

@@ -128,27 +128,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_astar_no_obstacles() {
+    fn astar_no_obstacles() {
         let collision_map = CollisionMap::new(5, 5);
         let start = Point { x: 0, y: 0 };
         let goal = Point { x: 4, y: 4 };
-        let path = astar(start, goal, &collision_map).unwrap();
+        let path =
+            astar(start, goal, &collision_map).expect("Failed to calculate path without obstacles");
         assert_eq!(path.path.len(), 9); // Start to goal is 8 steps + start
     }
 
     #[test]
-    fn test_astar_with_obstacles() {
+    fn astar_with_obstacles() {
         let mut collision_map = CollisionMap::new(5, 5);
         collision_map.set(2, 2);
         collision_map.set(3, 2);
         let start = Point { x: 0, y: 0 };
         let goal = Point { x: 4, y: 4 };
-        let path = astar(start, goal, &collision_map).unwrap();
+        let path = astar(start, goal, &collision_map)
+            .expect("Failed to calculate path while obstacles are present");
         assert_eq!(path.path.len(), 9); // Start to goal is 9 steps + start
     }
 
     #[test]
-    fn test_astar_no_path() {
+    fn astar_no_path() {
         let mut collision_map = CollisionMap::new(5, 5);
         for x in 0..5 {
             collision_map.set(x, 2);
@@ -160,11 +162,12 @@ mod tests {
     }
 
     #[test]
-    fn test_astar_start_equals_goal() {
+    fn astar_start_equals_goal() {
         let collision_map = CollisionMap::new(5, 5);
         let start = Point { x: 2, y: 2 };
         let goal = Point { x: 2, y: 2 };
-        let path = astar(start, goal, &collision_map).unwrap();
+        let path = astar(start, goal, &collision_map)
+            .expect("Failed to find a path when the start equals the goal");
         assert_eq!(path.path.len(), 1); // Only the start point
     }
 }
