@@ -20,7 +20,7 @@ game_clock = "1.1.1"
 stopwatch2 = "2.0.0"
 thread_profiler = "0.3.0"
 planck_ecs = { version = "1.2.1", features = ["big_systems", "parallel"] }
-oorandom = "11.1.4"
+rand = "0.9.2"
 game_engine_core = "1.1.2"
 planck_ecs_bundle = "1.1.0"
 planck_game_features = "0.1.0"

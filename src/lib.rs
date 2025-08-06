@@ -24,6 +24,7 @@ pub use derive_new::*;
 
 mod components;
 mod data;
+mod dice;
 mod engine;
 mod event;
 mod pathfinding;
@@ -43,6 +44,7 @@ pub mod prelude;
 
 pub use self::components::*;
 pub use self::data::*;
+pub use self::dice::*;
 pub use self::engine::*;
 pub use self::event::*;
 pub use self::pathfinding::*;

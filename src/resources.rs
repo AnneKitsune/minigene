@@ -37,20 +37,3 @@ pub struct EngineRunning {
     /// Whether the engine should continue running (`true`) or exit (`false`)
     pub running: bool,
 }
-
-/// Random Number Generator
-/// It is suggested to create it manually if it is important that the numbers can't be guessed
-/// easily.
-#[derive(Clone, Debug, new)]
-pub struct RNG {
-    /// The random number generator.
-    pub rng: oorandom::Rand32,
-}
-
-impl Default for RNG {
-    fn default() -> Self {
-        Self {
-            rng: oorandom::Rand32::new(1),
-        }
-    }
-}
